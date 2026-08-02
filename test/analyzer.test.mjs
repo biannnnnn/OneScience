@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { analyzeDocument } from '../server/lib/analyzer.mjs';
 import { __testables as extractor } from '../server/lib/extractor.mjs';
+import { normalizeUploadFilename } from '../server/lib/filename.mjs';
 
 function completeDocument() {
   return {
@@ -53,4 +54,15 @@ test('Chinese abstract and keyword extraction stops at the next section', () => 
   assert.match(abstract, /验证摘要抽取/);
   assert.doesNotMatch(abstract, /关键词/);
   assert.deepEqual(extractor.extractKeywords(text), ['智能体', '论文分析', '投稿']);
+});
+
+test('multipart mojibake in a Chinese filename is repaired', () => {
+  const filename = '大模型驱动的具身群体智能研究.pdf';
+  const latin1Decoded = Buffer.from(filename, 'utf8').toString('latin1');
+  assert.equal(normalizeUploadFilename(latin1Decoded), filename);
+});
+
+test('legitimate Latin filename and client paths are preserved safely', () => {
+  assert.equal(normalizeUploadFilename('résumé.pdf'), 'résumé.pdf');
+  assert.equal(normalizeUploadFilename('C:\\fakepath\\论文.docx'), '论文.docx');
 });

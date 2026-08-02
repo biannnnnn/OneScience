@@ -6,6 +6,8 @@ async function request(path, options = {}) {
 }
 
 export const api = {
+  modelStatus: () => request('/api/model/status'),
+  journals: () => request('/api/journals'),
   listProjects: () => request('/api/projects'),
   getProject: (id) => request(`/api/projects/${id}`),
   createDemo: () => request('/api/demo', { method: 'POST' }),

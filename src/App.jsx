@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   AlertCircle,
   ArrowRight,
@@ -12,6 +12,7 @@ import {
   Compass,
   Copy,
   Database,
+  ExternalLink,
   FileCheck2,
   FileText,
   FolderOpen,
@@ -23,6 +24,7 @@ import {
   MessageSquareReply,
   MoreHorizontal,
   Plus,
+  RefreshCw,
   ScanSearch,
   ShieldCheck,
   Sparkles,
@@ -72,6 +74,7 @@ function App() {
   const [busy, setBusy] = useState('');
   const [error, setError] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [modelStatus, setModelStatus] = useState(null);
 
   const refreshProjects = async () => {
     const result = await api.listProjects();
@@ -81,6 +84,7 @@ function App() {
 
   useEffect(() => {
     refreshProjects().catch((requestError) => setError(requestError.message));
+    api.modelStatus().then(setModelStatus).catch(() => setModelStatus(null));
   }, []);
 
   const runAction = async (name, action, nextStep) => {
@@ -134,7 +138,11 @@ function App() {
       />
 
       <main className="main-shell">
-        <Topbar project={currentProject} onToggle={() => setSidebarOpen((value) => !value)} />
+        <Topbar
+          project={currentProject}
+          modelStatus={modelStatus}
+          onToggle={() => setSidebarOpen((value) => !value)}
+        />
         {error && (
           <div className="error-banner" role="alert">
             <AlertCircle size={18} />
@@ -199,7 +207,7 @@ function Sidebar({ open, onToggle, projects, currentId, onOpen, onNew }) {
           <>
             <div className="sidebar-section-label">工作台</div>
             <button className="side-nav active"><FolderOpen size={17} />投稿项目</button>
-            <button className="side-nav"><LibraryBig size={17} />期刊知识库<span className="coming">规划中</span></button>
+            <button className="side-nav"><LibraryBig size={17} />期刊知识库<span className="coming">30 本</span></button>
 
             <div className="sidebar-section-label project-label">最近项目</div>
             <div className="project-list">
@@ -232,7 +240,7 @@ function Sidebar({ open, onToggle, projects, currentId, onOpen, onNew }) {
   );
 }
 
-function Topbar({ project, onToggle }) {
+function Topbar({ project, modelStatus, onToggle }) {
   return (
     <header className="topbar">
       <button className="icon-button mobile-menu" onClick={onToggle}><LayoutDashboard size={18} /></button>
@@ -241,7 +249,10 @@ function Topbar({ project, onToggle }) {
         {project && <><ChevronRight size={14} /><strong>{project.name}</strong></>}
       </div>
       <div className="topbar-meta">
-        <span className="system-status"><span className="status-dot" />分析服务正常</span>
+        <span className="system-status">
+          <span className={`status-dot ${modelStatus?.configured ? 'model-ready' : ''}`} />
+          {modelStatus?.configured ? `${modelStatus.model} 已配置` : '规则分析服务正常'}
+        </span>
         <div className="avatar">OS</div>
       </div>
     </header>
@@ -254,6 +265,7 @@ function UploadWorkspace({ busy, onCreated, runAction }) {
   const [researchField, setResearchField] = useState('');
   const [keywords, setKeywords] = useState('');
   const [accessPreference, setAccessPreference] = useState('不限');
+  const [useAI, setUseAI] = useState(true);
   const inputRef = useRef(null);
 
   const submit = async (event) => {
@@ -264,6 +276,7 @@ function UploadWorkspace({ busy, onCreated, runAction }) {
     formData.append('researchField', researchField);
     formData.append('keywords', keywords);
     formData.append('accessPreference', accessPreference);
+    formData.append('useAI', String(useAI));
     const result = await runAction('upload', () => api.analyze(formData));
     if (result) onCreated(result);
   };
@@ -282,7 +295,7 @@ function UploadWorkspace({ busy, onCreated, runAction }) {
       <div className="welcome-hero">
         <div className="eyebrow"><Sparkles size={15} />从一篇稿件开始</div>
         <h1>让每一步投稿决策<br /><em>有依据、可追踪</em></h1>
-        <p>上传论文，完成质量初评、期刊匹配、模拟审稿、投稿材料与 Rebuttal 的完整准备流程。</p>
+        <p>上传论文，通过可解释规则与 DeepSeek 深度评估完成期刊匹配、模拟审稿、投稿材料与 Rebuttal 的完整准备流程。</p>
         <div className="hero-points">
           <span><CheckCircle2 size={16} />结构化质量检查</span>
           <span><CheckCircle2 size={16} />可解释匹配依据</span>
@@ -293,7 +306,7 @@ function UploadWorkspace({ busy, onCreated, runAction }) {
       <form className="upload-card" onSubmit={submit}>
         <div className="card-heading">
           <div><span className="section-kicker">NEW ANALYSIS</span><h2>创建投稿项目</h2></div>
-          <span className="secure-note"><ShieldCheck size={15} />仅保存分析元数据</span>
+          <span className="secure-note"><ShieldCheck size={15} />原文不在本地持久化</span>
         </div>
 
         <button
@@ -329,6 +342,19 @@ function UploadWorkspace({ busy, onCreated, runAction }) {
             </>
           )}
         </button>
+
+        <label className="ai-upload-toggle">
+          <input
+            type="checkbox"
+            checked={useAI}
+            onChange={(event) => setUseAI(event.target.checked)}
+          />
+          <span className="toggle-control" />
+          <span>
+            <strong>启用 DeepSeek V4 Pro 深度评估</strong>
+            <small>开启后论文正文会发送至 DeepSeek 官方 API；关闭后仅执行本地规则检查。</small>
+          </span>
+        </label>
 
         <div className="form-grid">
           <label>
@@ -459,6 +485,8 @@ function AnalysisStage({ project, busy, runAction, setActiveStep }) {
         <div><Target size={18} /><span><strong>{document.keywords.length}</strong>关键词</span></div>
       </div>
 
+      <DeepSeekAnalysisCard analysis={project.aiAnalysis} />
+
       <div className="two-column-layout">
         <article className="surface-card issues-card">
           <div className="card-title-row"><div><h3>优先改进项</h3><p>建议先处理高风险问题，再进入目标期刊适配。</p></div><span className="count-badge">{analysis.issues.length}</span></div>
@@ -496,6 +524,75 @@ function AnalysisStage({ project, busy, runAction, setActiveStep }) {
   );
 }
 
+function DeepSeekAnalysisCard({ analysis }) {
+  if (!analysis) return null;
+  if (analysis.status === 'error') {
+    return (
+      <div className="ai-error-card">
+        <AlertCircle size={18} />
+        <div><strong>DeepSeek 深度评估未完成</strong><p>{analysis.message}</p></div>
+      </div>
+    );
+  }
+
+  return (
+    <article className="ai-analysis-card surface-card">
+      <div className="ai-analysis-header">
+        <div className="ai-model-mark"><Sparkles size={21} /></div>
+        <div>
+          <span className="section-kicker">AI SEMANTIC REVIEW</span>
+          <h3>DeepSeek 学术深度评估</h3>
+          <p>{analysis.overallAssessment}</p>
+        </div>
+        <div className="ai-model-meta">
+          <span>{analysis.model}</span>
+          <strong>{Math.round(analysis.confidence * 100)}%</strong>
+          <small>模型信心</small>
+        </div>
+      </div>
+
+      <div className="ai-contribution">
+        <span><Target size={16} />核心贡献判断</span>
+        <p>{analysis.centralContribution || '模型未形成明确的核心贡献判断。'}</p>
+      </div>
+
+      <div className="ai-review-columns">
+        <div>
+          <h4><CheckCircle2 size={16} />识别优势</h4>
+          {analysis.strengths.map((item, index) => (
+            <div className="ai-review-item" key={`strength-${index}`}>
+              <strong>{item.point}</strong>
+              {item.evidence && <p>{item.evidence}</p>}
+            </div>
+          ))}
+        </div>
+        <div>
+          <h4><AlertCircle size={16} />主要学术风险</h4>
+          {analysis.majorIssues.map((item, index) => (
+            <div className="ai-review-item risk" key={`risk-${index}`}>
+              <span>{item.category || '综合问题'}</span>
+              <strong>{item.point}</strong>
+              {item.evidence && <p>{item.evidence}</p>}
+              {item.suggestion && <small><ArrowRight size={13} />{item.suggestion}</small>}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {analysis.recommendedActions.length > 0 && (
+        <div className="ai-actions">
+          <strong>建议优先动作</strong>
+          <ol>{analysis.recommendedActions.map((action) => <li key={action}>{action}</li>)}</ol>
+        </div>
+      )}
+      <footer>
+        <span>{analysis.notice}</span>
+        {analysis.inputCoverage?.truncated && <small>首版分析使用了论文首尾 {analysis.inputCoverage.suppliedCharacters.toLocaleString()} 个字符</small>}
+      </footer>
+    </article>
+  );
+}
+
 function JournalStage({ project, busy, runAction, patchCurrent, setActiveStep }) {
   const recommendations = project.recommendations;
   const generate = () => runAction('recommend', () => api.recommend(project.id));
@@ -511,26 +608,58 @@ function JournalStage({ project, busy, runAction, patchCurrent, setActiveStep })
       <StageHeading
         eyebrow="JOURNAL DISCOVERY"
         title="候选期刊匹配"
-        description="先比较研究范围与稿件准备度，再由作者核对期刊官网的最新要求。"
-        action={<Button disabled={!project.selectedJournal} onClick={() => setActiveStep(2)} icon={ArrowRight}>进入模拟审稿</Button>}
+        description="规则模型先筛选候选，DeepSeek 再结合论文贡献、目标读者和证据准备度进行重排。"
+        action={
+          <div className="stage-actions">
+            <Button variant="secondary" loading={busy === 'recommend'} onClick={generate} icon={RefreshCw}>重新匹配</Button>
+            <Button disabled={!project.selectedJournal} onClick={() => setActiveStep(2)} icon={ArrowRight}>进入模拟审稿</Button>
+          </div>
+        }
       />
-      <div className="catalog-notice"><Info size={17} /><span>{recommendations.notice}</span></div>
+      <div className="catalog-notice journal-catalog-notice">
+        <Info size={17} />
+        <span>{recommendations.notice}</span>
+        <div className="journal-catalog-summary">
+          <strong>{recommendations.catalog?.size || '—'} 本</strong>
+          <small>{recommendations.method === 'deepseek-assisted' ? `${recommendations.model} 辅助重排` : '规则匹配'}</small>
+        </div>
+      </div>
+      {recommendations.aiError && <div className="catalog-notice warning"><AlertCircle size={17} /><span>{recommendations.aiError}</span></div>}
       <div className="journal-list">
         {recommendations.items.map((journal, index) => {
           const selected = project.selectedJournal?.id === journal.id;
+          const fitBreakdown = journal.fitBreakdown || {
+            scope: journal.topicalFit,
+            audience: journal.audienceFit,
+            evidence: journal.evidenceFit,
+          };
           return (
             <article className={`journal-card ${selected ? 'selected' : ''}`} key={journal.id}>
               <div className="journal-rank">{String(index + 1).padStart(2, '0')}</div>
               <div className="journal-main">
                 <div className="journal-title-row">
-                  <div><h3>{journal.name}</h3><p>{journal.publisher} · {journal.access}</p></div>
-                  <span className="match-score"><strong>{journal.matchScore}</strong><small>匹配分</small></span>
+                  <div>
+                    <h3>{journal.name}</h3>
+                    <p>{journal.publisher} · {journal.access}</p>
+                    {journal.source?.url && (
+                      <a className="journal-source" href={journal.source.url} target="_blank" rel="noreferrer">
+                        <ExternalLink size={12} />官方范围来源 · 核对于 {journal.source.checkedAt}
+                      </a>
+                    )}
+                  </div>
+                  <span className="match-score"><strong>{journal.matchScore}</strong><small>综合适配分</small></span>
                 </div>
                 <p className="journal-profile">{journal.profile}</p>
                 <div className="journal-tags">{journal.fields.map((field) => <span key={field}>{field}</span>)}</div>
+                <div className="fit-breakdown">
+                  <span>范围匹配<strong>{fitBreakdown.scope ?? '—'}</strong></span>
+                  <span>读者匹配<strong>{fitBreakdown.audience ?? '—'}</strong></span>
+                  <span>证据准备<strong>{fitBreakdown.evidence ?? '—'}</strong></span>
+                </div>
                 <div className="journal-evidence">
                   <div><strong>推荐依据</strong>{journal.reasons.map((reason) => <p key={reason}><CheckCircle2 size={14} />{reason}</p>)}</div>
                   <div><strong>投稿前关注</strong>{journal.risks.length ? journal.risks.map((risk) => <p key={risk}><AlertCircle size={14} />{risk}</p>) : <p><CheckCircle2 size={14} />暂无高优先级结构风险</p>}</div>
+                  <div><strong>建议动作</strong>{journal.preparationActions?.length ? journal.preparationActions.map((action) => <p key={action}><ArrowRight size={14} />{action}</p>) : <p><CheckCircle2 size={14} />进入官网核对文章类型和作者指南</p>}</div>
                 </div>
               </div>
               <div className="journal-action">

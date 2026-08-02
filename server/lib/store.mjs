@@ -1,17 +1,29 @@
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { normalizeUploadFilename } from './filename.mjs';
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const storageDir = path.resolve(currentDir, '../storage');
 const storageFile = path.join(storageDir, 'projects.json');
+
+function normalizeStoredProject(project) {
+  if (!project?.document?.filename) return project;
+  return {
+    ...project,
+    document: {
+      ...project.document,
+      filename: normalizeUploadFilename(project.document.filename),
+    },
+  };
+}
 
 async function readAll() {
   await mkdir(storageDir, { recursive: true });
   try {
     const raw = await readFile(storageFile, 'utf8');
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
+    return Array.isArray(parsed) ? parsed.map(normalizeStoredProject) : [];
   } catch (error) {
     if (error.code === 'ENOENT') return [];
     throw error;

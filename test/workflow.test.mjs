@@ -39,9 +39,25 @@ function projectFixture() {
 test('journal recommendation returns ranked explainable results', () => {
   const result = recommendJournals(projectFixture());
   assert.equal(result.items.length, 5);
+  assert.equal(result.catalog.size, 30);
   assert.ok(result.items[0].matchScore >= result.items[1].matchScore);
   assert.ok(result.items.every((item) => item.reasons.length > 0));
-  assert.match(result.notice, /演示目录/);
+  assert.ok(result.items.every((item) => item.source.url.startsWith('https://')));
+  assert.match(result.notice, /不代表录用概率/);
+});
+
+test('specific embodied multi-agent terms outrank generic computer terms', () => {
+  const project = projectFixture();
+  project.document = {
+    title: '面向无人作战的具身群体智能协同决策方法',
+    abstract: '研究多智能体与无人系统中的协同决策，并在仿真任务中验证。',
+    keywords: ['具身群体智能', '多智能体', '无人作战'],
+  };
+  const result = recommendJournals(project, {}, { limit: 8 });
+  const topIds = result.items.slice(0, 5).map((item) => item.id);
+  assert.ok(topIds.includes('ieee-ral'));
+  assert.ok(topIds.includes('robotics-and-autonomous-systems'));
+  assert.equal(topIds.includes('ieee-tse'), false);
 });
 
 test('review and materials form a complete preparation chain', () => {

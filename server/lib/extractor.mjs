@@ -1,6 +1,7 @@
 import path from 'node:path';
 import mammoth from 'mammoth';
 import pdf from 'pdf-parse';
+import { normalizeUploadFilename } from './filename.mjs';
 
 const SECTION_PATTERNS = {
   abstract: /(^|\n)\s*(摘要|abstract)\s*[:：]?/i,
@@ -69,7 +70,8 @@ function countReferences(text) {
 }
 
 export async function extractDocument(file) {
-  const extension = path.extname(file.originalname).toLowerCase();
+  const filename = normalizeUploadFilename(file.originalname);
+  const extension = path.extname(filename).toLowerCase();
   let rawText = '';
 
   if (extension === '.docx') {
@@ -96,9 +98,9 @@ export async function extractDocument(file) {
   const latinChars = text.match(/[A-Za-z]/g)?.length ?? 0;
 
   return {
-    filename: file.originalname,
+    filename,
     fileType: extension.slice(1).toUpperCase(),
-    title: extractTitle(text, file.originalname),
+    title: extractTitle(text, filename),
     abstract: extractAbstract(text),
     keywords: extractKeywords(text),
     language: chineseChars >= latinChars * 0.35 ? '中文' : '英文',
