@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.DS_Store
+*.log
+.env
+*.docx
+*.doc
+server/storage/projects.json
+server/storage/*.tmp
