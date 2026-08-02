@@ -67,10 +67,12 @@ export function rankJournalCandidates(project, preferences = {}) {
           field.includes(project.profile.researchField) || project.profile.researchField.includes(field),
         )
       : false;
-    const topicalFit = boundedScore(28 + hits.length * 8 + (fieldHit ? 16 : 0));
+    // A broad self-reported field is useful context, but multiple manuscript-level
+    // scope hits should outrank a generic journal that only shares that field.
+    const topicalFit = boundedScore(28 + hits.length * 8 + (fieldHit ? 6 : 0));
     const accessFit = preferredAccess === '不限' ? 82 : preferredAccess === journal.access ? 100 : 45;
     const readiness = boundedScore(project.analysis?.overall || 50);
-    const audienceFit = boundedScore(35 + hits.length * 7 + (fieldHit ? 18 : 0));
+    const audienceFit = boundedScore(35 + hits.length * 7 + (fieldHit ? 8 : 0));
     const matchScore = boundedScore(
       topicalFit * 0.52 + readiness * 0.16 + manuscriptEvidenceFit * 0.12 + audienceFit * 0.1 + accessFit * 0.1,
     );

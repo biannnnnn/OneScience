@@ -77,7 +77,7 @@ app.get('/api/health', (_request, response) => {
   response.json({
     ok: true,
     service: 'onescience-submission-agent',
-    version: '0.3.0',
+    version: '0.6.0',
     model: getDeepSeekStatus(),
   });
 });

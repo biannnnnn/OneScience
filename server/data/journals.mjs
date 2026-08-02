@@ -1,8 +1,46 @@
+import { ccfT1T2Journals } from './ccf-journals.mjs';
+
 const checkedAt = '2026-08-02';
 
+const internationalJournalRanks = {
+  'ieee-access': { casZone: '中科院4区' },
+  'ieee-tpami': { ccfRank: 'CCF-A', casZone: '中科院1区', ccfCategory: '人工智能' },
+  'ieee-tkde': { ccfRank: 'CCF-A', casZone: '中科院1区', ccfCategory: '数据库/数据挖掘/内容检索' },
+  'ieee-tse': { ccfRank: 'CCF-A', casZone: '中科院1区', ccfCategory: '软件工程/系统软件/程序设计语言' },
+  'ieee-ral': { casZone: '中科院2区' },
+  'acm-tist': { casZone: '中科院3区' },
+  'acm-tochi': { ccfRank: 'CCF-A', casZone: '中科院1区', ccfCategory: '人机交互与普适计算' },
+  'acm-tkdd': { ccfRank: 'CCF-B', casZone: '中科院3区', ccfCategory: '数据库/数据挖掘/内容检索' },
+  'artificial-intelligence': { ccfRank: 'CCF-A', casZone: '中科院2区', ccfCategory: '人工智能' },
+  eswa: { ccfRank: 'CCF-C', casZone: '中科院1区', ccfCategory: '人工智能' },
+  'knowledge-based-systems': { ccfRank: 'CCF-C', casZone: '中科院1区', ccfCategory: '人工智能' },
+  'information-sciences': { casZone: '中科院2区' },
+  'pattern-recognition': { ccfRank: 'CCF-B', casZone: '中科院1区', ccfCategory: '人工智能' },
+  'neural-networks': { ccfRank: 'CCF-B', casZone: '中科院2区', ccfCategory: '人工智能' },
+  'journal-of-systems-and-software': { ccfRank: 'CCF-B', casZone: '中科院2区', ccfCategory: '软件工程/系统软件/程序设计语言' },
+  'information-and-software-technology': { ccfRank: 'CCF-B', casZone: '中科院2区', ccfCategory: '软件工程/系统软件/程序设计语言' },
+  'robotics-and-autonomous-systems': { casZone: '中科院2区' },
+  'journal-of-biomedical-informatics': { casZone: '中科院2区' },
+  'machine-learning': { ccfRank: 'CCF-B', casZone: '中科院4区', ccfCategory: '人工智能' },
+  'applied-intelligence': { ccfRank: 'CCF-C', casZone: '中科院3区', ccfCategory: '人工智能' },
+  'data-mining-knowledge-discovery': { ccfRank: 'CCF-B', casZone: '中科院3区', ccfCategory: '数据库/数据挖掘/内容检索' },
+  'empirical-software-engineering': { ccfRank: 'CCF-B', casZone: '中科院2区', ccfCategory: '软件工程/系统软件/程序设计语言' },
+  'vldb-journal': { ccfRank: 'CCF-A', casZone: '中科院2区', ccfCategory: '数据库/数据挖掘/内容检索' },
+  jair: { ccfRank: 'CCF-B', casZone: '中科院3区', ccfCategory: '人工智能' },
+  jmlr: { ccfRank: 'CCF-A', casZone: '中科院4区', ccfCategory: '人工智能' },
+  'nature-machine-intelligence': { casZone: '中科院1区' },
+  'scientific-reports': { casZone: '中科院3区' },
+};
+
 function journal(entry) {
+  const ranks = internationalJournalRanks[entry.id] || {};
   return {
     ...entry,
+    ...ranks,
+    rankingVersions: {
+      ...(ranks.ccfRank ? { ccf: '2022' } : {}),
+      ...(ranks.casZone ? { cas: '2025年3月升级版' } : {}),
+    },
     source: {
       label: '官方期刊范围与介绍',
       checkedAt,
@@ -12,12 +50,24 @@ function journal(entry) {
 }
 
 export const journalCatalog = {
-  version: '2026.08-computing-v1',
+  version: '2026.08-computing-v3',
   updatedAt: checkedAt,
-  discipline: '计算机科学与人工智能',
+  discipline: '计算机科学、人工智能与 CCF 2025 T1/T2',
+  rankingSources: {
+    ccf: {
+      label: 'CCF 推荐国际学术会议和期刊目录',
+      version: '2022',
+      url: 'https://www.ccf.org.cn/Academic_Evaluation/By_category/2023-03-08/787209.shtml',
+    },
+    cas: {
+      label: '中国科学院期刊分区表',
+      version: '2025年3月升级版',
+      url: 'https://www.fenqubiao.com/',
+    },
+  },
 };
 
-export const journals = [
+const coreJournals = [
   journal({
     id: 'ieee-access', name: 'IEEE Access', publisher: 'IEEE', access: '开放获取',
     fields: ['计算机科学', '人工智能', '工程技术'],
@@ -290,5 +340,10 @@ export const journals = [
   }),
 ];
 
+export const journals = [
+  ...coreJournals,
+  ...ccfT1T2Journals.map(journal),
+];
+
 export const journalCatalogNotice =
-  '候选来自首版计算机领域知识库；匹配分用于缩小检索范围，不代表录用概率。投稿前请打开官方来源核对最新范围、文章类型、费用和作者指南。';
+  '候选来自计算机领域知识库：中文刊 CCF-T1/T2 依据 CCF 2025 计算领域高质量科技期刊分级目录，国际刊 CCF-A/B/C 依据 CCF 2022 国际目录，中科院分区采用 2025 年 3 月升级版。等级用于检索与辅助判断，不代表录用概率；投稿前请核对最新目录、期刊范围、费用和作者指南。';

@@ -6,6 +6,7 @@ import {
   generateReview,
   recommendJournals,
 } from '../server/lib/workflow.mjs';
+import { journals } from '../server/data/journals.mjs';
 
 function projectFixture() {
   return {
@@ -39,11 +40,41 @@ function projectFixture() {
 test('journal recommendation returns ranked explainable results', () => {
   const result = recommendJournals(projectFixture());
   assert.equal(result.items.length, 5);
-  assert.equal(result.catalog.size, 30);
+  assert.equal(result.catalog.size, 71);
   assert.ok(result.items[0].matchScore >= result.items[1].matchScore);
   assert.ok(result.items.every((item) => item.reasons.length > 0));
   assert.ok(result.items.every((item) => item.source.url.startsWith('https://')));
   assert.match(result.notice, /不代表录用概率/);
+});
+
+test('journal catalog includes the complete CCF 2025 T1 and T2 lists', () => {
+  assert.equal(journals.length, 71);
+  assert.equal(journals.filter((journal) => journal.ccfTier === 'CCF-T1').length, 19);
+  assert.equal(journals.filter((journal) => journal.ccfTier === 'CCF-T2').length, 22);
+  assert.equal(new Set(journals.map((journal) => journal.id)).size, journals.length);
+  assert.ok(journals.filter((journal) => journal.ccfTier).every((journal) => journal.cn && journal.language && journal.organizer));
+});
+
+test('international journals expose versioned CCF and CAS ranking labels', () => {
+  const byId = new Map(journals.map((journal) => [journal.id, journal]));
+  assert.deepEqual(
+    [byId.get('ieee-tpami').ccfRank, byId.get('ieee-tpami').casZone],
+    ['CCF-A', '中科院1区'],
+  );
+  assert.deepEqual(
+    [byId.get('eswa').ccfRank, byId.get('eswa').casZone],
+    ['CCF-C', '中科院1区'],
+  );
+  assert.deepEqual(
+    [byId.get('machine-learning').ccfRank, byId.get('machine-learning').casZone],
+    ['CCF-B', '中科院4区'],
+  );
+  assert.equal(byId.get('nature-machine-intelligence').ccfRank, undefined);
+  assert.equal(byId.get('nature-machine-intelligence').casZone, '中科院1区');
+  assert.equal(byId.get('ieee-tai').ccfRank, undefined);
+  assert.equal(byId.get('ieee-tai').casZone, undefined);
+  assert.ok(journals.filter((journal) => journal.ccfRank).every((journal) => journal.rankingVersions.ccf === '2022'));
+  assert.ok(journals.filter((journal) => journal.casZone).every((journal) => journal.rankingVersions.cas === '2025年3月升级版'));
 });
 
 test('specific embodied multi-agent terms outrank generic computer terms', () => {

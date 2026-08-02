@@ -26,6 +26,7 @@ import {
   Plus,
   RefreshCw,
   ScanSearch,
+  Search,
   ShieldCheck,
   Sparkles,
   Target,
@@ -70,6 +71,7 @@ function Button({ children, variant = 'primary', loading = false, icon: Icon, ..
 function App() {
   const [projects, setProjects] = useState([]);
   const [currentProject, setCurrentProject] = useState(null);
+  const [workspaceView, setWorkspaceView] = useState('projects');
   const [activeStep, setActiveStep] = useState(0);
   const [busy, setBusy] = useState('');
   const [error, setError] = useState('');
@@ -106,10 +108,12 @@ function App() {
 
   const openProject = async (id) => {
     await runAction('open', () => api.getProject(id));
+    setWorkspaceView('projects');
     setActiveStep(0);
   };
 
   const startNew = () => {
+    setWorkspaceView('projects');
     setCurrentProject(null);
     setActiveStep(0);
     setError('');
@@ -117,6 +121,33 @@ function App() {
 
   const patchCurrent = (patch, name = 'save') =>
     runAction(name, () => api.patchProject(currentProject.id, patch));
+
+  const runLibraryMatching = async () => {
+    if (!currentProject) return null;
+    const result = await runAction('library-match', () => api.recommend(currentProject.id));
+    if (result) {
+      setWorkspaceView('projects');
+      setActiveStep(1);
+    }
+    return result;
+  };
+
+  const selectJournalFromLibrary = async (journal) => {
+    if (!currentProject) return null;
+    const result = await runAction(
+      `library-journal-${journal.id}`,
+      () => api.patchProject(currentProject.id, {
+        selectedJournal: journal,
+        status: `已选择 ${journal.name}`,
+        stage: Math.max(currentProject.stage, 2),
+      }),
+    );
+    if (result) {
+      setWorkspaceView('projects');
+      setActiveStep(1);
+    }
+    return result;
+  };
 
   const context = {
     project: currentProject,
@@ -133,13 +164,23 @@ function App() {
         onToggle={() => setSidebarOpen((value) => !value)}
         projects={projects}
         currentId={currentProject?.id}
+        activeView={workspaceView}
         onOpen={openProject}
         onNew={startNew}
+        onOpenProjects={() => {
+          setWorkspaceView('projects');
+          setError('');
+        }}
+        onOpenLibrary={() => {
+          setWorkspaceView('journals');
+          setError('');
+        }}
       />
 
       <main className="main-shell">
         <Topbar
           project={currentProject}
+          section={workspaceView === 'journals' ? '期刊知识库' : ''}
           modelStatus={modelStatus}
           onToggle={() => setSidebarOpen((value) => !value)}
         />
@@ -151,7 +192,19 @@ function App() {
           </div>
         )}
 
-        {!currentProject ? (
+        {workspaceView === 'journals' ? (
+          <JournalLibraryPage
+            currentProject={currentProject}
+            busy={busy}
+            onRunMatching={runLibraryMatching}
+            onOpenMatching={() => {
+              setWorkspaceView('projects');
+              setActiveStep(1);
+            }}
+            onSelectJournal={selectJournalFromLibrary}
+            onCreateProject={startNew}
+          />
+        ) : !currentProject ? (
           <UploadWorkspace
             busy={busy}
             onCreated={(project) => {
@@ -184,7 +237,7 @@ function App() {
   );
 }
 
-function Sidebar({ open, onToggle, projects, currentId, onOpen, onNew }) {
+function Sidebar({ open, onToggle, projects, currentId, activeView, onOpen, onNew, onOpenProjects, onOpenLibrary }) {
   return (
     <aside className="sidebar">
       <div className="brand-row">
@@ -206,8 +259,8 @@ function Sidebar({ open, onToggle, projects, currentId, onOpen, onNew }) {
         {open && (
           <>
             <div className="sidebar-section-label">工作台</div>
-            <button className="side-nav active"><FolderOpen size={17} />投稿项目</button>
-            <button className="side-nav"><LibraryBig size={17} />期刊知识库<span className="coming">30 本</span></button>
+            <button className={`side-nav ${activeView === 'projects' ? 'active' : ''}`} onClick={onOpenProjects}><FolderOpen size={17} />投稿项目</button>
+            <button className={`side-nav ${activeView === 'journals' ? 'active' : ''}`} onClick={onOpenLibrary}><LibraryBig size={17} />期刊知识库<span className="coming">71 本</span></button>
 
             <div className="sidebar-section-label project-label">最近项目</div>
             <div className="project-list">
@@ -240,13 +293,13 @@ function Sidebar({ open, onToggle, projects, currentId, onOpen, onNew }) {
   );
 }
 
-function Topbar({ project, modelStatus, onToggle }) {
+function Topbar({ project, section, modelStatus, onToggle }) {
   return (
     <header className="topbar">
       <button className="icon-button mobile-menu" onClick={onToggle}><LayoutDashboard size={18} /></button>
       <div className="breadcrumb">
         <span>投稿智能体</span>
-        {project && <><ChevronRight size={14} /><strong>{project.name}</strong></>}
+        {section ? <><ChevronRight size={14} /><strong>{section}</strong></> : project && <><ChevronRight size={14} /><strong>{project.name}</strong></>}
       </div>
       <div className="topbar-meta">
         <span className="system-status">
@@ -256,6 +309,244 @@ function Topbar({ project, modelStatus, onToggle }) {
         <div className="avatar">OS</div>
       </div>
     </header>
+  );
+}
+
+function JournalRankBadges({ journal }) {
+  const badges = [
+    journal.ccfTier && { label: journal.ccfTier, className: journal.ccfTier.toLowerCase() },
+    journal.ccfRank && { label: journal.ccfRank, className: journal.ccfRank.toLowerCase() },
+    journal.casZone && { label: journal.casZone, className: `cas-${journal.casZone.match(/\d/)?.[0] || ''}` },
+  ].filter(Boolean);
+
+  return badges.map((badge) => (
+    <span className={`journal-rank-badge ${badge.className}`} key={badge.label}>{badge.label}</span>
+  ));
+}
+
+function JournalLibraryPage({
+  currentProject,
+  busy,
+  onRunMatching,
+  onOpenMatching,
+  onSelectJournal,
+  onCreateProject,
+}) {
+  const [library, setLibrary] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
+  const [query, setQuery] = useState('');
+  const [field, setField] = useState('全部领域');
+  const [publisher, setPublisher] = useState('全部出版社');
+  const [access, setAccess] = useState('全部模式');
+  const [rank, setRank] = useState('全部期刊等级');
+  const [selectedId, setSelectedId] = useState('');
+
+  useEffect(() => {
+    let active = true;
+    setLoading(true);
+    api.journals()
+      .then((result) => {
+        if (!active) return;
+        setLibrary(result);
+        setSelectedId((value) => value || result.items?.[0]?.id || '');
+      })
+      .catch((requestError) => active && setLoadError(requestError.message))
+      .finally(() => active && setLoading(false));
+    return () => { active = false; };
+  }, []);
+
+  const journals = library?.items || [];
+  const fields = [...new Set(journals.flatMap((journal) => journal.fields))].sort((a, b) => a.localeCompare(b, 'zh-CN'));
+  const publishers = [...new Set(journals.map((journal) => journal.publisher))].sort((a, b) => a.localeCompare(b, 'zh-CN'));
+  const accessModes = [...new Set(journals.map((journal) => journal.access))];
+  const rankOrder = ['CCF-T1', 'CCF-T2', 'CCF-A', 'CCF-B', 'CCF-C', '中科院1区', '中科院2区', '中科院3区', '中科院4区'];
+  const ranks = [...new Set(journals.flatMap((journal) => [journal.ccfTier, journal.ccfRank, journal.casZone]).filter(Boolean))]
+    .sort((a, b) => rankOrder.indexOf(a) - rankOrder.indexOf(b));
+  const normalizedQuery = query.trim().toLowerCase();
+  const filteredJournals = journals.filter((journal) => {
+    const searchable = [
+      journal.name,
+      journal.englishName,
+      journal.publisher,
+      journal.organizer,
+      journal.ccfTier,
+      journal.ccfRank,
+      journal.casZone,
+      journal.cn,
+      journal.language,
+      journal.profile,
+      ...journal.fields,
+      ...journal.audience,
+      ...journal.evidencePreferences,
+    ].join(' ').toLowerCase();
+    return (!normalizedQuery || searchable.includes(normalizedQuery))
+      && (field === '全部领域' || journal.fields.includes(field))
+      && (publisher === '全部出版社' || journal.publisher === publisher)
+      && (access === '全部模式' || journal.access === access)
+      && (rank === '全部期刊等级' || [journal.ccfTier, journal.ccfRank, journal.casZone].includes(rank));
+  });
+  const selectedJournal = filteredJournals.find((journal) => journal.id === selectedId)
+    || filteredJournals[0]
+    || null;
+  const existingMatch = selectedJournal
+    ? currentProject?.recommendations?.items?.find((journal) => journal.id === selectedJournal.id)
+    : null;
+  const isTarget = selectedJournal?.id === currentProject?.selectedJournal?.id;
+  const clearFilters = () => {
+    setQuery('');
+    setField('全部领域');
+    setPublisher('全部出版社');
+    setAccess('全部模式');
+    setRank('全部期刊等级');
+  };
+
+  return (
+    <div className="journal-library-page">
+      <header className="library-hero">
+        <div>
+          <span className="section-kicker">JOURNAL KNOWLEDGE BASE</span>
+          <h1>期刊知识库</h1>
+          <p>浏览计算机与人工智能期刊目录，包含 CCF 2025 T1/T2 中文刊，以及带有 CCF-A/B/C 和中科院分区的国际刊；核对研究范围和证据偏好，再与当前论文进行适配分析。</p>
+        </div>
+        <div className="library-version">
+          <LibraryBig size={21} />
+          <span><strong>{library?.catalog?.size || 71} 本期刊</strong><small>{library?.catalog?.version || '正在读取目录'}</small></span>
+        </div>
+      </header>
+
+      <section className="library-toolbar surface-card">
+        <label className="library-search">
+          <Search size={17} />
+          <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="搜索期刊、研究领域、目标读者…" />
+        </label>
+        <select value={rank} onChange={(event) => setRank(event.target.value)} aria-label="期刊等级筛选">
+          <option>全部期刊等级</option>
+          {ranks.map((item) => <option key={item}>{item}</option>)}
+        </select>
+        <select value={field} onChange={(event) => setField(event.target.value)} aria-label="研究领域筛选">
+          <option>全部领域</option>
+          {fields.map((item) => <option key={item}>{item}</option>)}
+        </select>
+        <select value={publisher} onChange={(event) => setPublisher(event.target.value)} aria-label="出版机构筛选">
+          <option>全部出版社</option>
+          {publishers.map((item) => <option key={item}>{item}</option>)}
+        </select>
+        <select value={access} onChange={(event) => setAccess(event.target.value)} aria-label="开放获取筛选">
+          <option>全部模式</option>
+          {accessModes.map((item) => <option key={item}>{item}</option>)}
+        </select>
+      </section>
+
+      {loadError ? (
+        <div className="library-state error"><AlertCircle size={22} /><h2>期刊目录加载失败</h2><p>{loadError}</p></div>
+      ) : loading ? (
+        <div className="library-state"><Loader2 size={25} className="spin" /><h2>正在读取期刊知识库</h2></div>
+      ) : (
+        <div className="library-layout">
+          <section className="library-results surface-card">
+            <div className="library-results-heading">
+              <span>检索结果</span>
+              <strong>{filteredJournals.length}</strong>
+            </div>
+            {filteredJournals.length ? (
+              <div className="library-journal-list">
+                {filteredJournals.map((journal) => (
+                  <button
+                    key={journal.id}
+                    className={selectedJournal?.id === journal.id ? 'selected' : ''}
+                    onClick={() => setSelectedId(journal.id)}
+                    aria-pressed={selectedJournal?.id === journal.id}
+                  >
+                    <span className="library-journal-mark">{journal.name.slice(0, 2).toUpperCase()}</span>
+                    <span className="library-journal-copy">
+                      <strong>{journal.name}</strong>
+                      <small><JournalRankBadges journal={journal} />{journal.publisher} · {journal.access}</small>
+                      <span>{journal.fields.slice(0, 3).join(' · ')}</span>
+                    </span>
+                    {currentProject?.selectedJournal?.id === journal.id && <CheckCircle2 size={18} />}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="library-empty"><Search size={24} /><strong>没有找到符合条件的期刊</strong><button onClick={clearFilters}>清除筛选条件</button></div>
+            )}
+          </section>
+
+          <aside className="library-detail surface-card">
+            {selectedJournal ? (
+              <>
+                <div className="library-detail-header">
+                  <div>
+                    <span className="section-kicker">JOURNAL PROFILE</span>
+                    <h2>{selectedJournal.name}</h2>
+                    {selectedJournal.englishName && <span className="library-english-name">{selectedJournal.englishName}</span>}
+                    <p>{selectedJournal.publisher} · {selectedJournal.access}</p>
+                  </div>
+                  <a href={selectedJournal.source.url} target="_blank" rel="noreferrer"><ExternalLink size={15} />官方来源</a>
+                </div>
+                <p className="library-profile">{selectedJournal.profile}</p>
+                {(selectedJournal.ccfTier || selectedJournal.ccfRank || selectedJournal.casZone || selectedJournal.cn || selectedJournal.language) && (
+                  <div className="library-catalog-meta">
+                    <JournalRankBadges journal={selectedJournal} />
+                    {selectedJournal.cn && <span>CN {selectedJournal.cn}</span>}
+                    {selectedJournal.language && <span>{selectedJournal.language}</span>}
+                    {selectedJournal.organizer && <span>主办：{selectedJournal.organizer}</span>}
+                  </div>
+                )}
+                <div className="library-field-tags">{selectedJournal.fields.map((item) => <span key={item}>{item}</span>)}</div>
+                <div className="library-detail-grid">
+                  <section><strong>目标读者</strong>{selectedJournal.audience.map((item) => <p key={item}><Target size={14} />{item}</p>)}</section>
+                  <section><strong>证据偏好</strong>{selectedJournal.evidencePreferences.map((item) => <p key={item}><CheckCircle2 size={14} />{item}</p>)}</section>
+                </div>
+                <div className="library-source-note"><Info size={16} /><span>{selectedJournal.source.label}，数据核对日期 {selectedJournal.source.checkedAt}。CCF 国际等级采用 2022 版目录，中科院分区采用 2025 年 3 月升级版；未显示标签表示当前目录中未核实收录。平台标签用于辅助匹配，投稿前请再次查看期刊官网与最新评价目录。</span></div>
+
+                <div className="library-project-link">
+                  {currentProject ? (
+                    <>
+                      <div className="library-project-heading">
+                        <span><FileText size={17} />当前论文</span>
+                        <strong>{currentProject.name}</strong>
+                      </div>
+                      {existingMatch ? (
+                        <div className="library-existing-match">
+                          <span>已有 AI 适配结果<strong>{existingMatch.matchScore}</strong></span>
+                          <p>{existingMatch.reasons?.[0]}</p>
+                        </div>
+                      ) : (
+                        <p className="library-no-match">当前结果尚未包含该期刊，可重新运行 AI 匹配，或由作者核对后直接设为目标期刊。</p>
+                      )}
+                      <div className="library-actions">
+                        <Button variant="secondary" loading={busy === 'library-match'} onClick={existingMatch ? onOpenMatching : onRunMatching} icon={existingMatch ? ScanSearch : Sparkles}>
+                          {existingMatch ? '查看完整适配' : '运行 AI 匹配'}
+                        </Button>
+                        <Button
+                          variant={isTarget ? 'selected' : 'primary'}
+                          loading={busy === `library-journal-${selectedJournal.id}`}
+                          disabled={isTarget}
+                          onClick={() => onSelectJournal(existingMatch || selectedJournal)}
+                          icon={isTarget ? Check : Target}
+                        >
+                          {isTarget ? '已是目标期刊' : '设为目标期刊'}
+                        </Button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="library-project-heading"><span><FileText size={17} />论文适配</span><strong>尚未创建投稿项目</strong></div>
+                      <p className="library-no-match">上传论文后，系统会结合稿件主题、目标读者和证据准备度生成可解释适配结果。</p>
+                      <Button onClick={onCreateProject} icon={Plus}>创建投稿项目</Button>
+                    </>
+                  )}
+                </div>
+              </>
+            ) : (
+              <div className="library-empty"><LibraryBig size={26} /><strong>请选择一本期刊</strong></div>
+            )}
+          </aside>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -639,11 +930,11 @@ function JournalStage({ project, busy, runAction, patchCurrent, setActiveStep })
               <div className="journal-main">
                 <div className="journal-title-row">
                   <div>
-                    <h3>{journal.name}</h3>
+                    <h3>{journal.name}<span className="journal-title-ranks"><JournalRankBadges journal={journal} /></span></h3>
                     <p>{journal.publisher} · {journal.access}</p>
                     {journal.source?.url && (
                       <a className="journal-source" href={journal.source.url} target="_blank" rel="noreferrer">
-                        <ExternalLink size={12} />官方范围来源 · 核对于 {journal.source.checkedAt}
+                        <ExternalLink size={12} />官方范围来源 · 核对日期 {journal.source.checkedAt}
                       </a>
                     )}
                   </div>
