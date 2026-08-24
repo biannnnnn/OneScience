@@ -1,90 +1,137 @@
-# OneScience 智能投稿智能体
+# OneScience 当前审稿智能体
 
-OneScience 是一个可运行的学术论文全链路辅助投稿 MVP。它以统一工作台串联论文评估、期刊匹配、模拟审稿、投稿材料和 Rebuttal，帮助研究者记录每一步投稿决策及其依据。
+OneScience 是一个面向论文投稿前判断的可运行 MVP。当前版本只保留一条审稿主流程：从论文关键词出发发现有梯度的候选期刊，检索每本期刊的近期相似论文，用本地小模型统一评分，再判断用户稿件是否达到该刊近期论文基线。
 
-> 当前版本采用“可解释规则 + DeepSeek V4 Pro 深度评估与期刊重排”的双通道架构；自主工具规划和专用 OpenReview 8B 模型仍在后续路线中。
+> 旧的“质量初评 → 手动选刊 → 模拟审稿 → 投稿材料 → Rebuttal → 归档”流程已停止使用，不再作为产品入口或 API。
 
-## 功能
-
-1. DOCX、PDF、TXT、Markdown 论文解析；
-2. 结构完整性、创新表达、可复现性、证据充分性和写作清晰度评估；
-3. 基于 71 本计算机领域期刊知识库的规则预筛选与 DeepSeek 可解释重排，完整收录 CCF 2025 T1（19 本）和 T2（22 本）目录，并为国际刊展示 CCF-A/B/C 与中科院分区；
-4. 目标期刊模拟审稿与修改任务；
-5. Cover Letter、Highlights 和投稿检查清单；
-6. 真实审稿意见解析与 Rebuttal 草稿；
-7. 投稿流程归档。
-8. DeepSeek V4 Pro 论文贡献、证据链和学术风险深度评估；
-9. 期刊官方范围来源、核对日期、目标读者与证据偏好展示。
-10. 独立期刊知识库页面，支持名称与主题搜索，以及 CCF-T1/T2、CCF-A/B/C、中科院分区、领域、出版机构和开放获取模式筛选；
-11. 从期刊详情关联当前论文、查看已有 AI 适配结果或设为目标期刊。
-
-## 工作流程
+## 当前唯一流程
 
 ```text
 上传论文
-  → 论文解析与质量初评
-  → 候选期刊匹配
-  → 目标期刊模拟审稿
-  → 修改任务与投稿材料
-  → Rebuttal 回复准备
-  → 流程归档
+  → 提取关键词与语义画像
+  → Web 检索 k 本差异化候选期刊
+  → 每本期刊检索 n 篇近期相似论文
+  → 自训练 NAIPv2 Ranker 使用标题与摘要批量评分（用户稿件 + n 篇参考论文）
+  → 与该刊近期论文分布比较并给出录用判断
 ```
+
+其中 `k`、`n` 和近期年份窗口均为可配置超参数。候选期刊尽量覆盖高挑战、稳健和广覆盖三档，并展示有来源的 JIF、CCF 和中科院分区。指标缺失时保持为空，禁止由模型编造。
+
+## 判断口径
+
+- Ranker 输出的是论文在学术质量排序轴上的标量分数，不输出期刊适配度或录用概率；
+- 每本期刊只发起一次 `/v1/paper-scores` 批量推理，输入严格保持为训练时的标题与摘要；
+- 每本期刊的 n 篇近期相似论文形成动态评分基线；
+- 当前只展示“高于 / 接近 / 低于近期论文基线”，不展示录用概率；
+- 所有结果均为投稿辅助判断，不替代真实同行评审或编辑决定。
+
+完整的论文调研、训练方案、泄漏边界和评分协议见 [当前审稿流程研究说明](docs/reviewer/current-review-workflow-research.md)。
 
 ## 技术架构
 
-- 前端：React 19、Vite、Lucide Icons；
-- 后端：Node.js、Express；
+- 前端：React 19、Vite；
+- 主 API：Node.js、Express；
 - 文档解析：Mammoth（DOCX）、pdf-parse（PDF）；
-- 通用模型：DeepSeek V4 Pro（OpenAI兼容接口、JSON结构化输出）；
-- 持久化：JSON 文件存储，接口可替换为 PostgreSQL；
-- 测试：Node.js Test Runner。
+- 论文与期刊 Web 检索：OpenAlex Works/Sources API；
+- 语义画像与候选重排：DeepSeek OpenAI 兼容接口（可选）；
+- 论文评分：Meta-Llama-3-8B + 自训练 NAIPv2 LoRA、独立 Ranker HTTP 服务；
+- 录用分类：冻结 Reviewer 特征 + 标准化逻辑回归 + validation Platt calibration；
+- 持久化：项目元数据与评分结果写入 JSON，原始论文正文仅保存在进程内存中；
+- 测试：Node.js Test Runner + Python unittest。
 
 核心目录：
 
 ```text
-src/                    React 工作台
-server/index.mjs        HTTP API 与流程入口
-server/lib/extractor.mjs 文档解析
-server/lib/analyzer.mjs  可解释质量评估
-server/lib/workflow.mjs  期刊、审稿、材料与 Rebuttal
-server/data/journals.mjs 计算机领域期刊知识库
-server/data/ccf-journals.mjs CCF 2025 T1/T2 期刊目录与匹配元数据
-server/lib/deepseek.mjs  DeepSeek 结构化分析与期刊重排
-server/lib/store.mjs     项目状态持久化
-test/                   自动化测试
+src/                              当前四阶段审稿工作台
+server/index.mjs                  API 与端到端流程编排
+server/lib/scholarly-search.mjs  OpenAlex 期刊解析与近期论文检索
+server/lib/reviewer-client.mjs   本地小模型审稿与录用预测客户端
+server/lib/review-flow.mjs       期刊梯度、评分分布与基线判断
+server/data/journals.mjs         期刊范围、CCF 与中科院分区
+server/data/journal-metrics.mjs  有官方来源的稀疏 JIF 数据
+reviewer_service/                 可替换的本地 Reviewer Service
+ranker_service/                   自训练 NAIPv2 Ranker 评分服务
+acceptance_prediction/            录用分类与概率校准
+scripts/openreview/               OpenReview 采集、清洗和无泄漏切分
+scripts/reviewer-training/        Reviewer 训练数据准备
+scripts/acceptance-prediction/    录用分类训练与推理
+schemas/                          Reviewer 与录用预测协议
+docs/reviewer/                    训练、部署、评估和研究说明
 ```
 
-## 环境要求
+## 环境配置
 
-- Node.js 20 或更高版本；
-- npm 10 或更高版本。
-
-## 本地运行
-
-复制环境变量模板，并填写自己的 DeepSeek API Key：
+复制环境变量模板：
 
 ```bash
 cp .env.example .env
 ```
 
+主要配置：
+
 ```dotenv
-DEEPSEEK_API_KEY=your_api_key
+# Web 学术检索；未配置时不会虚构近期论文
+OPENALEX_API_KEY=your_openalex_key
+OPENALEX_BASE_URL=https://api.openalex.org
+
+# 可选：论文语义画像与候选期刊重排
+DEEPSEEK_API_KEY=your_deepseek_key
 DEEPSEEK_BASE_URL=https://api.deepseek.com
 DEEPSEEK_MODEL=deepseek-v4-pro
-DEEPSEEK_THINKING=enabled
-DEEPSEEK_REASONING_EFFORT=high
+
+# 已训练的私有 NAIPv2 Ranker Service
+RANKER_SERVICE_URL=http://100.91.253.128:8788
+RANKER_SERVICE_API_KEY=
 ```
 
-`.env` 已加入 `.gitignore`，禁止将真实密钥提交到仓库。
+OpenAlex API 在当前官方文档中要求 API key。没有 key 时，界面会明确显示 Web 检索未执行；没有 Ranker Service 时，界面显示降级分，并明确说明该分数不代表论文质量。
+
+配置后先运行真实链路预检：
+
+```bash
+npm run preflight:current-review
+```
+
+预检会核对 Ranker 的服务鉴权、模型、adapter、官方 pointwise prompt、`paper_score_batch` 能力和 OpenAlex 状态，但不会输出任何密钥。
+
+PDF 上传默认优先通过 Microsoft MarkItDown 转换为 Markdown，再识别标题、摘要和关键词。首次使用先安装隔离的 PDF 转换环境：
+
+```bash
+npm run setup:markitdown
+```
+
+服务默认使用项目内的 `.venv-markitdown/bin/python`。部署时也可通过
+`MARKITDOWN_PYTHON=/absolute/path/to/python` 指定已安装
+`markitdown[pdf]==0.1.7` 的 Python；转换失败时系统会明确标注并回退到
+`pdf-parse`，不会阻断上传。
+
+## 本地运行
+
+安装依赖并启动主应用：
 
 ```bash
 npm install
 npm run dev
 ```
 
-打开 `http://127.0.0.1:5173`。前端开发服务器会把 `/api` 请求代理到 `http://127.0.0.1:3001`。
+默认地址：
 
-首页可以选择“使用示例论文体验”，无需准备测试文件即可走完整流程。
+- 前端：`http://127.0.0.1:5173`
+- 主 API：`http://127.0.0.1:3001`
+
+启动 Ranker 的 mock 接口测试后端：
+
+```bash
+npm run ranker:mock
+```
+
+NVIDIA 服务器上的正式 Ranker：
+
+```bash
+npm run ranker:serve
+```
+
+正式服务需要设置 `NAIPV2_BASE_MODEL`、`NAIPV2_ADAPTER_DIR` 和 `NAIPV2_CALIBRATION_PATH`；生产环境建议同时设置 `ONESCIENCE_RANKER_API_KEY` 并将服务配置中的鉴权改为必需。mock 后端只验证协议，不执行真实学术判断。
 
 生产模式：
 
@@ -93,7 +140,25 @@ npm run build
 npm start
 ```
 
-默认访问 `http://127.0.0.1:3001`。可以通过 `PORT` 环境变量修改端口。
+## 训练与校准
+
+OpenReview 数据和 Reviewer 训练流程见：
+
+- [OpenReview 数据流水线](docs/reviewer/openreview-data-pipeline.md)
+- [Qwen 基线](docs/reviewer/qwen3-4b-baseline.md)
+- [OpenReview Qwen LoRA](docs/reviewer/openreview-qwen-lora.md)
+- [本地 Reviewer Service](docs/reviewer/local-reviewer-service.md)
+- [目标期刊录用概率预测](docs/reviewer/acceptance-prediction.md)
+
+录用预测的基本顺序：
+
+```bash
+npm run acceptance:prepare -- --dataset-revision <fixed-revision> --out <cases-dir>
+npm run acceptance:review-features -- --cases <cases.jsonl> --out <reviews.jsonl>
+npm run acceptance:train -- --cases <cases.jsonl> --reviews <reviews.jsonl> --out <model.json>
+```
+
+训练严格禁止使用人类审稿文本、meta-review、rebuttal、最终版本、作者/机构身份或最终 decision 文本作为输入。decision 只允许作为标签。
 
 ## 验证
 
@@ -102,50 +167,21 @@ npm test
 npm run build
 ```
 
-## 期刊匹配方法
+Python 录用分类器测试：
 
-1. 确定性规则根据研究方向、标题、摘要、关键词、开放获取偏好和稿件准备度，从 30 本期刊中选出候选池；
-2. DeepSeek 只能在候选池中重排，综合判断研究范围、目标读者和证据准备度；
-3. 最终分数融合规则分与模型分，并展示推荐依据、投稿风险、针对性准备动作和官方范围来源；
-4. 模型被禁止生成知识库未提供的影响因子、分区、录用率、费用和审稿周期；
-5. 模型不可用时自动返回规则排序，不中断投稿流程。
-
-## 期刊知识库页面
-
-点击侧栏“期刊知识库”即可进入独立目录：
-
-- 搜索期刊名称、研究领域、目标读者和证据偏好；
-- 按研究领域、出版社和开放获取模式组合筛选；
-- 查看期刊范围、目标读者、证据偏好、官方来源及核对日期；
-- 已打开投稿项目时，可以查看该期刊已有适配分、重新运行 AI 匹配或设为目标期刊；
-- 尚未创建项目时，可以从详情页返回论文上传流程。
-
-## MVP 边界
-
-- 当前质量分数由确定性、可解释规则生成，不是期刊录用概率。
-- DeepSeek负责语义深度评估，但不会取代规则结果；远程调用失败时系统仍可完成基础分析。
-- 当前知识库首批覆盖 30 本计算机与人工智能领域期刊，尚不代表完整期刊集合；范围和出版政策可能变化，正式投稿前必须核对卡片中的官方来源。
-- 原始论文在内存中完成解析，不持久化保存；项目仅保存元数据、分析结果与工作流状态。
-- Rebuttal 草稿保留页码、行号和证据占位符，必须由作者核实后提交。
-- 项目数据暂存在 `server/storage/projects.json`；接入账户体系后可替换为 PostgreSQL。
+```bash
+python3 -m unittest test_py.test_acceptance_prediction
+```
 
 ## 数据与隐私
 
-- 上传文件在内存中解析，原始论文全文不会写入项目存储；
-- 开启 DeepSeek 深度评估时，论文正文会发送至 DeepSeek 官方 API；用户可以在上传页关闭该选项，仅使用本地规则检查；
-- 本地项目状态保存在 `server/storage/projects.json`，该文件默认不会提交到 Git；
-- `.env`、Word 需求文档和构建产物均已排除；
-- 正式部署前仍需增加用户认证、数据保留策略、访问审计与加密存储。
-
-## 后续模型接入点
-
-后续可以保持现有 API 和前端流程不变，逐步增加以下专用模型：
-
-- `server/lib/analyzer.mjs`：论文质量评价模型；
-- `server/lib/workflow.mjs` 中的 `recommendJournals`：期刊检索与排序模型；
-- `generateReview`：目标期刊审稿模型；
-- `generateRebuttal`：Rebuttal 回复模型。
+- 上传的原始论文正文不写入项目存储，只保存在当前 Node 进程内存中；
+- 进程重启后，已有项目仍能查看历史结果，但重新进行全文评分需要再次上传论文；
+- 开启 DeepSeek 时，论文正文会发送至配置的 DeepSeek API；
+- 开启 OpenAlex 时，只发送检索关键词、期刊名称和过滤参数，不发送论文全文；
+- Ranker Service 不持久化标题、摘要或预测请求；
+- 正式部署仍需补充身份认证、加密、数据保留策略和审计日志。
 
 ## License
 
-当前仓库暂未指定开源许可证。如需公开分发或接受外部贡献，请先补充合适的 License。
+当前仓库暂未指定开源许可证。公开分发或接受外部贡献前应先补充 License。

@@ -1,0 +1,35 @@
+{
+  "baseline_version": "2.0.0-server-8b",
+  "provider": "OneScience GPU Server",
+  "model_id": "qwen/Qwen3-8B",
+  "model_revision": "modelscope-snapshot-pinned-on-server",
+  "adapter_version": "schema-lora-v1",
+  "runtime": "LLaMA-Factory OpenAI-compatible API",
+  "quantization": "bnb-4bit+lora-r8",
+  "prompt_version": "reviewer-zero-shot-1.0.2",
+  "review_language": "zh-CN",
+  "input": {
+    "max_characters": 24000,
+    "max_paragraphs": 80
+  },
+  "generation": {
+    "max_tokens": 3200,
+    "temperature": 0
+  },
+  "scoring_generation": {
+    "max_tokens": 1800,
+    "temperature": 0
+  },
+  "upstream": {
+    "base_url": "http://127.0.0.1:8000/v1",
+    "served_model_name": "onescience-reviewer-qwen3-8b",
+    "api_key_env": "ONESCIENCE_UPSTREAM_API_KEY",
+    "timeout_seconds": 300
+  },
+  "deepseek_fallback": {
+    "enabled": true,
+    "api_key_env": "DEEPSEEK_API_KEY",
+    "schema_path": "schemas/review-schema.json",
+    "score_schema_path": "schemas/venue-score.json"
+  }
+}

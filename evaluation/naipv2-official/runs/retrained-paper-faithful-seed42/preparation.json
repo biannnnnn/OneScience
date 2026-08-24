@@ -1,0 +1,61 @@
+{
+  "official_code_revision": "272a480713cb7412d889a061421559a16bf4e398",
+  "train_csv": "/data2/liuheng/OneScience/data/naipv2-official/NAIDv2-train.csv",
+  "train_csv_sha256": "c5d42dea04e25b04a3e13bc02a8eb9733cb3261347a0f06ab478297601cf5241",
+  "public_train_rows": 23246,
+  "paper_declared_train_rows": 23247,
+  "source_sha256": {
+    "v2_resource/v2_finetune.py": "d311d70f68c9b08c42b7d0e812b5edc096cd25acc93e92d40480c80a70fbcbfc",
+    "v2_resource/NAIDv2/dataset.py": "77d633b8f16e9311147021ed3745837edde1ed108fc84599fc183b0dd555a656",
+    "v2_resource/shell/fine-tune.sh": "721b9169be131f7888430939f376f5e3e329a10775a8eb06ce0352015a050d35",
+    "requirements.txt": "47a902e1b7f08bb32c7ac02fbd0bf6f31a0f93286065ee965aa53b965eba16c5"
+  },
+  "patched_sha256": {
+    "v2_resource/v2_finetune.py": "1510a557fd90107da1d501f2c7f5019c279e749106cd17eaed50c0a456e84b71",
+    "v2_resource/NAIDv2/dataset.py": "77d633b8f16e9311147021ed3745837edde1ed108fc84599fc183b0dd555a656",
+    "v2_resource/shell/fine-tune.sh": "721b9169be131f7888430939f376f5e3e329a10775a8eb06ce0352015a050d35",
+    "requirements.txt": "47a902e1b7f08bb32c7ac02fbd0bf6f31a0f93286065ee965aa53b965eba16c5"
+  },
+  "minimal_patches": [
+    "remove .to(device) on the already device-mapped 8-bit model",
+    "construct PairwiseBCELoss without the unsupported args parameter"
+  ],
+  "training_profile": {
+    "seed": 42,
+    "max_pairs": 10000,
+    "max_length": 512,
+    "batch_size": 8,
+    "epochs": 1,
+    "learning_rate": 0.0001,
+    "weight_decay": 0.01,
+    "warmup_ratio": 0.1,
+    "lora_r": 16,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "target_modules": [
+      "q_proj",
+      "v_proj"
+    ],
+    "load_in_8bit": true,
+    "shuffle_train": false,
+    "shuffle_note": "false preserves the curriculum order described by the paper; the released parser default true would erase it"
+  },
+  "train_rows": 20921,
+  "validation_rows": 2325,
+  "pairs": 10000,
+  "bucket_counts": [
+    300,
+    400,
+    675,
+    5725,
+    2136,
+    644,
+    104,
+    14,
+    2,
+    0
+  ],
+  "manifest_sha256": "88a3a70e6260fc4cc6b747466ad7dc066d6bf561a8cd115db524db37c77815f8",
+  "train_split_ids_sha256": "4420b2a1df0fee61078bba272a34edcdee31f1de3039f1c0f1f183fafa17f5b9",
+  "validation_split_ids_sha256": "52c477918a090155e1ee904b89a1fefb9af1bddc030da01b929e62312570d6e8"
+}

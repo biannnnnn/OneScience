@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://onescience.local/schemas/paper-ranker-batch-1.0.0.json",
+  "title": "OneScience NAIPv2 Ranker Batch",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["request_id", "status", "schema_version", "scores", "model_trace", "disclaimer"],
+  "properties": {
+    "request_id": { "type": "string", "minLength": 1, "maxLength": 64 },
+    "status": { "const": "completed" },
+    "schema_version": { "const": "1.0.0" },
+    "scores": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["paper_id", "title", "raw_score", "score", "score_method"],
+        "properties": {
+          "paper_id": { "type": "string", "minLength": 1, "maxLength": 256 },
+          "title": { "type": "string", "minLength": 1, "maxLength": 1000 },
+          "raw_score": { "type": "number" },
+          "score": { "type": "number", "minimum": 0, "maximum": 100 },
+          "score_method": { "enum": ["validation_empirical_cdf", "request_empirical_cdf"] }
+        }
+      }
+    },
+    "model_trace": { "type": "object" },
+    "disclaimer": { "type": "string", "minLength": 1, "maxLength": 500 }
+  }
+}

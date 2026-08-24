@@ -1,0 +1,30 @@
+{
+  "baseline_version": "1.0.0",
+  "model_id": "Qwen/Qwen3-4B-MLX-4bit",
+  "model_revision": "52a5ab34fa604bc8af6d3ce0cac0cab10b7eb495",
+  "adapter_version": null,
+  "model_cache_dir": ".model-cache/huggingface",
+  "runtime": "mlx-lm",
+  "runtime_version": "0.29.1",
+  "mlx_version": "0.29.3",
+  "quantization": "4bit",
+  "prompt_version": "reviewer-zero-shot-1.0.2",
+  "review_language": "zh-CN",
+  "input": {
+    "max_characters": 24000,
+    "max_paragraphs": 80
+  },
+  "generation": {
+    "max_tokens": 1600,
+    "temperature": 0,
+    "max_kv_size": 4096,
+    "kv_bits": null,
+    "prefill_step_size": 512
+  },
+  "hardware_profile": {
+    "platform": "Apple Silicon",
+    "minimum_memory_gb": 8,
+    "recommended_free_disk_gb": 10,
+    "batch_size": 1
+  }
+}

@@ -56,6 +56,30 @@ test('Chinese abstract and keyword extraction stops at the next section', () => 
   assert.deepEqual(extractor.extractKeywords(text), ['智能体', '论文分析', '投稿']);
 });
 
+test('journal masthead is not mistaken for a Chinese paper title', () => {
+  const text = extractor.normalizeText(`
+软件学报ISSN 1000-9825, CODEN RUXUEW E-mail: jos@example.org
+Journal of Software, doi: 10.0000/example https://example.org
+©中国科学院软件研究所版权所有. Tel: +86-10-00000000
+*
+大小模型协同驱动的学科结构优化方法
+陈董1,2,3,4, 边帝行1, 高飞1, 吕培1,2,3,4
+1(郑州大学 计算机与人工智能学院, 河南 郑州 450001)
+通讯作者: 徐明亮, E-mail: author@example.org
+摘 要: 这是一个长度足够的中文摘要，用于验证带空格的摘要标签、期刊页眉过滤以及标题识别是否能够正常工作。
+关键词: 学科结构优化;通用大模型;专用小模型
+`);
+  assert.equal(
+    extractor.extractTitle(text, 'fallback.pdf'),
+    '大小模型协同驱动的学科结构优化方法',
+  );
+  assert.match(extractor.extractAbstract(text), /带空格的摘要标签/);
+  assert.deepEqual(
+    extractor.extractKeywords(text),
+    ['学科结构优化', '通用大模型', '专用小模型'],
+  );
+});
+
 test('multipart mojibake in a Chinese filename is repaired', () => {
   const filename = '大模型驱动的具身群体智能研究.pdf';
   const latin1Decoded = Buffer.from(filename, 'utf8').toString('latin1');

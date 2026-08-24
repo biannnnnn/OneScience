@@ -1,0 +1,620 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://onescience.local/schemas/review-schema-1.0.0.json",
+  "title": "OneScience Pre-submission Review",
+  "description": "OneScience 本地审稿模型、训练数据、评测集和产品接口共用的审稿结果协议。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "review_id",
+    "review_type",
+    "review_language",
+    "manuscript",
+    "target_venue",
+    "recommendation",
+    "summary",
+    "central_contribution",
+    "strengths",
+    "major_concerns",
+    "minor_concerns",
+    "questions",
+    "revision_tasks",
+    "limitations",
+    "input_coverage",
+    "model_trace"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0",
+      "description": "审稿协议版本；版本变更遵循语义化版本。"
+    },
+    "review_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "description": "由服务层生成的单次审稿唯一标识。"
+    },
+    "review_type": {
+      "type": "string",
+      "enum": ["general", "venue_conditioned"],
+      "description": "general 为通用投稿前审稿；venue_conditioned 为加入目标期刊信息后的审稿。"
+    },
+    "review_language": {
+      "type": "string",
+      "enum": ["zh-CN", "en"],
+      "description": "审稿意见的输出语言；原文证据保持稿件原始语言。"
+    },
+    "manuscript": {
+      "$ref": "#/$defs/manuscript"
+    },
+    "target_venue": {
+      "oneOf": [
+        { "$ref": "#/$defs/targetVenue" },
+        { "type": "null" }
+      ],
+      "default": null
+    },
+    "recommendation": {
+      "$ref": "#/$defs/recommendation"
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 3000,
+      "description": "平衡概括研究目标、方法、主要贡献、优势与核心风险，不引入稿件外事实。"
+    },
+    "central_contribution": {
+      "oneOf": [
+        { "$ref": "#/$defs/contribution" },
+        { "type": "null" }
+      ],
+      "description": "可以从稿件中识别的核心贡献；无法识别时为 null，并在 limitations 中说明。"
+    },
+    "strengths": {
+      "type": "array",
+      "maxItems": 8,
+      "items": { "$ref": "#/$defs/strength" }
+    },
+    "major_concerns": {
+      "type": "array",
+      "maxItems": 10,
+      "items": { "$ref": "#/$defs/majorConcern" }
+    },
+    "minor_concerns": {
+      "type": "array",
+      "maxItems": 15,
+      "items": { "$ref": "#/$defs/minorConcern" }
+    },
+    "questions": {
+      "type": "array",
+      "maxItems": 10,
+      "items": { "$ref": "#/$defs/question" }
+    },
+    "revision_tasks": {
+      "type": "array",
+      "maxItems": 20,
+      "items": { "$ref": "#/$defs/revisionTask" }
+    },
+    "limitations": {
+      "type": "array",
+      "maxItems": 10,
+      "items": {
+        "type": "string",
+        "minLength": 5,
+        "maxLength": 800
+      },
+      "description": "记录输入缺失、解析失败、学科能力边界或证据不足等本次审稿限制。"
+    },
+    "input_coverage": {
+      "$ref": "#/$defs/inputCoverage"
+    },
+    "model_trace": {
+      "$ref": "#/$defs/modelTrace"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "review_type": { "const": "venue_conditioned" } },
+        "required": ["review_type"]
+      },
+      "then": {
+        "properties": {
+          "target_venue": { "$ref": "#/$defs/targetVenue" }
+        }
+      },
+      "else": {
+        "properties": {
+          "target_venue": { "type": "null" }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "manuscript": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "language", "fingerprint"],
+      "properties": {
+        "paper_id": {
+          "type": ["string", "null"],
+          "maxLength": 256
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        "language": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 32
+        },
+        "fingerprint": {
+          "type": ["string", "null"],
+          "maxLength": 128,
+          "description": "服务层计算的稿件内容指纹；训练数据无法提供时允许为 null。"
+        }
+      }
+    },
+    "targetVenue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "id": {
+          "type": ["string", "null"],
+          "maxLength": 128
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "scope_source": {
+          "type": ["string", "null"],
+          "format": "uri",
+          "maxLength": 2000
+        },
+        "scope_checked_at": {
+          "type": ["string", "null"],
+          "format": "date"
+        }
+      }
+    },
+    "recommendation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["verdict", "rationale", "confidence"],
+      "properties": {
+        "verdict": {
+          "type": "string",
+          "enum": [
+            "ready_for_submission",
+            "minor_revision",
+            "major_revision",
+            "fundamental_revision",
+            "insufficient_evidence"
+          ],
+          "description": "投稿前准备度，而非真实录用概率或编辑决定。"
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 1500
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        }
+      }
+    },
+    "contribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["claim", "evidence", "confidence"],
+      "properties": {
+        "claim": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 1500
+        },
+        "evidence": {
+          "$ref": "#/$defs/evidenceList"
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        }
+      }
+    },
+    "strength": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "category", "point", "evidence", "confidence"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^strength-[0-9]{2,}$"
+        },
+        "category": {
+          "$ref": "#/$defs/category"
+        },
+        "point": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 1200
+        },
+        "evidence": {
+          "$ref": "#/$defs/evidenceList"
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        }
+      }
+    },
+    "concernBase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "category",
+        "problem",
+        "impact",
+        "request",
+        "evidence",
+        "confidence"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "category": {
+          "$ref": "#/$defs/category"
+        },
+        "problem": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 1800
+        },
+        "impact": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 1500
+        },
+        "request": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 1500
+        },
+        "evidence": {
+          "$ref": "#/$defs/evidenceList"
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        }
+      }
+    },
+    "majorConcern": {
+      "allOf": [
+        { "$ref": "#/$defs/concernBase" },
+        {
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^major-[0-9]{2,}$"
+            }
+          }
+        }
+      ]
+    },
+    "minorConcern": {
+      "allOf": [
+        { "$ref": "#/$defs/concernBase" },
+        {
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^minor-[0-9]{2,}$"
+            }
+          }
+        }
+      ]
+    },
+    "question": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "question", "reason", "related_concern_ids"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^question-[0-9]{2,}$"
+        },
+        "question": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 1200
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 1000
+        },
+        "related_concern_ids": {
+          "$ref": "#/$defs/concernIdList"
+        }
+      }
+    },
+    "revisionTask": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source_concern_ids",
+        "priority",
+        "action",
+        "acceptance_criteria"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^task-[0-9]{2,}$"
+        },
+        "source_concern_ids": {
+          "$ref": "#/$defs/nonEmptyConcernIdList"
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["critical", "high", "medium", "low"]
+        },
+        "action": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 1500
+        },
+        "acceptance_criteria": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 1500,
+          "description": "作者用来判断任务是否完成的可核验标准。"
+        }
+      }
+    },
+    "evidenceList": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 5,
+      "items": { "$ref": "#/$defs/evidence" }
+    },
+    "evidence": {
+      "oneOf": [
+        { "$ref": "#/$defs/directEvidence" },
+        { "$ref": "#/$defs/absenceEvidence" },
+        { "$ref": "#/$defs/crossSectionEvidence" }
+      ]
+    },
+    "directEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "section", "paragraph_id", "excerpt"],
+      "properties": {
+        "type": { "const": "direct_quote" },
+        "section": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "paragraph_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "excerpt": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000,
+          "description": "逐字摘录原稿内容，保持原始语言，不进行改写。"
+        }
+      }
+    },
+    "absenceEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "description", "searched_sections"],
+      "properties": {
+        "type": { "const": "absence" },
+        "description": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 1000
+        },
+        "searched_sections": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          }
+        }
+      }
+    },
+    "crossSectionEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "description", "locations"],
+      "properties": {
+        "type": { "const": "cross_section" },
+        "description": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 1000
+        },
+        "locations": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 5,
+          "items": { "$ref": "#/$defs/location" }
+        }
+      }
+    },
+    "location": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["section", "paragraph_id", "excerpt"],
+      "properties": {
+        "section": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "paragraph_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "excerpt": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        }
+      }
+    },
+    "inputCoverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "analyzed_sections",
+        "omitted_sections",
+        "total_paragraphs",
+        "analyzed_paragraphs",
+        "truncated"
+      ],
+      "properties": {
+        "analyzed_sections": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          }
+        },
+        "omitted_sections": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          }
+        },
+        "total_paragraphs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "analyzed_paragraphs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "truncated": {
+          "type": "boolean"
+        }
+      }
+    },
+    "modelTrace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provider",
+        "model",
+        "model_version",
+        "adapter_version",
+        "prompt_version",
+        "generated_at"
+      ],
+      "properties": {
+        "provider": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "model_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "adapter_version": {
+          "type": ["string", "null"],
+          "maxLength": 256
+        },
+        "prompt_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "quantization": {
+          "type": ["string", "null"],
+          "maxLength": 128
+        },
+        "generated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "latency_ms": {
+          "type": ["integer", "null"],
+          "minimum": 0
+        }
+      }
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "research_question",
+        "contribution_novelty",
+        "scope_relevance",
+        "related_work",
+        "methodology",
+        "experimental_design",
+        "data_quality",
+        "statistical_analysis",
+        "results_interpretation",
+        "conclusion_support",
+        "reproducibility",
+        "ethics_compliance",
+        "limitations",
+        "writing_clarity",
+        "structure",
+        "figures_tables",
+        "references",
+        "other"
+      ]
+    },
+    "concernIdList": {
+      "type": "array",
+      "uniqueItems": true,
+      "maxItems": 10,
+      "items": {
+        "type": "string",
+        "pattern": "^(major|minor)-[0-9]{2,}$"
+      }
+    },
+    "nonEmptyConcernIdList": {
+      "allOf": [
+        { "$ref": "#/$defs/concernIdList" }
+      ],
+      "minItems": 1
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    }
+  }
+}

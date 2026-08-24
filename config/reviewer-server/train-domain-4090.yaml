@@ -1,0 +1,55 @@
+### model
+model_name_or_path: models/Qwen3-4B-Instruct-2507
+cache_dir: .cache/huggingface
+quantization_bit: 4
+quantization_method: bnb
+trust_remote_code: true
+
+### method
+stage: sft
+do_train: true
+finetuning_type: lora
+lora_rank: 8
+lora_target: all
+
+### dataset
+dataset: onescience_domain_train
+eval_dataset: onescience_domain_valid
+dataset_dir: data/openreview/sft
+template: qwen3_nothink
+enable_thinking: false
+cutoff_len: 1600
+train_on_prompt: false
+preprocessing_num_workers: 8
+dataloader_num_workers: 4
+
+### output
+output_dir: outputs/qwen3-4b-instruct-2507/domain-lora
+logging_steps: 5
+save_steps: 50
+save_total_limit: 3
+plot_loss: true
+overwrite_output_dir: false
+save_only_model: false
+report_to: none
+
+### train
+per_device_train_batch_size: 2
+gradient_accumulation_steps: 4
+learning_rate: 1.0e-4
+num_train_epochs: 1.0
+lr_scheduler_type: cosine
+warmup_ratio: 0.05
+bf16: true
+gradient_checkpointing: true
+seed: 17
+ddp_timeout: 180000000
+
+### eval and selection
+per_device_eval_batch_size: 2
+eval_strategy: steps
+eval_steps: 50
+load_best_model_at_end: true
+metric_for_best_model: eval_loss
+greater_is_better: false
+early_stopping_steps: 3

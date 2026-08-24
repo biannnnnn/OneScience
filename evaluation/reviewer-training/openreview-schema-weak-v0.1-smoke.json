@@ -1,0 +1,108 @@
+{
+  "run_id": "qwen3-4b-openreview-schema-weak-v0.1-smoke",
+  "status": "completed_not_promoted",
+  "dataset": {
+    "id": "UKPLab/ProReviewer-Dataset",
+    "revision": "104e9b01c5d002f3f1775d38d3f5517f828cafd3",
+    "objective": "review_schema_core_weak_alignment",
+    "label_quality": "weak_supervision_requires_expert_audit",
+    "alignment_method": "high-threshold lexical TF-IDF cosine matching",
+    "minimum_alignment_score": 0.3,
+    "minimum_top1_top2_margin": 0.06,
+    "splits": {
+      "train": 3154,
+      "validation": 353,
+      "test": 821
+    },
+    "test_source": "ICLR 2026",
+    "alignment_count": 5799,
+    "mean_alignment_score": 0.3886,
+    "token_length": {
+      "p50": 893,
+      "p95": 1175,
+      "maximum": 1544,
+      "samples_over_1536": 1
+    },
+    "integrity_checks": {
+      "schema_failures": 0,
+      "ungrounded_excerpts": 0,
+      "invalid_concern_references": 0
+    },
+    "excluded_supervision": [
+      "initial_rating",
+      "decision",
+      "meta_review",
+      "reviewer_identity"
+    ]
+  },
+  "model": {
+    "id": "Qwen/Qwen3-4B-MLX-4bit",
+    "revision": "52a5ab34fa604bc8af6d3ce0cac0cab10b7eb495",
+    "resume_adapter_version": "openreview-domain-v0.1-smoke-iter20",
+    "selected_adapter_version": "openreview-schema-weak-v0.1-step10",
+    "selected_adapter_path": "adapters/qwen3-4b-openreview-schema-weak-v0.1-step10",
+    "final_adapter_version": "openreview-schema-weak-v0.1-iter20",
+    "final_adapter_path": "adapters/qwen3-4b-openreview-schema-weak-v0.1-smoke"
+  },
+  "training": {
+    "fine_tune_type": "continued_lora_on_4bit_base",
+    "iterations": 20,
+    "lora_rank": 4,
+    "layers": 4,
+    "batch_size": 1,
+    "gradient_accumulation_steps": 4,
+    "maximum_sequence_length": 1600,
+    "learning_rate": 0.00001,
+    "gradient_checkpointing": true,
+    "validation_loss": {
+      "iteration_1": 2.512,
+      "iteration_5": 2.239,
+      "iteration_10": 2.095,
+      "iteration_15": 2.017,
+      "iteration_20": 2.4
+    },
+    "final_training_loss": 2.153,
+    "trained_tokens": 12429,
+    "peak_memory_gb": 4.614,
+    "checkpoint_selection_note": "Iteration 15 had the lowest observed validation loss but was not saved; iteration 10 is the best saved checkpoint. Iteration 20 regressed."
+  },
+  "frozen_schema_smoke": {
+    "cases": 2,
+    "warning": "Two smoke cases validate the pipeline only and are not a scientific quality estimate.",
+    "models": {
+      "base": {
+        "json_valid_rate": 1.0,
+        "contract_valid_rate": 0.0,
+        "evidence_grounded_rate": 0.625,
+        "issue_f1_macro": 0.25,
+        "verdict_accuracy": 0.0
+      },
+      "domain_iteration_20": {
+        "json_valid_rate": 1.0,
+        "contract_valid_rate": 0.0,
+        "evidence_grounded_rate": 0.5,
+        "issue_f1_macro": 0.25,
+        "verdict_accuracy": 0.0
+      },
+      "schema_iteration_10": {
+        "json_valid_rate": 1.0,
+        "contract_valid_rate": 0.0,
+        "evidence_grounded_rate": 0.75,
+        "issue_f1_macro": 0.25,
+        "verdict_accuracy": 0.0,
+        "contract_error_on_both_cases": "limitations_not_array"
+      },
+      "schema_iteration_20": {
+        "json_valid_rate": 1.0,
+        "contract_valid_rate": 0.0,
+        "evidence_grounded_rate": 0.4,
+        "issue_f1_macro": 0.25,
+        "verdict_accuracy": 0.0,
+        "contract_error_on_both_cases": "limitations_not_array"
+      }
+    },
+    "selected_checkpoint": "schema_iteration_10",
+    "promotion_decision": "rejected",
+    "reason": "The best saved checkpoint improves evidence grounding on the smoke set but still fails the core schema contract and does not improve issue F1 or verdict accuracy. Weak labels also require expert audit before product use."
+  }
+}

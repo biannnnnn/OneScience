@@ -1,0 +1,3 @@
+# PDF-to-Markdown extraction used by server/lib/extractor.mjs.
+# Keep this isolated from the Reviewer environments.
+markitdown[pdf]==0.1.7

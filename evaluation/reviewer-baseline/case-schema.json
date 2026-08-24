@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://onescience.local/schemas/reviewer-evaluation-case-1.0.0.json",
+  "title": "OneScience Reviewer Evaluation Case",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["case_schema_version", "case_id", "source", "manuscript", "gold", "human_references"],
+  "properties": {
+    "case_schema_version": { "const": "1.0.0" },
+    "case_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "dataset", "split"],
+      "properties": {
+        "kind": { "enum": ["synthetic", "openreview", "expert"] },
+        "dataset": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "split": { "enum": ["smoke", "validation", "test"] },
+        "forum_id": { "type": ["string", "null"], "maxLength": 256 },
+        "venue_id": { "type": ["string", "null"], "maxLength": 256 },
+        "year": { "type": ["integer", "null"], "minimum": 1900, "maximum": 2200 }
+      }
+    },
+    "manuscript": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "language", "paragraphs"],
+      "properties": {
+        "title": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "language": { "type": "string", "minLength": 2, "maxLength": 32 },
+        "paragraphs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["section", "paragraph_id", "text"],
+            "properties": {
+              "section": { "type": "string", "minLength": 1, "maxLength": 300 },
+              "paragraph_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+              "text": { "type": "string", "minLength": 1, "maxLength": 20000 }
+            }
+          }
+        }
+      }
+    },
+    "gold": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["acceptable_verdicts", "issues"],
+          "properties": {
+            "acceptable_verdicts": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "enum": ["ready_for_submission", "minor_revision", "major_revision", "fundamental_revision", "insufficient_evidence"]
+              }
+            },
+            "issues": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["id", "severity", "category", "evidence_paragraph_ids"],
+                "properties": {
+                  "id": { "type": "string", "minLength": 1 },
+                  "severity": { "enum": ["major", "minor"] },
+                  "category": { "type": "string", "minLength": 1 },
+                  "acceptable_categories": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": { "type": "string", "minLength": 1 }
+                  },
+                  "evidence_paragraph_ids": {
+                    "type": "array",
+                    "uniqueItems": true,
+                    "items": { "type": "string", "minLength": 1 }
+                  }
+                }
+              }
+            }
+          }
+        },
+        { "type": "null" }
+      ]
+    },
+    "human_references": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["review_id", "text"],
+        "properties": {
+          "review_id": { "type": "string", "minLength": 1 },
+          "text": { "type": "string", "minLength": 1 },
+          "rating": { "type": ["number", "null"] }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+model_name_or_path: models/Qwen2.5-7B-Instruct
+adapter_name_or_path: outputs/qwen2.5-7b-instruct/domain-lora
+cache_dir: .cache/huggingface
+template: qwen
+enable_thinking: false
+infer_backend: huggingface
+trust_remote_code: true
+finetuning_type: lora
+quantization_bit: 4
+quantization_method: bnb

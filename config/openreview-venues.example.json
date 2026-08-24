@@ -1,0 +1,13 @@
+{
+  "api_base_url": "https://api2.openreview.net",
+  "venues": [
+    {
+      "venue_id": "ICLR.cc/2024/Conference",
+      "year": 2024,
+      "submission_invitation": "ICLR.cc/2024/Conference/-/Submission",
+      "download_pdfs": false,
+      "allowed_article_licenses": ["CC BY 4.0", "CC0 1.0"],
+      "max_submissions": 0
+    }
+  ]
+}

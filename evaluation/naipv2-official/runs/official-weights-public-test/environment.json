@@ -1,0 +1,30 @@
+{
+  "model_id": "ssocean/NAIPv2",
+  "model_revision": "174b3728a2517012b26b51764252c1688fab7ba0",
+  "code_revision": "272a480713cb7412d889a061421559a16bf4e398",
+  "model_path": "/data2/liuheng/OneScience/.cache/huggingface/models--ssocean--NAIPv2/snapshots/174b3728a2517012b26b51764252c1688fab7ba0",
+  "test_csv": "/data2/liuheng/OneScience/data/naipv2-official/NAIDv2-test.csv",
+  "test_sha256": "bbbd4ccc1a84761579e6faf54c3248bba0c3456696c0a9897889390aaef2095e",
+  "public_test_rows": 1028,
+  "paper_declared_test_rows": 1029,
+  "prompt_template": "Given a certain paper, Title: {title}\nAbstract: {abstract}\nEvaluate the quality of this paper:",
+  "max_length": 512,
+  "batch_size": 8,
+  "precision": "8bit",
+  "seed": 42,
+  "python": "3.11.15 (main, Mar 11 2026, 17:20:07) [GCC 14.3.0]",
+  "platform": "Linux-6.8.0-136-generic-x86_64-with-glibc2.35",
+  "gpu": "NVIDIA GeForce RTX 4090, 595.84, 24564 MiB",
+  "packages": {
+    "torch": "2.10.0+cu128",
+    "transformers": "4.57.1",
+    "accelerate": "1.11.0",
+    "peft": "0.17.1",
+    "bitsandbytes": "0.50.0",
+    "pandas": "2.3.3",
+    "numpy": "2.2.6",
+    "scipy": "1.17.1",
+    "scikit_learn": "1.8.0"
+  },
+  "loader_compatibility_note": "Published snapshot is a full LlamaForSequenceClassification model; AutoModelForSequenceClassification replaces the public script's PEFT-only loader."
+}

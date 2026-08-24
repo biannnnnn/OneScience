@@ -1,0 +1,9 @@
+{
+  "seed": "onescience-openreview-v1",
+  "validation_years": [2023],
+  "test_years": [2024],
+  "validation_ratio": 0.1,
+  "test_ratio": 0.1,
+  "near_duplicate_threshold": 0.9,
+  "include_ineligible": false
+}

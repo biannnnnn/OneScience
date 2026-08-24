@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://onescience.local/schemas/paper-ranker-request-1.0.0.json",
+  "title": "OneScience NAIPv2 Ranker Request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["papers"],
+  "properties": {
+    "request_id": { "type": "string", "minLength": 1, "maxLength": 64 },
+    "papers": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["paper_id", "title", "abstract"],
+        "properties": {
+          "paper_id": { "type": "string", "minLength": 1, "maxLength": 256 },
+          "title": { "type": "string", "minLength": 1, "maxLength": 1000 },
+          "abstract": { "type": "string", "minLength": 1, "maxLength": 24000 }
+        }
+      }
+    }
+  }
+}

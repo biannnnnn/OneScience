@@ -18,18 +18,10 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(patch),
     }),
-  recommend: (id, preferences = {}) =>
-    request(`/api/projects/${id}/recommend`, {
+  runReviewFlow: (id, options = {}) =>
+    request(`/api/projects/${id}/review-flow`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(preferences),
-    }),
-  review: (id) => request(`/api/projects/${id}/review`, { method: 'POST' }),
-  materials: (id) => request(`/api/projects/${id}/materials`, { method: 'POST' }),
-  rebuttal: (id, comments) =>
-    request(`/api/projects/${id}/rebuttal`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ comments }),
+      body: JSON.stringify(options),
     }),
 };

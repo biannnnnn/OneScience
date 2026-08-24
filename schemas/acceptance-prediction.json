@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://onescience.local/schemas/acceptance-prediction-1.0.0.json",
+  "title": "OneScience Calibrated Acceptance Prediction",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "prediction_schema_version",
+    "prediction",
+    "acceptance_probability",
+    "confidence_level",
+    "target_venue",
+    "main_positive_factors",
+    "main_risk_factors",
+    "uncertainty_reasons",
+    "calibration",
+    "model_trace",
+    "disclaimer"
+  ],
+  "properties": {
+    "prediction_schema_version": { "const": "1.0.0" },
+    "prediction": { "enum": ["accept", "borderline", "reject"] },
+    "acceptance_probability": { "type": "number", "minimum": 0, "maximum": 1 },
+    "confidence_level": { "enum": ["high", "medium", "low"] },
+    "target_venue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name"],
+      "properties": {
+        "id": { "type": ["string", "null"] },
+        "name": { "type": "string", "minLength": 1 }
+      }
+    },
+    "main_positive_factors": {
+      "type": "array",
+      "maxItems": 3,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "main_risk_factors": {
+      "type": "array",
+      "maxItems": 4,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "uncertainty_reasons": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "calibration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "validation_sample_count",
+        "validation_brier_score",
+        "validation_ece",
+        "venue_training_sample_count",
+        "out_of_distribution_venue"
+      ],
+      "properties": {
+        "method": { "enum": ["identity", "platt"] },
+        "validation_sample_count": { "type": "integer", "minimum": 0 },
+        "validation_brier_score": { "type": ["number", "null"], "minimum": 0 },
+        "validation_ece": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+        "venue_training_sample_count": { "type": "integer", "minimum": 0 },
+        "out_of_distribution_venue": { "type": "boolean" }
+      }
+    },
+    "model_trace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "model_id",
+        "model_type",
+        "feature_contract_version",
+        "reviewer_signature",
+        "calibration_method"
+      ],
+      "properties": {
+        "model_id": { "type": "string", "minLength": 1 },
+        "model_type": { "type": "string", "minLength": 1 },
+        "feature_contract_version": { "type": "string", "minLength": 1 },
+        "reviewer_signature": { "type": "string" },
+        "calibration_method": { "enum": ["identity", "platt"] }
+      }
+    },
+    "disclaimer": { "type": "string", "minLength": 20 }
+  }
+}

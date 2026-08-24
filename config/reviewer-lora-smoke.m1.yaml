@@ -1,0 +1,23 @@
+model: .model-cache/huggingface/models--Qwen--Qwen3-4B-MLX-4bit/snapshots/52a5ab34fa604bc8af6d3ce0cac0cab10b7eb495
+train: true
+data: data/openreview/sft/proreview-domain-v0.1
+fine_tune_type: lora
+optimizer: adam
+mask_prompt: true
+num_layers: 4
+batch_size: 1
+grad_accumulation_steps: 4
+iters: 20
+val_batches: 4
+learning_rate: 1.0e-5
+steps_per_report: 1
+steps_per_eval: 5
+save_every: 10
+max_seq_length: 1024
+grad_checkpoint: true
+seed: 7
+adapter_path: adapters/qwen3-4b-openreview-domain-v0.1-smoke
+lora_parameters:
+  rank: 4
+  dropout: 0.0
+  scale: 8.0

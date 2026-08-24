@@ -1,0 +1,21 @@
+{
+  "status": "ok",
+  "seed": 42,
+  "batch_size": 1,
+  "max_pairs": 10000,
+  "loss": 1.1517465114593506,
+  "prediction_diff_before": [
+    0.7718260288238525
+  ],
+  "gradient_norm_before_clip": 33.69289016723633,
+  "gradient_tensors": 129,
+  "nonzero_gradient_tensors": 65,
+  "changed_trainable_tensors": 129,
+  "max_parameter_delta": 0.02556697465479374,
+  "allocated_mib_after_step": 8831.06,
+  "peak_allocated_mib_step": 10016.15,
+  "peak_reserved_mib_step": 10438.0,
+  "elapsed_seconds": 27.694,
+  "gpu_processes_before": "910716, 7882",
+  "gpu_processes_after": "910716, 7882\n955104, 10914"
+}

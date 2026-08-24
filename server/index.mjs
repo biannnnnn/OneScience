@@ -8,17 +8,28 @@ import { extractDocument } from './lib/extractor.mjs';
 import { analyzeDocument } from './lib/analyzer.mjs';
 import {
   analyzeManuscriptWithDeepSeek,
+  generateJournalSearchPlanWithDeepSeek,
   getDeepSeekStatus,
-  rerankJournalsWithDeepSeek,
 } from './lib/deepseek.mjs';
+import { discoverJournalSourcesFromWorks, getOpenAlexStatus, findRecentSimilarPapers } from './lib/scholarly-search.mjs';
+import {
+  fallbackManuscriptScore,
+  fallbackReferenceScore,
+} from './lib/reviewer-client.mjs';
+import {
+  getRankerServiceStatus,
+  scoreFromRanker,
+  scorePapersWithRanker,
+} from './lib/ranker-client.mjs';
+import {
+  compareWithJournalBenchmark,
+  enrichJournalMetrics,
+  selectDistinctJournals,
+  workflowKeywords,
+} from './lib/review-flow.mjs';
+import { enrichDiscoveredJournal, prestigeBandForDiscovered } from './lib/journal-discovery.mjs';
 import { journalCatalog, journals } from './data/journals.mjs';
 import { getProject, listProjects, patchProject, saveProject } from './lib/store.mjs';
-import {
-  generateMaterials,
-  generateRebuttal,
-  generateReview,
-  recommendJournals,
-} from './lib/workflow.mjs';
 
 const app = express();
 const port = Number(process.env.PORT || 3001);
@@ -27,6 +38,7 @@ const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 15 * 1024 * 1024 },
 });
+const volatileDocuments = new Map();
 
 app.use(express.json({ limit: '2mb' }));
 
@@ -64,26 +76,29 @@ async function createProjectFromDocument(document, profile, options = {}) {
     document: publicDocument(document),
     analysis,
     aiAnalysis,
-    recommendations: null,
-    selectedJournal: null,
-    review: null,
-    materials: null,
-    rebuttal: null,
+    reviewFlow: null,
   };
+  volatileDocuments.set(project.id, document);
   return saveProject(project);
 }
 
-app.get('/api/health', (_request, response) => {
+app.get('/api/health', async (_request, response) => {
   response.json({
     ok: true,
     service: 'onescience-submission-agent',
-    version: '0.6.0',
+    version: '0.7.0',
     model: getDeepSeekStatus(),
+    scholarlySearch: getOpenAlexStatus(),
+    ranker: await getRankerServiceStatus(),
   });
 });
 
-app.get('/api/model/status', (_request, response) => {
-  response.json(getDeepSeekStatus());
+app.get('/api/model/status', async (_request, response) => {
+  response.json({
+    llm: getDeepSeekStatus(),
+    scholarlySearch: getOpenAlexStatus(),
+    ranker: await getRankerServiceStatus(),
+  });
 });
 
 app.get('/api/journals', (_request, response) => {
@@ -155,7 +170,7 @@ app.post('/api/demo', async (request, response, next) => {
 
 app.patch('/api/projects/:id', async (request, response, next) => {
   try {
-    const allowed = ['name', 'status', 'stage', 'profile', 'selectedJournal', 'review', 'materials', 'rebuttal'];
+    const allowed = ['name', 'status'];
     const safePatch = Object.fromEntries(
       Object.entries(request.body).filter(([key]) => allowed.includes(key)),
     );
@@ -167,67 +182,191 @@ app.patch('/api/projects/:id', async (request, response, next) => {
   }
 });
 
-app.post('/api/projects/:id/recommend', async (request, response, next) => {
+app.post('/api/projects/:id/review-flow', async (request, response, next) => {
   try {
     const project = await getProject(request.params.id);
     if (!project) return response.status(404).json({ error: '未找到该投稿项目。' });
-    const ruleRecommendations = recommendJournals(project, request.body, { limit: 12 });
-    let recommendations = {
-      ...ruleRecommendations,
-      items: ruleRecommendations.items.slice(0, 5),
-    };
+    const journalCount = Math.max(2, Math.min(Number(request.body.k) || 5, 8));
+    const papersPerJournal = Math.max(1, Math.min(Number(request.body.n) || 3, 8));
+    const recentYears = Math.max(1, Math.min(Number(request.body.recentYears) || 3, 8));
+    const keywords = workflowKeywords(project);
+    if (!keywords.length) return response.status(422).json({ error: '未能提取有效关键词，请补充研究方向或关键词后重试。' });
+
+    const openAlexStatus = getOpenAlexStatus();
+    let searchQueries = [];
+    let searchSubjects = [];
+    let discoveryMethod = 'openalex-web-discovery';
+    let discoveryModel = null;
+    let llmError = null;
     if (getDeepSeekStatus().configured && request.body.useAI !== false) {
       try {
-        const aiRanking = await rerankJournalsWithDeepSeek(project, ruleRecommendations.items);
-        recommendations = {
-          ...ruleRecommendations,
-          ...aiRanking,
-          catalog: ruleRecommendations.catalog,
-          notice: ruleRecommendations.notice,
-        };
+        const plan = await generateJournalSearchPlanWithDeepSeek(project);
+        searchQueries = plan.searchQueries;
+        searchSubjects = plan.subjects;
+        discoveryMethod = 'openalex-web-discovery+llm-search-plan';
+        discoveryModel = plan.model;
       } catch (error) {
-        recommendations.aiError = 'DeepSeek 重排暂时不可用，本次已返回规则匹配结果。';
-        console.error(`DeepSeek journal ranking failed: ${error.message}`);
+        llmError = error.message;
       }
     }
+    if (!searchQueries.length) {
+      searchQueries = [keywords.slice(0, 8).join(' ')];
+      discoveryMethod = 'openalex-web-discovery+keyword-fallback';
+    }
+    if (!openAlexStatus.configured) {
+      return response.status(422).json({ error: '未配置 OPENALEX_API_KEY，无法执行期刊 Web 检索。' });
+    }
+    const worksPerQuery = Math.max(10, Math.min(Number(request.body.worksPerQuery) || 50, 100));
+    const minWorksCount = Math.max(0, Math.min(Number(request.body.minWorksCount) || 500, 1_000_000));
+    const discovery = await discoverJournalSourcesFromWorks(searchQueries, {
+      limit: Math.max(15, journalCount * 5),
+      worksPerQuery,
+      recentYears: Math.max(recentYears, 5),
+      minWorksCount,
+    });
+    const discoveredCandidates = discovery.sources.map((source) => enrichDiscoveredJournal(source));
+    prestigeBandForDiscovered(discoveredCandidates);
+    const candidates = selectDistinctJournals(discoveredCandidates, journalCount);
+    const rankerStatus = await getRankerServiceStatus();
+    const journalResults = [];
+
+    for (const candidate of candidates) {
+      let retrieval = { source: null, items: [] };
+      let retrievalError = null;
+      if (openAlexStatus.configured) {
+        try {
+          retrieval = await findRecentSimilarPapers(candidate, keywords, {
+            limit: papersPerJournal,
+            recentYears,
+            queries: searchQueries,
+            source: {
+              id: candidate.openAlexId,
+              openAlexUrl: candidate.source?.url || null,
+              name: candidate.name,
+              issn: null,
+              worksCount: candidate.openAlex?.worksCount || 0,
+              citedByCount: candidate.openAlex?.citedByCount || 0,
+              twoYearMeanCitedness: candidate.openAlex?.twoYearMeanCitedness ?? null,
+            },
+          });
+        } catch (error) {
+          retrievalError = error.message;
+        }
+      } else {
+        retrievalError = '未配置 OPENALEX_API_KEY，未执行近期论文 Web 检索。';
+      }
+      const journal = enrichJournalMetrics(candidate, retrieval.source);
+      const originalDocument = volatileDocuments.get(project.id) || {
+        ...project.document,
+        text: project.document?.abstract || '',
+      };
+      let referencePapers = retrieval.items.map((paper) => ({
+        ...paper,
+        modelScore: fallbackReferenceScore(paper),
+        scoringError: null,
+      }));
+      let manuscriptScore = fallbackManuscriptScore(project, journal);
+      let manuscriptReview = null;
+      let scoringError = null;
+      let rankerTrace = null;
+      const batchScoringAvailable = rankerStatus.available
+        && rankerStatus.capabilities?.includes('paper_score_batch');
+      if (batchScoringAvailable && originalDocument.abstract) {
+        try {
+          const scoreInputs = [
+            {
+              paperId: project.id,
+              title: originalDocument.title,
+              abstract: originalDocument.abstract,
+            },
+            ...referencePapers
+              .filter((paper) => paper.abstract)
+              .map((paper) => ({
+                paperId: paper.id,
+                title: paper.title,
+                abstract: paper.abstract,
+              })),
+          ];
+          const scored = await scorePapersWithRanker(scoreInputs);
+          rankerTrace = scored.modelTrace;
+          const scoreById = new Map(scored.scores.map((item) => [item.paper_id, item]));
+          const manuscriptItem = scoreById.get(project.id);
+          if (!manuscriptItem) throw new Error('Ranker Service 未返回用户稿件评分。');
+          manuscriptScore = scoreFromRanker(manuscriptItem, scored.modelTrace);
+          referencePapers = referencePapers.map((paper) => {
+            const scoreItem = scoreById.get(paper.id);
+            return scoreItem
+              ? { ...paper, modelScore: scoreFromRanker(scoreItem, scored.modelTrace) }
+              : { ...paper, scoringError: paper.abstract ? '批量评分结果缺少该论文。' : 'OpenAlex 未提供摘要。' };
+          });
+        } catch (error) {
+          scoringError = error.message;
+          referencePapers = referencePapers.map((paper) => ({
+            ...paper,
+            scoringError: paper.abstract ? error.message : 'OpenAlex 未提供摘要。',
+          }));
+        }
+      } else if (rankerStatus.available && !originalDocument.abstract) {
+        scoringError = '用户稿件未识别到摘要，Ranker 不会使用全文替代训练时的标题+摘要输入。';
+        referencePapers = referencePapers.map((paper) => ({
+          ...paper,
+          scoringError: paper.abstract ? scoringError : 'OpenAlex 未提供摘要。',
+        }));
+      } else if (rankerStatus.available) {
+        scoringError = 'Ranker Service 尚未部署 paper_score_batch 能力。';
+      } else {
+        scoringError = rankerStatus.error || 'Ranker Service 不可用。';
+      }
+      journalResults.push({
+        journal,
+        retrieval: {
+          provider: 'OpenAlex',
+          source: retrieval.source,
+          queryKeywords: keywords,
+          searchQueries: retrieval.queries || searchQueries,
+          queryErrors: retrieval.errors || [],
+          recentYears,
+          error: retrievalError,
+        },
+        referencePapers,
+        manuscriptScore,
+        manuscriptReview,
+        rankerTrace,
+        scoringError,
+        comparison: compareWithJournalBenchmark(manuscriptScore, referencePapers),
+      });
+    }
+
+    const reviewFlow = {
+      schemaVersion: '1.0.0',
+      generatedAt: new Date().toISOString(),
+      hyperparameters: { k: journalCount, n: papersPerJournal, recentYears },
+      keywords,
+      discovery: {
+        method: discoveryMethod,
+        model: discoveryModel,
+        llmError,
+        searchQueries,
+        subjects: searchSubjects,
+        queryCount: searchQueries.length,
+        worksExamined: discovery.worksExamined,
+        evidenceJournalCount: discovery.evidenceJournalCount,
+        sourceCount: discovery.sources.length,
+        retrievalErrors: discovery.errors,
+        diversityPolicy: '至少覆盖高挑战、稳健、广覆盖三个梯度（候选充足时）；分级优先权威 JIF/CCF/中科院，缺失时用 OpenAlex 引用指标近似分档。',
+      },
+      services: {
+        openAlex: openAlexStatus,
+        ranker: rankerStatus,
+      },
+      journals: journalResults,
+      notice: '自训练 Ranker 只提供论文质量相对排序；系统据此比较稿件与每本期刊的近期相似论文基线，不展示录用概率。',
+    };
     response.json(await patchProject(project.id, {
-      recommendations,
-      stage: Math.max(project.stage, 2),
-      status: recommendations.method === 'deepseek-assisted' ? 'AI 期刊匹配已完成' : '待选择期刊',
+      reviewFlow,
+      stage: 4,
+      status: '当前审稿流程已完成',
     }));
-  } catch (error) {
-    next(error);
-  }
-});
-
-app.post('/api/projects/:id/review', async (request, response, next) => {
-  try {
-    const project = await getProject(request.params.id);
-    if (!project) return response.status(404).json({ error: '未找到该投稿项目。' });
-    const review = generateReview(project);
-    response.json(await patchProject(project.id, { review, stage: Math.max(project.stage, 3), status: '模拟审稿已完成' }));
-  } catch (error) {
-    next(error);
-  }
-});
-
-app.post('/api/projects/:id/materials', async (request, response, next) => {
-  try {
-    const project = await getProject(request.params.id);
-    if (!project) return response.status(404).json({ error: '未找到该投稿项目。' });
-    const materials = generateMaterials(project);
-    response.json(await patchProject(project.id, { materials, stage: Math.max(project.stage, 4), status: '投稿材料准备中' }));
-  } catch (error) {
-    next(error);
-  }
-});
-
-app.post('/api/projects/:id/rebuttal', async (request, response, next) => {
-  try {
-    const project = await getProject(request.params.id);
-    if (!project) return response.status(404).json({ error: '未找到该投稿项目。' });
-    const rebuttal = generateRebuttal(project, request.body.comments);
-    response.json(await patchProject(project.id, { rebuttal, stage: 5, status: 'Rebuttal 准备中' }));
   } catch (error) {
     next(error);
   }

@@ -1,0 +1,173 @@
+{
+  "schema_version": "1.0.0",
+  "review_id": "review-demo-001",
+  "review_type": "general",
+  "review_language": "zh-CN",
+  "manuscript": {
+    "paper_id": "demo-paper-001",
+    "title": "面向科研论文的可解释智能投稿辅助方法",
+    "language": "zh-CN",
+    "fingerprint": null
+  },
+  "target_venue": null,
+  "recommendation": {
+    "verdict": "major_revision",
+    "rationale": "稿件提出了完整的投稿辅助流程，但当前实验规模和对照范围不足以充分支持稳定性与普适性主张。",
+    "confidence": 0.9
+  },
+  "summary": "论文面向科研投稿准备流程，提出融合论文解析、规则评估和期刊匹配的可解释辅助框架。系统结构与研究问题较清楚，也报告了初步对比和消融结果；但实验仅覆盖少量样例，缺少多数据来源和重复实验，当前证据尚不足以支持方法能够稳定适用于更广泛投稿场景的结论。",
+  "central_contribution": {
+    "claim": "构建一个将论文结构分析、期刊知识检索和任务化修订机制串联起来的可解释投稿辅助框架。",
+    "evidence": [
+      {
+        "type": "direct_quote",
+        "section": "摘要",
+        "paragraph_id": "abstract-p01",
+        "excerpt": "本研究提出一种可解释的全链路智能投稿辅助框架。该框架融合论文结构分析、期刊知识检索和任务化修订机制。"
+      }
+    ],
+    "confidence": 0.97
+  },
+  "strengths": [
+    {
+      "id": "strength-01",
+      "category": "methodology",
+      "point": "论文给出了原型系统的主要组成部分，方法流程具有清楚的模块边界。",
+      "evidence": [
+        {
+          "type": "direct_quote",
+          "section": "2 研究方法",
+          "paragraph_id": "methods-p01",
+          "excerpt": "我们构建包含论文解析器、规则评估器和期刊匹配器的原型系统。"
+        }
+      ],
+      "confidence": 0.96
+    },
+    {
+      "id": "strength-02",
+      "category": "experimental_design",
+      "point": "论文除基线对比外还报告了组件消融结果。",
+      "evidence": [
+        {
+          "type": "direct_quote",
+          "section": "3 实验结果",
+          "paragraph_id": "results-p01",
+          "excerpt": "消融实验显示，结构识别和用户偏好分别贡献 9.1% 和 6.3% 的增益。"
+        }
+      ],
+      "confidence": 0.98
+    }
+  ],
+  "major_concerns": [
+    {
+      "id": "major-01",
+      "category": "experimental_design",
+      "problem": "实验仅报告了 30 个测试样例，且没有说明样例是否覆盖不同论文类型、研究主题和投稿阶段。",
+      "impact": "有限且组成不明的测试集不足以证明系统在更广泛论文和投稿场景下仍能稳定识别风险。",
+      "request": "说明测试样例的来源、类型和领域分布，并扩大测试覆盖；如果暂时无法扩展，应收窄关于稳定性和适用范围的结论。",
+      "evidence": [
+        {
+          "type": "cross_section",
+          "description": "摘要提出稳定识别风险，而结果只报告了 30 个样例，二者的证据范围不一致。",
+          "locations": [
+            {
+              "section": "摘要",
+              "paragraph_id": "abstract-p01",
+              "excerpt": "实验结果表明，该方法能够稳定识别稿件结构风险。"
+            },
+            {
+              "section": "3 实验结果",
+              "paragraph_id": "results-p01",
+              "excerpt": "与关键词检索基线相比，本方法在 30 个测试样例上的任务覆盖率提高 18.4%。"
+            }
+          ]
+        }
+      ],
+      "confidence": 0.94
+    },
+    {
+      "id": "major-02",
+      "category": "reproducibility",
+      "problem": "稿件没有说明用于比较系统的评价流程、标注者数量以及任务覆盖率的具体计算方式。",
+      "impact": "缺少指标定义和评价程序时，读者无法复核 18.4% 增益或判断该差异是否来自一致的标注标准。",
+      "request": "补充任务覆盖率的正式定义、标注流程、标注者一致性和基线复现实验设置。",
+      "evidence": [
+        {
+          "type": "absence",
+          "description": "方法和实验结果报告了任务覆盖率增益，但未给出该指标定义及标注流程。",
+          "searched_sections": ["2 研究方法", "3 实验结果"]
+        }
+      ],
+      "confidence": 0.89
+    }
+  ],
+  "minor_concerns": [
+    {
+      "id": "minor-01",
+      "category": "statistical_analysis",
+      "problem": "正文只报告 p < 0.05，没有给出所用统计检验、效应量或置信区间。",
+      "impact": "读者难以判断显著性检验是否适合当前样本和提升幅度。",
+      "request": "说明统计检验方法并报告效应量或置信区间；如果检验条件不成立，应改用更合适的分析。",
+      "evidence": [
+        {
+          "type": "direct_quote",
+          "section": "3 实验结果",
+          "paragraph_id": "results-p01",
+          "excerpt": "消融实验显示，结构识别和用户偏好分别贡献 9.1% 和 6.3% 的增益，p < 0.05。"
+        }
+      ],
+      "confidence": 0.92
+    }
+  ],
+  "questions": [
+    {
+      "id": "question-01",
+      "question": "30 个测试样例是否来自与参数设计阶段完全独立的数据？",
+      "reason": "这个信息决定当前对比结果是否存在测试集参与规则调优的风险。",
+      "related_concern_ids": ["major-01"]
+    }
+  ],
+  "revision_tasks": [
+    {
+      "id": "task-01",
+      "source_concern_ids": ["major-01"],
+      "priority": "high",
+      "action": "扩展并描述测试集覆盖范围，重新核对关于系统稳定性和适用范围的结论。",
+      "acceptance_criteria": "数据章节列出测试样例来源、论文类型和研究领域分布；结果按主要子集报告；摘要和结论中的适用范围与实验覆盖一致。"
+    },
+    {
+      "id": "task-02",
+      "source_concern_ids": ["major-02"],
+      "priority": "high",
+      "action": "补充任务覆盖率定义、标注程序、基线配置和一致性控制。",
+      "acceptance_criteria": "方法章节给出可复算的指标公式、标注者与分歧处理流程，并提供足以复现基线的配置。"
+    },
+    {
+      "id": "task-03",
+      "source_concern_ids": ["minor-01"],
+      "priority": "medium",
+      "action": "完善统计分析报告。",
+      "acceptance_criteria": "结果部分说明检验名称、检验假设、样本单位，并报告效应量或置信区间。"
+    }
+  ],
+  "limitations": [
+    "本次审稿只基于解析出的正文文本，未检查图表中的视觉内容和参考文献真实性。"
+  ],
+  "input_coverage": {
+    "analyzed_sections": ["摘要", "1 引言", "2 研究方法", "3 实验结果", "4 讨论", "5 结论"],
+    "omitted_sections": ["参考文献"],
+    "total_paragraphs": 9,
+    "analyzed_paragraphs": 8,
+    "truncated": false
+  },
+  "model_trace": {
+    "provider": "OneScience",
+    "model": "human-annotated-example",
+    "model_version": "1.0.0",
+    "adapter_version": null,
+    "prompt_version": "annotation-guidelines-1.0.0",
+    "quantization": null,
+    "generated_at": "2026-08-10T00:00:00.000Z",
+    "latency_ms": null
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0.0",
+  "ranker": {
+    "required": true,
+    "expected_model": "meta-llama/Meta-Llama-3-8B",
+    "expected_adapter_version": "retrained-paper-faithful-seed42",
+    "expected_prompt_version": "naipv2-official-pointwise-1.0.0",
+    "required_capabilities": ["paper_score_batch"],
+    "disallowed_backends": ["mock"]
+  },
+  "scholarly_search": {
+    "provider": "OpenAlex",
+    "required": true
+  },
+  "acceptance_prediction": {
+    "required_for_probability": true,
+    "allow_benchmark_without_model": true
+  },
+  "default_hyperparameters": {
+    "k": 5,
+    "n": 3,
+    "recent_years": 3,
+    "search_queries": 4,
+    "sources_per_query": 8,
+    "min_works_count": 500
+  }
+}

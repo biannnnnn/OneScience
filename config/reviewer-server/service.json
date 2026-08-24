@@ -1,0 +1,22 @@
+{
+  "service_version": "1.2.0-server",
+  "backend": "openai_compatible",
+  "model_config_path": "config/reviewer-server/model-qwen3-4b-schema.json",
+  "request_schema_path": "schemas/reviewer-service-request.json",
+  "review_schema_path": "schemas/review-schema.json",
+  "score_request_schema_path": "schemas/venue-score-request.json",
+  "score_output_schema_path": "schemas/venue-score-batch.json",
+  "auth": {
+    "api_key_env": "ONESCIENCE_REVIEWER_API_KEY"
+  },
+  "server": {
+    "host": "0.0.0.0",
+    "port": 8787,
+    "max_concurrent": 2,
+    "max_request_bytes": 2097152
+  },
+  "privacy": {
+    "persist_requests": false,
+    "log_manuscript_text": false
+  }
+}

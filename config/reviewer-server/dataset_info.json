@@ -1,0 +1,50 @@
+{
+  "onescience_domain_train": {
+    "file_name": "proreview-domain-v0.1/train.jsonl",
+    "formatting": "sharegpt",
+    "columns": {"messages": "messages"},
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant",
+      "system_tag": "system"
+    }
+  },
+  "onescience_domain_valid": {
+    "file_name": "proreview-domain-v0.1/valid.jsonl",
+    "formatting": "sharegpt",
+    "columns": {"messages": "messages"},
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant",
+      "system_tag": "system"
+    }
+  },
+  "onescience_schema_train": {
+    "file_name": "proreview-schema-weak-v0.1/train.jsonl",
+    "formatting": "sharegpt",
+    "columns": {"messages": "messages"},
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant",
+      "system_tag": "system"
+    }
+  },
+  "onescience_schema_valid": {
+    "file_name": "proreview-schema-weak-v0.1/valid.jsonl",
+    "formatting": "sharegpt",
+    "columns": {"messages": "messages"},
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant",
+      "system_tag": "system"
+    }
+  }
+}

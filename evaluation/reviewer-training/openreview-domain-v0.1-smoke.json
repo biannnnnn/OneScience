@@ -1,0 +1,65 @@
+{
+  "run_id": "qwen3-4b-openreview-domain-v0.1-smoke-iter20",
+  "status": "completed_not_promoted",
+  "dataset": {
+    "id": "UKPLab/ProReviewer-Dataset",
+    "revision": "104e9b01c5d002f3f1775d38d3f5517f828cafd3",
+    "license_from_dataset_card": "MIT",
+    "splits": {
+      "train": 3605,
+      "validation": 406,
+      "test": 997
+    },
+    "test_source": "ICLR 2026",
+    "maximum_tokens": 1018,
+    "samples_over_1024_tokens": 0,
+    "excluded_supervision": [
+      "initial_rating",
+      "decision",
+      "meta_review",
+      "reviewer_identity"
+    ]
+  },
+  "model": {
+    "id": "Qwen/Qwen3-4B-MLX-4bit",
+    "revision": "52a5ab34fa604bc8af6d3ce0cac0cab10b7eb495",
+    "adapter_version": "openreview-domain-v0.1-smoke-iter20",
+    "adapter_path": "adapters/qwen3-4b-openreview-domain-v0.1-smoke"
+  },
+  "training": {
+    "fine_tune_type": "lora_on_4bit_base",
+    "iterations": 20,
+    "trainable_parameters": 918000,
+    "trainable_parameter_ratio": 0.00023,
+    "lora_rank": 4,
+    "layers": 4,
+    "batch_size": 1,
+    "gradient_accumulation_steps": 4,
+    "maximum_sequence_length": 1024,
+    "learning_rate": 0.00001,
+    "gradient_checkpointing": true,
+    "initial_validation_loss": 3.994,
+    "final_validation_loss": 3.521,
+    "final_training_loss": 3.54,
+    "trained_tokens": 4613,
+    "peak_memory_gb": 3.74
+  },
+  "held_out_test_probe": {
+    "batches": 4,
+    "base_loss": 3.842,
+    "base_perplexity": 46.6,
+    "adapter_loss": 3.642,
+    "adapter_perplexity": 38.167,
+    "warning": "Only four ICLR 2026 batches; this is a pipeline probe, not a quality claim."
+  },
+  "review_schema_smoke": {
+    "cases": 2,
+    "json_valid_rate": 1.0,
+    "contract_valid_rate": 0.0,
+    "evidence_grounded_rate": 0.5,
+    "issue_f1_macro": 0.25,
+    "verdict_accuracy": 0.0,
+    "promotion_decision": "rejected",
+    "reason": "Domain SFT does not teach evidence alignment or the full review-schema.json contract."
+  }
+}

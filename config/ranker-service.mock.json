@@ -1,0 +1,13 @@
+{
+  "backend": "mock",
+  "server": {
+    "host": "127.0.0.1",
+    "port": 8788,
+    "max_concurrent": 2,
+    "max_request_bytes": 2097152
+  },
+  "privacy": {
+    "persist_requests": false,
+    "log_paper_text": false
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "baseline_version": "2.1.0-plan-b",
+  "provider": "OneScience Plan B",
+  "model_id": "Qwen/Qwen2.5-7B-Instruct",
+  "model_revision": "modelscope-snapshot-pinned-on-server",
+  "adapter_version": "openreview-domain-server-v0.1",
+  "runtime": "LLaMA-Factory OpenAI-compatible API",
+  "quantization": "bnb-4bit+lora-r8",
+  "prompt_version": "plan-b-nl-v1",
+  "review_language": "zh-CN",
+  "input": {
+    "max_characters": 24000,
+    "max_paragraphs": 80
+  },
+  "generation": {
+    "max_tokens": 2400,
+    "temperature": 0
+  },
+  "upstream": {
+    "base_url": "http://127.0.0.1:8000/v1",
+    "served_model_name": "onescience-reviewer-qwen25-7b-domain",
+    "api_key_env": "ONESCIENCE_UPSTREAM_API_KEY",
+    "timeout_seconds": 300
+  },
+  "deepseek": {
+    "api_key": "sk-758c1d00b52a4554a6877d00db8b2f9f",
+    "schema_path": "schemas/review-schema.json",
+    "score_schema_path": "schemas/venue-score.json"
+  }
+}
