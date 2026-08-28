@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0.0",
+  "baseline": {
+    "name": "OneScience production NAIPv2 8B adapter",
+    "metrics_path": "evaluation/naipv2-official/runs/retrained-paper-faithful-seed42-public-test/metrics.json",
+    "model": "meta-llama/Meta-Llama-3-8B",
+    "adapter_version": "retrained-paper-faithful-seed42"
+  },
+  "official_reference": {
+    "name": "NAIPv2 official 8B weights",
+    "metrics_path": "evaluation/naipv2-official/runs/official-weights-public-test/metrics.json"
+  },
+  "protocol": {
+    "seed": 42,
+    "max_pairs": 10000,
+    "max_length": 512,
+    "batch_size": 8,
+    "epochs": 1,
+    "learning_rate": 0.0001,
+    "weight_decay": 0.01,
+    "warmup_ratio": 0.1,
+    "lora_r": 16,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "target_modules": "q_proj,v_proj",
+    "load_in_8bit": true,
+    "shuffle_train": false
+  },
+  "noninferiority_margins": {
+    "auc": 0.02,
+    "spearman": 0.03,
+    "ndcg_at_20": 0.03
+  },
+  "models": {
+    "qwen25-3b": {
+      "model_id": "Qwen/Qwen2.5-3B",
+      "parameter_class": "3B",
+      "local_dir": "models/Qwen2.5-3B"
+    },
+    "qwen3-0.6b": {
+      "model_id": "Qwen/Qwen3-0.6B",
+      "parameter_class": "0.6B",
+      "local_dir": "models/Qwen3-0.6B"
+    }
+  }
+}

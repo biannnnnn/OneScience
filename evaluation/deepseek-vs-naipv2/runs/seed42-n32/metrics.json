@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0.0",
+  "dataset": "NAIDv2 fixed public test stratified subset",
+  "rows": 32,
+  "note": "NAIPv2 scores are archived predictions from official published weights, not the currently unreachable private retrained service.",
+  "deepseek": {
+    "model": "deepseek-v4-pro",
+    "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+    "thinking": "disabled",
+    "auc_vs_accept": 0.5723,
+    "spearman_vs_rts": 0.0657,
+    "pairwise_accuracy_vs_rts": 0.5303,
+    "within_batch_auc_vs_accept": 0.5625,
+    "within_batch_pairwise_accuracy_vs_rts": 0.5714,
+    "mean_accept_score": 73.38,
+    "mean_reject_score": 72.13,
+    "score_distribution": {
+      "min": 65,
+      "max": 82,
+      "mean": 72.75,
+      "standard_deviation": 4.49,
+      "unique_values": 12
+    }
+  },
+  "naipv2_official_weights": {
+    "auc_vs_accept": 0.7852,
+    "spearman_vs_rts": 0.3724,
+    "pairwise_accuracy_vs_rts": 0.631,
+    "within_batch_auc_vs_accept": 0.8125,
+    "within_batch_pairwise_accuracy_vs_rts": 0.7054,
+    "score_distribution": {
+      "min": -3.650390625,
+      "max": 2.111328125,
+      "mean": -1.02,
+      "standard_deviation": 1.25,
+      "unique_values": 32
+    }
+  },
+  "agreement": {
+    "spearman_scores": 0.2111,
+    "pairwise_order_agreement": 0.5931
+  },
+  "deepseek_runtime": {
+    "requests": 4,
+    "batch_size": 8,
+    "latency_ms": 92650,
+    "prompt_tokens": 10320,
+    "completion_tokens": 5466,
+    "total_tokens": 15786,
+    "mean_latency_ms_per_request": 23162.5
+  }
+}

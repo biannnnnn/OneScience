@@ -1,0 +1,1027 @@
+[
+  {
+    "batch_id": "list-01",
+    "papers": [
+      {
+        "paper_id": "543358",
+        "original_rank": 1,
+        "reversed_rank": 1,
+        "borda_rank_sum": 2,
+        "rts": 0.3899347145473402,
+        "accept": 1,
+        "naipv2_score": 0.359375
+      },
+      {
+        "paper_id": "544568",
+        "original_rank": 2,
+        "reversed_rank": 2,
+        "borda_rank_sum": 4,
+        "rts": 0.4866725088517709,
+        "accept": 1,
+        "naipv2_score": -0.404296875
+      },
+      {
+        "paper_id": "540960",
+        "original_rank": 3,
+        "reversed_rank": 3,
+        "borda_rank_sum": 6,
+        "rts": 0.1955310881037645,
+        "accept": 0,
+        "naipv2_score": -0.5693359375
+      },
+      {
+        "paper_id": "545378",
+        "original_rank": 4,
+        "reversed_rank": 4,
+        "borda_rank_sum": 8,
+        "rts": 0.0212075462007768,
+        "accept": 0,
+        "naipv2_score": -3.650390625
+      }
+    ]
+  },
+  {
+    "batch_id": "list-02",
+    "papers": [
+      {
+        "paper_id": "541433",
+        "original_rank": 2,
+        "reversed_rank": 1,
+        "borda_rank_sum": 3,
+        "rts": 0.5291043743078626,
+        "accept": 1,
+        "naipv2_score": 0.256591796875
+      },
+      {
+        "paper_id": "542922",
+        "original_rank": 1,
+        "reversed_rank": 2,
+        "borda_rank_sum": 3,
+        "rts": 0.5082980565710986,
+        "accept": 1,
+        "naipv2_score": 2.3046875
+      },
+      {
+        "paper_id": "547238",
+        "original_rank": 4,
+        "reversed_rank": 3,
+        "borda_rank_sum": 7,
+        "rts": 0.25,
+        "accept": 0,
+        "naipv2_score": -2.94921875
+      },
+      {
+        "paper_id": "549826",
+        "original_rank": 3,
+        "reversed_rank": 4,
+        "borda_rank_sum": 7,
+        "rts": 0.2499999999999999,
+        "accept": 0,
+        "naipv2_score": -2.88671875
+      }
+    ]
+  },
+  {
+    "batch_id": "list-03",
+    "papers": [
+      {
+        "paper_id": "541678",
+        "original_rank": 1,
+        "reversed_rank": 1,
+        "borda_rank_sum": 2,
+        "rts": 0.566412002945508,
+        "accept": 1,
+        "naipv2_score": 0.41845703125
+      },
+      {
+        "paper_id": "546966",
+        "original_rank": 2,
+        "reversed_rank": 4,
+        "borda_rank_sum": 6,
+        "rts": 0.25000000000001,
+        "accept": 0,
+        "naipv2_score": -1.8388671875
+      },
+      {
+        "paper_id": "547125",
+        "original_rank": 3,
+        "reversed_rank": 3,
+        "borda_rank_sum": 6,
+        "rts": 0.5587268743914313,
+        "accept": 1,
+        "naipv2_score": -1.4375
+      },
+      {
+        "paper_id": "550575",
+        "original_rank": 4,
+        "reversed_rank": 2,
+        "borda_rank_sum": 6,
+        "rts": 0.2857324949014276,
+        "accept": 0,
+        "naipv2_score": -1.9033203125
+      }
+    ]
+  },
+  {
+    "batch_id": "list-04",
+    "papers": [
+      {
+        "paper_id": "548999",
+        "original_rank": 1,
+        "reversed_rank": 1,
+        "borda_rank_sum": 2,
+        "rts": 0.5907330397912589,
+        "accept": 1,
+        "naipv2_score": -0.91357421875
+      },
+      {
+        "paper_id": "547779",
+        "original_rank": 2,
+        "reversed_rank": 2,
+        "borda_rank_sum": 4,
+        "rts": 0.3060102575817623,
+        "accept": 0,
+        "naipv2_score": -2.58984375
+      },
+      {
+        "paper_id": "547760",
+        "original_rank": 4,
+        "reversed_rank": 3,
+        "borda_rank_sum": 7,
+        "rts": 0.5833333333333334,
+        "accept": 1,
+        "naipv2_score": -2.279296875
+      },
+      {
+        "paper_id": "549433",
+        "original_rank": 3,
+        "reversed_rank": 4,
+        "borda_rank_sum": 7,
+        "rts": 0.3011233196999472,
+        "accept": 0,
+        "naipv2_score": -2.755859375
+      }
+    ]
+  },
+  {
+    "batch_id": "list-05",
+    "papers": [
+      {
+        "paper_id": "542837",
+        "original_rank": 1,
+        "reversed_rank": 2,
+        "borda_rank_sum": 3,
+        "rts": 0.5958956256921374,
+        "accept": 1,
+        "naipv2_score": -0.493896484375
+      },
+      {
+        "paper_id": "547252",
+        "original_rank": 2,
+        "reversed_rank": 1,
+        "borda_rank_sum": 3,
+        "rts": 0.5994096884128528,
+        "accept": 1,
+        "naipv2_score": -0.204345703125
+      },
+      {
+        "paper_id": "548580",
+        "original_rank": 3,
+        "reversed_rank": 3,
+        "borda_rank_sum": 6,
+        "rts": 0.3247250119560019,
+        "accept": 0,
+        "naipv2_score": -3.681640625
+      },
+      {
+        "paper_id": "545762",
+        "original_rank": 4,
+        "reversed_rank": 4,
+        "borda_rank_sum": 8,
+        "rts": 0.3125,
+        "accept": 0,
+        "naipv2_score": -1.703125
+      }
+    ]
+  },
+  {
+    "batch_id": "list-06",
+    "papers": [
+      {
+        "paper_id": "542442",
+        "original_rank": 3,
+        "reversed_rank": 1,
+        "borda_rank_sum": 4,
+        "rts": 0.6163119105196516,
+        "accept": 1,
+        "naipv2_score": -1.603515625
+      },
+      {
+        "paper_id": "544635",
+        "original_rank": 2,
+        "reversed_rank": 2,
+        "borda_rank_sum": 4,
+        "rts": 0.34375,
+        "accept": 0,
+        "naipv2_score": -0.2646484375
+      },
+      {
+        "paper_id": "549620",
+        "original_rank": 1,
+        "reversed_rank": 4,
+        "borda_rank_sum": 5,
+        "rts": 0.3316927567609226,
+        "accept": 0,
+        "naipv2_score": -1.5830078125
+      },
+      {
+        "paper_id": "551615",
+        "original_rank": 4,
+        "reversed_rank": 3,
+        "borda_rank_sum": 7,
+        "rts": 0.6122131224846405,
+        "accept": 1,
+        "naipv2_score": -0.29638671875
+      }
+    ]
+  },
+  {
+    "batch_id": "list-07",
+    "papers": [
+      {
+        "paper_id": "541394",
+        "original_rank": 1,
+        "reversed_rank": 1,
+        "borda_rank_sum": 2,
+        "rts": 0.3494096884128529,
+        "accept": 0,
+        "naipv2_score": -1.4140625
+      },
+      {
+        "paper_id": "547861",
+        "original_rank": 2,
+        "reversed_rank": 2,
+        "borda_rank_sum": 4,
+        "rts": 0.6249999999999999,
+        "accept": 1,
+        "naipv2_score": -1.2568359375
+      },
+      {
+        "paper_id": "543839",
+        "original_rank": 4,
+        "reversed_rank": 3,
+        "borda_rank_sum": 7,
+        "rts": 0.625,
+        "accept": 1,
+        "naipv2_score": -1.1865234375
+      },
+      {
+        "paper_id": "546853",
+        "original_rank": 3,
+        "reversed_rank": 4,
+        "borda_rank_sum": 7,
+        "rts": 0.3627664435657172,
+        "accept": 0,
+        "naipv2_score": -1.662109375
+      }
+    ]
+  },
+  {
+    "batch_id": "list-08",
+    "papers": [
+      {
+        "paper_id": "552361",
+        "original_rank": 1,
+        "reversed_rank": 1,
+        "borda_rank_sum": 2,
+        "rts": 0.3674537487828628,
+        "accept": 0,
+        "naipv2_score": -1.359375
+      },
+      {
+        "paper_id": "540926",
+        "original_rank": 3,
+        "reversed_rank": 2,
+        "borda_rank_sum": 5,
+        "rts": 0.6250000000000001,
+        "accept": 1,
+        "naipv2_score": 1.6083984375
+      },
+      {
+        "paper_id": "541900",
+        "original_rank": 2,
+        "reversed_rank": 3,
+        "borda_rank_sum": 5,
+        "rts": 0.3785779477394135,
+        "accept": 0,
+        "naipv2_score": -0.376220703125
+      },
+      {
+        "paper_id": "547527",
+        "original_rank": 4,
+        "reversed_rank": 4,
+        "borda_rank_sum": 8,
+        "rts": 0.625,
+        "accept": 1,
+        "naipv2_score": -0.408203125
+      }
+    ]
+  },
+  {
+    "batch_id": "list-09",
+    "papers": [
+      {
+        "paper_id": "550248",
+        "original_rank": 1,
+        "reversed_rank": 1,
+        "borda_rank_sum": 2,
+        "rts": 0.6250000000000001,
+        "accept": 1,
+        "naipv2_score": -0.59765625
+      },
+      {
+        "paper_id": "545310",
+        "original_rank": 3,
+        "reversed_rank": 2,
+        "borda_rank_sum": 5,
+        "rts": 0.6250000000000001,
+        "accept": 1,
+        "naipv2_score": -2.447265625
+      },
+      {
+        "paper_id": "547792",
+        "original_rank": 2,
+        "reversed_rank": 3,
+        "borda_rank_sum": 5,
+        "rts": 0.3952280161631711,
+        "accept": 0,
+        "naipv2_score": -1.74609375
+      },
+      {
+        "paper_id": "546880",
+        "original_rank": 4,
+        "reversed_rank": 4,
+        "borda_rank_sum": 8,
+        "rts": 0.3849410898379971,
+        "accept": 0,
+        "naipv2_score": -4.66796875
+      }
+    ]
+  },
+  {
+    "batch_id": "list-10",
+    "papers": [
+      {
+        "paper_id": "544433",
+        "original_rank": 2,
+        "reversed_rank": 1,
+        "borda_rank_sum": 3,
+        "rts": 0.6250000000000002,
+        "accept": 1,
+        "naipv2_score": -1.8505859375
+      },
+      {
+        "paper_id": "548279",
+        "original_rank": 1,
+        "reversed_rank": 3,
+        "borda_rank_sum": 4,
+        "rts": 0.4005903115871469,
+        "accept": 0,
+        "naipv2_score": -1.3330078125
+      },
+      {
+        "paper_id": "544670",
+        "original_rank": 4,
+        "reversed_rank": 2,
+        "borda_rank_sum": 6,
+        "rts": 0.6337212441835698,
+        "accept": 1,
+        "naipv2_score": -2.125
+      },
+      {
+        "paper_id": "548705",
+        "original_rank": 3,
+        "reversed_rank": 4,
+        "borda_rank_sum": 7,
+        "rts": 0.40625,
+        "accept": 0,
+        "naipv2_score": -0.259033203125
+      }
+    ]
+  },
+  {
+    "batch_id": "list-11",
+    "papers": [
+      {
+        "paper_id": "550034",
+        "original_rank": 1,
+        "reversed_rank": 2,
+        "borda_rank_sum": 3,
+        "rts": 0.413455631567344,
+        "accept": 0,
+        "naipv2_score": -1.7841796875
+      },
+      {
+        "paper_id": "541449",
+        "original_rank": 3,
+        "reversed_rank": 1,
+        "borda_rank_sum": 4,
+        "rts": 0.6507306226175351,
+        "accept": 1,
+        "naipv2_score": 0.00778961181640625
+      },
+      {
+        "paper_id": "544495",
+        "original_rank": 2,
+        "reversed_rank": 3,
+        "borda_rank_sum": 5,
+        "rts": 0.4200894335872806,
+        "accept": 0,
+        "naipv2_score": -0.9482421875
+      },
+      {
+        "paper_id": "550853",
+        "original_rank": 4,
+        "reversed_rank": 4,
+        "borda_rank_sum": 8,
+        "rts": 0.6430440603700096,
+        "accept": 1,
+        "naipv2_score": -1.6630859375
+      }
+    ]
+  },
+  {
+    "batch_id": "list-12",
+    "papers": [
+      {
+        "paper_id": "547149",
+        "original_rank": 1,
+        "reversed_rank": 1,
+        "borda_rank_sum": 2,
+        "rts": 0.6581365628042843,
+        "accept": 1,
+        "naipv2_score": -0.246826171875
+      },
+      {
+        "paper_id": "544067",
+        "original_rank": 2,
+        "reversed_rank": 2,
+        "borda_rank_sum": 4,
+        "rts": 0.65625,
+        "accept": 1,
+        "naipv2_score": 0.2490234375
+      },
+      {
+        "paper_id": "550379",
+        "original_rank": 3,
+        "reversed_rank": 3,
+        "borda_rank_sum": 6,
+        "rts": 0.4263277202072537,
+        "accept": 0,
+        "naipv2_score": -2.302734375
+      },
+      {
+        "paper_id": "544350",
+        "original_rank": 4,
+        "reversed_rank": 4,
+        "borda_rank_sum": 8,
+        "rts": 0.4337268743914313,
+        "accept": 0,
+        "naipv2_score": -2.423828125
+      }
+    ]
+  },
+  {
+    "batch_id": "list-13",
+    "papers": [
+      {
+        "paper_id": "546438",
+        "original_rank": 1,
+        "reversed_rank": 2,
+        "borda_rank_sum": 3,
+        "rts": 0.4375,
+        "accept": 0,
+        "naipv2_score": -0.93701171875
+      },
+      {
+        "paper_id": "549838",
+        "original_rank": 2,
+        "reversed_rank": 1,
+        "borda_rank_sum": 3,
+        "rts": 0.6666666666666667,
+        "accept": 1,
+        "naipv2_score": 2.380859375
+      },
+      {
+        "paper_id": "550912",
+        "original_rank": 3,
+        "reversed_rank": 3,
+        "borda_rank_sum": 6,
+        "rts": 0.6644809108059282,
+        "accept": 1,
+        "naipv2_score": -1.029296875
+      },
+      {
+        "paper_id": "543759",
+        "original_rank": 4,
+        "reversed_rank": 4,
+        "borda_rank_sum": 8,
+        "rts": 0.4424705449189985,
+        "accept": 0,
+        "naipv2_score": -1.0849609375
+      }
+    ]
+  },
+  {
+    "batch_id": "list-14",
+    "papers": [
+      {
+        "paper_id": "546788",
+        "original_rank": 1,
+        "reversed_rank": 1,
+        "borda_rank_sum": 2,
+        "rts": 0.6749999999999999,
+        "accept": 1,
+        "naipv2_score": 0.488525390625
+      },
+      {
+        "paper_id": "542931",
+        "original_rank": 2,
+        "reversed_rank": 2,
+        "borda_rank_sum": 4,
+        "rts": 0.4567033678756477,
+        "accept": 0,
+        "naipv2_score": -0.07489013671875
+      },
+      {
+        "paper_id": "542135",
+        "original_rank": 3,
+        "reversed_rank": 3,
+        "borda_rank_sum": 6,
+        "rts": 0.671885190978491,
+        "accept": 1,
+        "naipv2_score": -0.85888671875
+      },
+      {
+        "paper_id": "551467",
+        "original_rank": 4,
+        "reversed_rank": 4,
+        "borda_rank_sum": 8,
+        "rts": 0.4507783920542821,
+        "accept": 0,
+        "naipv2_score": -1.765625
+      }
+    ]
+  },
+  {
+    "batch_id": "list-15",
+    "papers": [
+      {
+        "paper_id": "540913",
+        "original_rank": 3,
+        "reversed_rank": 1,
+        "borda_rank_sum": 4,
+        "rts": 0.6865814934949512,
+        "accept": 1,
+        "naipv2_score": -1.083984375
+      },
+      {
+        "paper_id": "550685",
+        "original_rank": 2,
+        "reversed_rank": 2,
+        "borda_rank_sum": 4,
+        "rts": 0.6822831362084589,
+        "accept": 1,
+        "naipv2_score": -0.2037353515625
+      },
+      {
+        "paper_id": "551473",
+        "original_rank": 1,
+        "reversed_rank": 3,
+        "borda_rank_sum": 4,
+        "rts": 0.4631547699080418,
+        "accept": 0,
+        "naipv2_score": 0.59619140625
+      },
+      {
+        "paper_id": "542088",
+        "original_rank": 4,
+        "reversed_rank": 4,
+        "borda_rank_sum": 8,
+        "rts": 0.4674784982215495,
+        "accept": 0,
+        "naipv2_score": -2.533203125
+      }
+    ]
+  },
+  {
+    "batch_id": "list-16",
+    "papers": [
+      {
+        "paper_id": "541481",
+        "original_rank": 1,
+        "reversed_rank": 1,
+        "borda_rank_sum": 2,
+        "rts": 0.694642265650878,
+        "accept": 1,
+        "naipv2_score": -1.296875
+      },
+      {
+        "paper_id": "546189",
+        "original_rank": 2,
+        "reversed_rank": 3,
+        "borda_rank_sum": 5,
+        "rts": 0.4754471679364026,
+        "accept": 0,
+        "naipv2_score": -2.044921875
+      },
+      {
+        "paper_id": "548113",
+        "original_rank": 3,
+        "reversed_rank": 2,
+        "borda_rank_sum": 5,
+        "rts": 0.6884080715477494,
+        "accept": 1,
+        "naipv2_score": -1.33203125
+      },
+      {
+        "paper_id": "547418",
+        "original_rank": 4,
+        "reversed_rank": 4,
+        "borda_rank_sum": 8,
+        "rts": 0.4828349944629015,
+        "accept": 0,
+        "naipv2_score": -2.3203125
+      }
+    ]
+  },
+  {
+    "batch_id": "list-17",
+    "papers": [
+      {
+        "paper_id": "540946",
+        "original_rank": 3,
+        "reversed_rank": 2,
+        "borda_rank_sum": 5,
+        "rts": 0.5,
+        "accept": 0,
+        "naipv2_score": -1.5947265625
+      },
+      {
+        "paper_id": "542449",
+        "original_rank": 4,
+        "reversed_rank": 1,
+        "borda_rank_sum": 5,
+        "rts": 0.7024116347569956,
+        "accept": 1,
+        "naipv2_score": -1.8916015625
+      },
+      {
+        "paper_id": "543595",
+        "original_rank": 1,
+        "reversed_rank": 4,
+        "borda_rank_sum": 5,
+        "rts": 0.4919689119170986,
+        "accept": 0,
+        "naipv2_score": -1.451171875
+      },
+      {
+        "paper_id": "548224",
+        "original_rank": 2,
+        "reversed_rank": 3,
+        "borda_rank_sum": 5,
+        "rts": 0.6997250119560018,
+        "accept": 1,
+        "naipv2_score": -0.78125
+      }
+    ]
+  },
+  {
+    "batch_id": "list-18",
+    "papers": [
+      {
+        "paper_id": "548346",
+        "original_rank": 1,
+        "reversed_rank": 2,
+        "borda_rank_sum": 3,
+        "rts": 0.5104908653153146,
+        "accept": 0,
+        "naipv2_score": -2.068359375
+      },
+      {
+        "paper_id": "549274",
+        "original_rank": 3,
+        "reversed_rank": 1,
+        "borda_rank_sum": 4,
+        "rts": 0.7151788671745611,
+        "accept": 1,
+        "naipv2_score": -0.73974609375
+      },
+      {
+        "paper_id": "551705",
+        "original_rank": 2,
+        "reversed_rank": 3,
+        "borda_rank_sum": 5,
+        "rts": 0.5,
+        "accept": 0,
+        "naipv2_score": -1.2001953125
+      },
+      {
+        "paper_id": "541648",
+        "original_rank": 4,
+        "reversed_rank": 4,
+        "borda_rank_sum": 8,
+        "rts": 0.7102902567094517,
+        "accept": 1,
+        "naipv2_score": -0.5439453125
+      }
+    ]
+  },
+  {
+    "batch_id": "list-19",
+    "papers": [
+      {
+        "paper_id": "552283",
+        "original_rank": 1,
+        "reversed_rank": 1,
+        "borda_rank_sum": 2,
+        "rts": 0.5287647275405007,
+        "accept": 0,
+        "naipv2_score": -0.1363525390625
+      },
+      {
+        "paper_id": "547778",
+        "original_rank": 2,
+        "reversed_rank": 3,
+        "borda_rank_sum": 5,
+        "rts": 0.5248149448356401,
+        "accept": 0,
+        "naipv2_score": -2.88671875
+      },
+      {
+        "paper_id": "550925",
+        "original_rank": 3,
+        "reversed_rank": 2,
+        "borda_rank_sum": 5,
+        "rts": 0.7255499760879962,
+        "accept": 1,
+        "naipv2_score": -1.01171875
+      },
+      {
+        "paper_id": "541557",
+        "original_rank": 4,
+        "reversed_rank": 4,
+        "borda_rank_sum": 8,
+        "rts": 0.7241750358680057,
+        "accept": 1,
+        "naipv2_score": 1.05859375
+      }
+    ]
+  },
+  {
+    "batch_id": "list-20",
+    "papers": [
+      {
+        "paper_id": "548632",
+        "original_rank": 1,
+        "reversed_rank": 1,
+        "borda_rank_sum": 2,
+        "rts": 0.7396117171897919,
+        "accept": 1,
+        "naipv2_score": -0.94140625
+      },
+      {
+        "paper_id": "548906",
+        "original_rank": 2,
+        "reversed_rank": 2,
+        "borda_rank_sum": 4,
+        "rts": 0.7487057299354578,
+        "accept": 1,
+        "naipv2_score": -0.94091796875
+      },
+      {
+        "paper_id": "543134",
+        "original_rank": 3,
+        "reversed_rank": 4,
+        "borda_rank_sum": 7,
+        "rts": 0.5348211328254389,
+        "accept": 0,
+        "naipv2_score": -2.75
+      },
+      {
+        "paper_id": "549809",
+        "original_rank": 4,
+        "reversed_rank": 3,
+        "borda_rank_sum": 7,
+        "rts": 0.5414126689636893,
+        "accept": 0,
+        "naipv2_score": -0.73486328125
+      }
+    ]
+  },
+  {
+    "batch_id": "list-21",
+    "papers": [
+      {
+        "paper_id": "543388",
+        "original_rank": 2,
+        "reversed_rank": 1,
+        "borda_rank_sum": 3,
+        "rts": 0.75,
+        "accept": 1,
+        "naipv2_score": -0.0012054443359375
+      },
+      {
+        "paper_id": "545467",
+        "original_rank": 3,
+        "reversed_rank": 2,
+        "borda_rank_sum": 5,
+        "rts": 0.5587268743914313,
+        "accept": 0,
+        "naipv2_score": -2.296875
+      },
+      {
+        "paper_id": "547869",
+        "original_rank": 1,
+        "reversed_rank": 4,
+        "borda_rank_sum": 5,
+        "rts": 0.5485985026061116,
+        "accept": 0,
+        "naipv2_score": -0.74755859375
+      },
+      {
+        "paper_id": "547459",
+        "original_rank": 4,
+        "reversed_rank": 3,
+        "borda_rank_sum": 7,
+        "rts": 0.7585825027685452,
+        "accept": 1,
+        "naipv2_score": -1.2138671875
+      }
+    ]
+  },
+  {
+    "batch_id": "list-22",
+    "papers": [
+      {
+        "paper_id": "542951",
+        "original_rank": 1,
+        "reversed_rank": 2,
+        "borda_rank_sum": 3,
+        "rts": 0.563427388678399,
+        "accept": 0,
+        "naipv2_score": -0.25439453125
+      },
+      {
+        "paper_id": "543804",
+        "original_rank": 2,
+        "reversed_rank": 1,
+        "borda_rank_sum": 3,
+        "rts": 0.7767502705698922,
+        "accept": 1,
+        "naipv2_score": -1.08203125
+      },
+      {
+        "paper_id": "551487",
+        "original_rank": 4,
+        "reversed_rank": 3,
+        "borda_rank_sum": 7,
+        "rts": 0.5767709347614411,
+        "accept": 0,
+        "naipv2_score": -1.060546875
+      },
+      {
+        "paper_id": "552198",
+        "original_rank": 3,
+        "reversed_rank": 4,
+        "borda_rank_sum": 7,
+        "rts": 0.7611872969987442,
+        "accept": 1,
+        "naipv2_score": -2.8046875
+      }
+    ]
+  },
+  {
+    "batch_id": "list-23",
+    "papers": [
+      {
+        "paper_id": "541806",
+        "original_rank": 1,
+        "reversed_rank": 2,
+        "borda_rank_sum": 3,
+        "rts": 0.791666661931764,
+        "accept": 1,
+        "naipv2_score": 2.0859375
+      },
+      {
+        "paper_id": "546322",
+        "original_rank": 2,
+        "reversed_rank": 1,
+        "borda_rank_sum": 3,
+        "rts": 0.7996262458165371,
+        "accept": 1,
+        "naipv2_score": 2.19140625
+      },
+      {
+        "paper_id": "550197",
+        "original_rank": 3,
+        "reversed_rank": 3,
+        "borda_rank_sum": 6,
+        "rts": 0.587637494021999,
+        "accept": 0,
+        "naipv2_score": -4.3515625
+      },
+      {
+        "paper_id": "549900",
+        "original_rank": 4,
+        "reversed_rank": 4,
+        "borda_rank_sum": 8,
+        "rts": 0.59375,
+        "accept": 0,
+        "naipv2_score": -4.62109375
+      }
+    ]
+  },
+  {
+    "batch_id": "list-24",
+    "papers": [
+      {
+        "paper_id": "542420",
+        "original_rank": 1,
+        "reversed_rank": 3,
+        "borda_rank_sum": 4,
+        "rts": 0.8082115628970671,
+        "accept": 1,
+        "naipv2_score": 0.59521484375
+      },
+      {
+        "paper_id": "544992",
+        "original_rank": 4,
+        "reversed_rank": 1,
+        "borda_rank_sum": 5,
+        "rts": 0.8205310875824223,
+        "accept": 1,
+        "naipv2_score": 0.82470703125
+      },
+      {
+        "paper_id": "548917",
+        "original_rank": 3,
+        "reversed_rank": 2,
+        "borda_rank_sum": 5,
+        "rts": 0.6250000000000002,
+        "accept": 0,
+        "naipv2_score": -1.7314453125
+      },
+      {
+        "paper_id": "549367",
+        "original_rank": 2,
+        "reversed_rank": 4,
+        "borda_rank_sum": 6,
+        "rts": 0.6057966321243523,
+        "accept": 0,
+        "naipv2_score": -3.154296875
+      }
+    ]
+  },
+  {
+    "batch_id": "list-25",
+    "papers": [
+      {
+        "paper_id": "550613",
+        "original_rank": 1,
+        "reversed_rank": 1,
+        "borda_rank_sum": 2,
+        "rts": 0.8749998102934814,
+        "accept": 1,
+        "naipv2_score": 1.0615234375
+      },
+      {
+        "paper_id": "543413",
+        "original_rank": 2,
+        "reversed_rank": 2,
+        "borda_rank_sum": 4,
+        "rts": 0.6656828140214215,
+        "accept": 0,
+        "naipv2_score": -1.75
+      },
+      {
+        "paper_id": "542964",
+        "original_rank": 4,
+        "reversed_rank": 3,
+        "borda_rank_sum": 7,
+        "rts": 0.8381096059722776,
+        "accept": 1,
+        "naipv2_score": -2.810546875
+      },
+      {
+        "paper_id": "546316",
+        "original_rank": 3,
+        "reversed_rank": 4,
+        "borda_rank_sum": 7,
+        "rts": 0.7311763622974963,
+        "accept": 0,
+        "naipv2_score": -3.583984375
+      }
+    ]
+  }
+]

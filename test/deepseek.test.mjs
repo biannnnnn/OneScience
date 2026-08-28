@@ -6,6 +6,11 @@ import {
   rerankJournalsWithDeepSeek,
   __testables,
 } from '../server/lib/deepseek.mjs';
+import {
+  getDeepSeekScorerStatus,
+  scoreFromDeepSeek,
+  scorePapersWithDeepSeek,
+} from '../server/lib/deepseek-scorer.mjs';
 
 test('model status never exposes the API key', () => {
   const status = getDeepSeekStatus({
@@ -156,4 +161,72 @@ test('DeepSeek journal ranking is restricted to supplied candidates and blended 
   assert.equal(result.items.some((item) => item.id === 'journal-c'), true);
   assert.equal(result.items[0].fitBreakdown.scope, 95);
   assert.equal(result.confidence, 0.82);
+});
+
+test('DeepSeek scorer sends only stable title-and-abstract inputs and normalizes a complete ranking', async () => {
+  let capturedRequest;
+  const fetchImpl = async (_url, init) => {
+    capturedRequest = JSON.parse(init.body);
+    return {
+      ok: true,
+      json: async () => ({
+        id: 'paper-scoring-request',
+        model: 'deepseek-v4-pro',
+        usage: { prompt_tokens: 300, completion_tokens: 200, total_tokens: 500 },
+        choices: [{ message: { content: JSON.stringify({
+          evaluations: [
+            {
+              paper_id: 'manuscript-1', score: 78.4, rank: 1, confidence: 0.74,
+              rationale: '问题重要，方法和实验信号完整。', strengths: ['实验设计明确'],
+              risks: ['样本范围有限'], limitations: ['无法从摘要确认消融细节'],
+            },
+            {
+              paper_id: 'reference-1', score: 69, rank: 2, confidence: 0.68,
+              rationale: '方法清楚，但证据描述较少。', strengths: ['任务定义清晰'],
+              risks: ['验证不足'], limitations: ['无法确认复现材料'],
+            },
+          ],
+          comparison_summary: '稿件的证据链描述更完整。',
+        }) } }],
+      }),
+    };
+  };
+
+  const result = await scorePapersWithDeepSeek([
+    {
+      paperId: 'reference-1', title: 'Reference', abstract: 'Reference abstract.',
+      text: 'This full text must never be sent.',
+    },
+    {
+      paperId: 'manuscript-1', title: 'Manuscript', abstract: 'Manuscript abstract.',
+      author: 'Identity must never be sent.',
+    },
+  ], {
+    fetchImpl,
+    env: { DEEPSEEK_API_KEY: 'test-key', DEEPSEEK_MODEL: 'deepseek-v4-pro' },
+  });
+
+  assert.equal(capturedRequest.temperature, 0);
+  assert.equal(capturedRequest.thinking.type, 'disabled');
+  const userPayload = capturedRequest.messages[1].content;
+  assert.doesNotMatch(userPayload, /full text|Identity must/i);
+  assert.ok(userPayload.indexOf('manuscript-1') < userPayload.indexOf('reference-1'));
+  assert.equal(result.scores.length, 2);
+  assert.equal(result.scores[0].paper_id, 'manuscript-1');
+  assert.equal(result.scores[0].score, 78.4);
+  assert.equal(result.modelTrace.prompt_version, 'deepseek-paper-batch-rubric-1.0.0');
+  const workflowScore = scoreFromDeepSeek(result.scores[0], result.modelTrace);
+  assert.equal(workflowScore.verdict, 'deepseek_paper_ranker');
+  assert.equal(workflowScore.confidence, 0.74);
+  assert.match(workflowScore.limitations.at(-1), /不是.*录用概率/);
+});
+
+test('DeepSeek scorer status does not expose credentials', () => {
+  const status = getDeepSeekScorerStatus({
+    DEEPSEEK_API_KEY: 'private-key',
+    DEEPSEEK_MODEL: 'deepseek-v4-pro',
+  });
+  assert.equal(status.available, true);
+  assert.equal(status.promptVersion, 'deepseek-paper-batch-rubric-1.0.0');
+  assert.doesNotMatch(JSON.stringify(status), /private-key/);
 });

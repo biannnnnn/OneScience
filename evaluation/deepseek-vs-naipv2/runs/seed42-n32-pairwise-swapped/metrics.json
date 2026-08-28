@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0.0",
+  "dataset": "NAIDv2 fixed n=32 subset",
+  "pair_orientation": "swapped",
+  "listwise_prompt_version": "deepseek-paper-listwise-1.0.0",
+  "pairwise_prompt_version": "deepseek-paper-pairwise-1.0.0",
+  "pairwise": {
+    "pairs": 32,
+    "ties": 0,
+    "a_win_rate": 0.8125,
+    "deepseek_accuracy_vs_rts": 0.5,
+    "naipv2_accuracy_vs_rts": 0.8125,
+    "deepseek_accuracy_vs_accept_on_cross_label": 0.4375,
+    "naipv2_accuracy_vs_accept_on_cross_label": 1,
+    "deepseek_naipv2_agreement": 0.5,
+    "median_rts_gap": 0.1804,
+    "deepseek_accuracy_small_gap": 0.5,
+    "deepseek_accuracy_large_gap": 0.5,
+    "runtime": {
+      "requests": 4,
+      "latency_ms": 38639,
+      "prompt_tokens": 18104,
+      "completion_tokens": 2023,
+      "total_tokens": 20127
+    }
+  }
+}

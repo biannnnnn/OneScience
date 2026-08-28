@@ -1,0 +1,23 @@
+{
+  "auc": 0.7571367694187529,
+  "spearman": 0.3808452171926033,
+  "ndcg_at_20": 0.7814103135845853,
+  "thresholds_on_test_for_official_parity_only": {
+    "best_f1": {
+      "threshold": 2.962890625,
+      "precision": 0.5538461538461539,
+      "recall": 0.6565349544072948,
+      "f1": 0.6008344923504868,
+      "accuracy": 0.7208171206225681
+    },
+    "best_accuracy": {
+      "threshold": 4.0546875,
+      "precision": 0.7219251336898396,
+      "recall": 0.41033434650455924,
+      "f1": 0.5232558139534884,
+      "accuracy": 0.7607003891050583
+    }
+  },
+  "rows": 1028,
+  "elapsed_seconds": 87.425
+}

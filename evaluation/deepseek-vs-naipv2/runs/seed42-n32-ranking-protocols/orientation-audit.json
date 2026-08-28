@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0.0",
+  "listwise_orientation_audit": {
+    "pairs": 112,
+    "original_vs_reversed_order_agreement": 0.5982,
+    "original_output_vs_input_order": 0.6607,
+    "reversed_output_vs_input_order": 0.7411
+  },
+  "dual_orientation_borda": {
+    "rts_pairs": 112,
+    "rts_ties": 13,
+    "rts_non_tie_accuracy": 0.7172,
+    "rts_tie_half_accuracy": 0.692,
+    "accept_pairs": 64,
+    "accept_ties": 8,
+    "accept_non_tie_accuracy": 0.875,
+    "accept_tie_half_accuracy": 0.8281,
+    "coverage_without_ties": 0.8839,
+    "naipv2_order_agreement_on_non_ties": 0.7273
+  },
+  "pairwise_orientation_audit": {
+    "pairs": 32,
+    "same_physical_winner": 17,
+    "orientation_consistency": 0.5313,
+    "rts_accuracy_when_consistent": 0.6471,
+    "cross_label_consistent_pairs": 7,
+    "accept_accuracy_when_consistent": 0.4286
+  },
+  "listwise_batch4_audit": {
+    "original_repeat_order_agreement": 0.9375,
+    "dual_borda_repeat_order_agreement": 0.9583,
+    "run1": {
+      "pairs": 48,
+      "rts_ties": 5,
+      "rts_tie_half_accuracy": 0.7604,
+      "accept_pairs": 32,
+      "accept_ties": 3,
+      "accept_tie_half_accuracy": 0.8594
+    },
+    "run2": {
+      "pairs": 48,
+      "rts_ties": 6,
+      "rts_tie_half_accuracy": 0.7292,
+      "accept_pairs": 32,
+      "accept_ties": 4,
+      "accept_tie_half_accuracy": 0.8438
+    }
+  }
+}

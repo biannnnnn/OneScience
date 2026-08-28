@@ -1,0 +1,69 @@
+{
+  "schema_version": "1.0.0",
+  "dataset_rows": 100,
+  "batches": 25,
+  "batch_size": 4,
+  "api_requests": 50,
+  "orientation": {
+    "pair_order_agreement": 0.6933,
+    "original_output_follows_input": 0.56,
+    "reversed_output_follows_input": 0.72
+  },
+  "dual_listwise_borda": {
+    "rts_pairs": 149,
+    "rts_ties": 30,
+    "rts_non_tie_accuracy": 0.6555,
+    "rts_tie_half_accuracy": 0.6242,
+    "accept_pairs": 100,
+    "accept_ties": 20,
+    "accept_non_tie_accuracy": 0.7,
+    "accept_tie_half_accuracy": 0.66,
+    "non_tie_coverage": 0.8,
+    "naipv2_order_agreement_on_non_ties": 0.725
+  },
+  "naipv2_same_pairs": {
+    "rts_accuracy": 0.6711,
+    "accept_accuracy": 0.75
+  },
+  "runtime": {
+    "original": {
+      "requests": 25,
+      "latency_ms_total": 116327,
+      "latency_ms_mean": 4653.1,
+      "latency_ms_p50": 4678,
+      "latency_ms_p95": 5242.2,
+      "latency_ms_min": 3603,
+      "latency_ms_max": 5722,
+      "prompt_tokens": 32396,
+      "completion_tokens": 5785,
+      "total_tokens": 38181,
+      "tokens_mean_per_request": 1527.2
+    },
+    "reversed": {
+      "requests": 25,
+      "latency_ms_total": 155958,
+      "latency_ms_mean": 6238.3,
+      "latency_ms_p50": 5519,
+      "latency_ms_p95": 10694.8,
+      "latency_ms_min": 4373,
+      "latency_ms_max": 10986,
+      "prompt_tokens": 32396,
+      "completion_tokens": 5658,
+      "total_tokens": 38054,
+      "tokens_mean_per_request": 1522.2
+    },
+    "combined": {
+      "requests": 50,
+      "latency_ms_total": 272285,
+      "latency_ms_mean": 5445.7,
+      "latency_ms_p50": 5023,
+      "latency_ms_p95": 8983.9,
+      "latency_ms_min": 3603,
+      "latency_ms_max": 10986,
+      "prompt_tokens": 64792,
+      "completion_tokens": 11443,
+      "total_tokens": 76235,
+      "tokens_mean_per_request": 1524.7
+    }
+  }
+}

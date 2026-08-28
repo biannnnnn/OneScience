@@ -1,0 +1,1315 @@
+[
+  {
+    "paper_id": "545378",
+    "title": "An efficient implementation for solving the all pairs minimax path problem in an undirected dense graph",
+    "abstract": "We provide an efficient $ O(n^2) $ implementation for solving the all pairs minimax path problem or  widest path problem in an undirected dense graph. It is a code implementation of the Algorithm 4 (MMJ distance by Calculation and Copy) in a previous paper. The distance matrix is also called the all points path distance (APPD). We conducted experiments to test the implementation and algorithm, compared it with several other algorithms for solving the APPD matrix.  Result shows Algorithm 4 works good for solving the widest path or minimax path APPD matrix.  It can drastically improve the efficiency for computing the APPD matrix.  There are several theoretical outcomes which claim the APPD matrix can be solved accurately in $ O(n^2) $ . However, they are impractical because there is no code implementation of these algorithms. It seems Algorithm 4 is the first algorithm that has an actual code implementation for solving the APPD matrix of minimax path or widest path problem in $ O(n^2) $, in an undirected dense graph.",
+    "rts": 0.0212075462007768,
+    "accept": 0,
+    "pub_year": 2025,
+    "cluster_cat": "8821863b-ce01-4b1b-b9d8-8176fde9c0e6",
+    "naipv2_score": -3.650390625,
+    "deepseek": {
+      "paper_id": "545378",
+      "score": 65,
+      "rank": 8,
+      "confidence": 0.6,
+      "rationale": "Provides an efficient implementation for all pairs minimax path problem, with experimental comparison. Practical contribution but limited novelty.",
+      "strengths": [
+        "Addresses a computational problem with practical implementation",
+        "Claims O(n^2) complexity",
+        "Experimental validation"
+      ],
+      "risks": [
+        "Incremental contribution over existing algorithms",
+        "Limited to dense graphs"
+      ],
+      "limitations": [
+        "No details on experimental setup or datasets",
+        "Theoretical guarantees not discussed"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 23529,
+      "usage_batch": {
+        "promptTokens": 2731,
+        "completionTokens": 1331,
+        "totalTokens": 4062
+      },
+      "request_id": "0c3d059f-26c1-4535-bbd6-0da88a723ff1",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  },
+  {
+    "paper_id": "543358",
+    "title": "Understanding Warmup-Stable-Decay Learning Rates: A River Valley Loss Landscape View",
+    "abstract": "Training language models currently requires pre-determining a fixed compute budget because the typical cosine learning rate schedule depends on the total number of steps. In contrast, the Warmup-Stable-Decay (WSD) schedule uses a constant learning rate to produce a main branch of iterates that can in principle continue indefinitely without a pre-specified compute budget. Then, given any compute budget, one can branch out from the main branch at a proper time with a rapidly decaying learning rate to produce a strong model. Empirically, WSD generates an intriguing, non-traditional loss curve: the loss remains elevated during the stable phase but sharply declines during the decay phase. Towards explaining this phenomenon, we conjecture that pretraining loss exhibits a river valley landscape, which resembles a deep valley with a river at its bottom. Under this assumption, we show that during the stable phase, the iterate undergoes large oscillations due to the high learning rate, yet it progresses swiftly along the river. During the decay phase, the rapidly dropping learning rate minimizes the iterate’s oscillations, moving it closer to the river and revealing true optimization progress. Therefore, the sustained high learning rate phase and fast decaying phase are responsible for progress in the river and the mountain directions, respectively, and are both critical. Our analysis predicts phenomenons consistent with empirical observations and shows that this landscape can naturally emerge from pretraining on a simple bi-gram dataset. Inspired by the theory, we introduce WSD-S, a variant of WSD that reuses previous checkpoints’ decay phases and keeps only one main branch, where we resume from a decayed checkpoint. WSD-S empirically outperforms WSD and Cyclic-Cosine in obtaining multiple pretrained language model checkpoints across various compute budgets in a single run for parameters scaling from 0.1B to 1.2B.",
+    "rts": 0.3899347145473402,
+    "accept": 1,
+    "pub_year": 2025,
+    "cluster_cat": "8484abec-ece5-4bb6-bf12-9e6606ef2a23",
+    "naipv2_score": 0.359375,
+    "deepseek": {
+      "paper_id": "543358",
+      "score": 76,
+      "rank": 3,
+      "confidence": 0.7,
+      "rationale": "Offers a theoretical explanation for WSD learning rate schedule and introduces a variant with empirical improvements. Addresses an important practical issue in LLM training.",
+      "strengths": [
+        "Novel theoretical perspective",
+        "Practical variant (WSD-S) with demonstrated gains",
+        "Experiments across model sizes"
+      ],
+      "risks": [
+        "Theoretical assumptions may not hold in all settings",
+        "Limited to language model pretraining"
+      ],
+      "limitations": [
+        "Abstract lacks details on experimental setup and metrics",
+        "Generalizability to other tasks unclear"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 23529,
+      "usage_batch": {
+        "promptTokens": 2731,
+        "completionTokens": 1331,
+        "totalTokens": 4062
+      },
+      "request_id": "0c3d059f-26c1-4535-bbd6-0da88a723ff1",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  },
+  {
+    "paper_id": "544662",
+    "title": "Generalization from Starvation: Hints of Universality in LLM Knowledge Graph Learning",
+    "abstract": "Motivated by interpretability and reliability, we investigate how neural networks represent knowledge during graph learning. We find hints of universality, where equivalent representations are learned across a range of model sizes (from $10^2$ to $10^9$ parameters) and contexts (MLP toy models, LLM in-context learning and LLM training). We show that these attractor representations optimize generalization to unseen examples by exploiting properties of knowledge graph relations (e.g. symmetry and meta-transitivity). We find experimental support for such universality by showing that LLMs and simpler neural networks can be successfully stitched, i.e., by stitching the first part of one model to the last part of another, mediated only by an affine or almost affine transformation. We hypothesize that this dynamic toward simplicity and generalization is driven by ``intelligence from starvation”: where overfitting is minimized by pressure to minimize the use of resources that are either scarce or competed for against other tasks.",
+    "rts": 0.2500000000000001,
+    "accept": 0,
+    "pub_year": 2025,
+    "cluster_cat": "8720dbc0-6bb7-4964-980d-b911ce5b1fcb",
+    "naipv2_score": -1.408203125,
+    "deepseek": {
+      "paper_id": "544662",
+      "score": 70,
+      "rank": 6,
+      "confidence": 0.6,
+      "rationale": "Investigates universality in knowledge graph learning across scales, with stitching experiments. Interesting hypothesis but limited empirical validation.",
+      "strengths": [
+        "Novel hypothesis on representation universality",
+        "Cross-model stitching experiments",
+        "Potential implications for interpretability"
+      ],
+      "risks": [
+        "Hypothesis may be speculative",
+        "Limited scope of experiments"
+      ],
+      "limitations": [
+        "Abstract lacks quantitative results",
+        "Generalizability beyond knowledge graphs unclear"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 23529,
+      "usage_batch": {
+        "promptTokens": 2731,
+        "completionTokens": 1331,
+        "totalTokens": 4062
+      },
+      "request_id": "0c3d059f-26c1-4535-bbd6-0da88a723ff1",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  },
+  {
+    "paper_id": "551584",
+    "title": "HyperFace: Generating Synthetic Face Recognition Datasets by Exploring Face Embedding Hypersphere",
+    "abstract": "Face recognition datasets are often collected by crawling Internet and without individuals' consents, raising  ethical and privacy concerns. Generating synthetic datasets for training face recognition models has emerged as a promising alternative. However, the generation of synthetic datasets remains  challenging as it entails adequate inter-class and intra-class variations. While advances in generative models have made it easier to increase intra-class variations in face datasets (such as pose, illumination, etc.), generating sufficient inter-class variation is still a difficult task. In this paper, we formulate the dataset generation as a packing problem on the embedding space (represented on a hypersphere) of a face recognition model and propose a new synthetic dataset generation approach, called HyperFace. We formalize our packing problem as an optimization problem and solve it with a gradient descent-based approach. Then, we use a conditional face generator model to synthesize face images from the optimized embeddings. We use our generated datasets to train face recognition models and evaluate the trained models on several benchmarking real datasets. Our experimental results show that models trained with HyperFace achieve state-of-the-art performance in training face recognition using synthetic datasets. Project page: https://www.idiap.ch/paper/hyperface",
+    "rts": 0.5333942185514613,
+    "accept": 1,
+    "pub_year": 2025,
+    "cluster_cat": "1d968458-a364-4afd-8372-27008ad228a9",
+    "naipv2_score": -0.26416015625,
+    "deepseek": {
+      "paper_id": "551584",
+      "score": 74,
+      "rank": 4,
+      "confidence": 0.65,
+      "rationale": "Proposes a novel synthetic face dataset generation method using hypersphere packing, achieving state-of-the-art results. Addresses ethical concerns.",
+      "strengths": [
+        "Novel formulation as packing problem",
+        "Addresses privacy and ethical issues",
+        "State-of-the-art performance"
+      ],
+      "risks": [
+        "Dependence on face recognition model for embeddings",
+        "Generalization to other domains unclear"
+      ],
+      "limitations": [
+        "No details on dataset size or diversity",
+        "Evaluation limited to face recognition"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 23529,
+      "usage_batch": {
+        "promptTokens": 2731,
+        "completionTokens": 1331,
+        "totalTokens": 4062
+      },
+      "request_id": "0c3d059f-26c1-4535-bbd6-0da88a723ff1",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  },
+  {
+    "paper_id": "544056",
+    "title": "Hi-Mamba: Hierarchical Mamba for Efficient Image Super-Resolution",
+    "abstract": "State Space Models (SSM), such as Mamba, have shown strong representation ability in modeling long-range dependency with linear complexity, achieving successful applications from high-level to low-level vision tasks. However, SSM's sequential nature necessitates multiple scans in different directions to compensate for the loss of spatial dependency when unfolding the image into a 1D sequence. This multi-direction scanning strategy significantly increases the computation overhead and is unbearable for high-resolution image processing. To address this problem, we propose a novel Hierarchical Mamba network, namely, Hi-Mamba, for image super-resolution (SR).  Hi-Mamba consists of two key designs: (1) The Hierarchical Mamba Block (HMB) assembled by a Local SSM (L-SSM) and a Region SSM (R-SSM) both with the single-direction scanning, aggregates multi-scale representations to enhance the context modeling ability. (2) The Direction Alternation  Hierarchical Mamba Group (DA-HMG) allocates the isomeric single-direction scanning into cascading HMBs to enrich the spatial relationship modeling.\nExtensive experiments demonstrate the superiority of Hi-Mamba across five benchmark datasets for efficient SR. For example, Hi-Mamba achieves a significant PSNR improvement of 0.29 dB on Manga109 for $\\times3$ SR, compared to the strong lightweight MambaIR.",
+    "rts": 0.3032912687585266,
+    "accept": 0,
+    "pub_year": 2025,
+    "cluster_cat": "0e15fef5-fe8c-4436-a234-dfb3501c2306",
+    "naipv2_score": -0.67626953125,
+    "deepseek": {
+      "paper_id": "544056",
+      "score": 72,
+      "rank": 5,
+      "confidence": 0.65,
+      "rationale": "Proposes an efficient hierarchical Mamba for image super-resolution, addressing computational overhead of multi-direction scanning. Shows improvements on benchmarks.",
+      "strengths": [
+        "Novel architecture for efficiency",
+        "Strong results on multiple datasets",
+        "Addresses practical limitation of SSMs"
+      ],
+      "risks": [
+        "Incremental novelty over existing Mamba-based SR methods",
+        "Limited to super-resolution task"
+      ],
+      "limitations": [
+        "No details on computational cost comparison",
+        "Only lightweight model comparison mentioned"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 23529,
+      "usage_batch": {
+        "promptTokens": 2731,
+        "completionTokens": 1331,
+        "totalTokens": 4062
+      },
+      "request_id": "0c3d059f-26c1-4535-bbd6-0da88a723ff1",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  },
+  {
+    "paper_id": "549564",
+    "title": "SPARTUN3D: Situated Spatial Understanding of 3D World in Large Language Model",
+    "abstract": "Integrating the 3D world into large language models (3D-based LLMs) has been a promising research direction for 3D scene understanding. However, current 3D-based LLMs fall short in situated understanding due to two key limitations: 1) existing 3D datasets are constructed from a global perspective of the 3D scenes and lack situated context.\n2) the architectures of the current 3D-based LLMs lack an explicit mechanism for aligning situated spatial information between 3D representations and natural language, limiting their performance in tasks requiring precise spatial reasoning. \nIn this work, we address these issues by introducing a scalable situated 3D dataset, named Spartun3D, that incorporates various situated spatial information.\nIn addition, we propose a situated spatial alignment module to enhance the learning between 3D visual representations and their corresponding textual descriptions. Our experimental results demonstrate that both our dataset and alignment module enhance situated spatial understanding ability.",
+    "rts": 0.5862941826215023,
+    "accept": 1,
+    "pub_year": 2025,
+    "cluster_cat": "06f4aec6-9273-4c22-957b-31e8612a8235",
+    "naipv2_score": -2.0078125,
+    "deepseek": {
+      "paper_id": "549564",
+      "score": 68,
+      "rank": 7,
+      "confidence": 0.6,
+      "rationale": "Introduces a situated 3D dataset and alignment module for LLMs, addressing spatial understanding. Contribution is moderate with potential impact.",
+      "strengths": [
+        "Addresses gap in situated 3D understanding",
+        "Dataset and module proposed",
+        "Experimental results show improvement"
+      ],
+      "risks": [
+        "Dataset may be limited in scale or diversity",
+        "Alignment module may be incremental"
+      ],
+      "limitations": [
+        "No details on dataset size or tasks",
+        "Comparison to state-of-the-art not specified"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 23529,
+      "usage_batch": {
+        "promptTokens": 2731,
+        "completionTokens": 1331,
+        "totalTokens": 4062
+      },
+      "request_id": "0c3d059f-26c1-4535-bbd6-0da88a723ff1",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  },
+  {
+    "paper_id": "542784",
+    "title": "Blind Coreset Selection: Efficient Pruning for Unlabeled Data",
+    "abstract": "Deep learning methods rely on massive data, resulting in substantial costs for storage, annotation, and model training.\nCoreset selection aims to select a representative subset of the data to train models with lower cost while ideally performing on par with the full data training.\nState-of-the-art coreset selection methods use carefully-designed criteria to quantify the importance of each data example using ground truth labels and dataset-specific training, then select examples whose scores lie in a certain range to construct a coreset.\nThese methods work well in their respective settings, however, they cannot consider candidate data that are initially unlabeled.\nThis limits the application of these methods, especially so considering that the majority of real-world data are unlabeled.\nTo that end, this paper explores the problem of coreset selection for unlabeled data.\nWe first motivate and formalize the problem of unlabeled coreset selection, which reduces annotation requirements to enable greater scale relative to label-based coreset selection.\nWe then develop an unlabeled coreset selection method, Blind Coreset Selection (BlindCS), that jointly considers overall data coverage on a distribution as well as the relative importance of each example based on redundancy.\nNotably, BlindCS does not use any model- or dataset-specific training, which increases coreset generalization and reduces computation relative to training-based coreset selection.\nWe evaluate BlindCS on four datasets and confirm the advance over several state-of-the-art methods that use labels and training, leading to a strong baseline for future research in unlabeled coreset selection.\nNotably, the BlindCS coreset for ImageNet achieves a higher accuracy than previous label-based coresets at a 90\\% prune rate, while removing annotation requirements for 1.15 million images.\nWe will make our code publicly available with the final paper.",
+    "rts": 0.3302577133005668,
+    "accept": 0,
+    "pub_year": 2025,
+    "cluster_cat": "ac11a68a-3c9c-43c7-a8c3-e61f5788dc21",
+    "naipv2_score": -1.4716796875,
+    "deepseek": {
+      "paper_id": "542784",
+      "score": 78,
+      "rank": 2,
+      "confidence": 0.7,
+      "rationale": "Addresses an important practical problem of coreset selection for unlabeled data, with a novel method and strong empirical results on ImageNet.",
+      "strengths": [
+        "Novel problem formulation",
+        "Method is model-agnostic and efficient",
+        "Strong results on large-scale dataset"
+      ],
+      "risks": [
+        "Generalization to other domains not shown",
+        "Theoretical guarantees not provided"
+      ],
+      "limitations": [
+        "Only four datasets evaluated",
+        "No details on hyperparameter sensitivity"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 23529,
+      "usage_batch": {
+        "promptTokens": 2731,
+        "completionTokens": 1331,
+        "totalTokens": 4062
+      },
+      "request_id": "0c3d059f-26c1-4535-bbd6-0da88a723ff1",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  },
+  {
+    "paper_id": "542408",
+    "title": "Systematic Outliers in Large Language Models",
+    "abstract": "Outliers have been widely observed in Large Language Models (LLMs), significantly impacting model performance and posing challenges for model compression. Understanding the functionality and formation mechanisms of these outliers is critically important. Existing works, however, largely focus on reducing the impact of outliers from an algorithmic perspective, lacking an in-depth investigation into their causes and roles. In this work, we provide a detailed analysis of the formation process, underlying causes, and functions of outliers in LLMs. We define and categorize three types of outliers—activation outliers, weight outliers, and attention outliers—and analyze their distributions across different dimensions, uncovering inherent connections between their occurrences and their ultimate influence on the attention mechanism. Based on these observations, we hypothesize and explore the mechanisms by which these outliers arise and function, demonstrating through theoretical derivations and experiments that they emerge due to the self-attention mechanism's softmax operation. These outliers act as implicit context-aware scaling factors within the attention mechanism. As these outliers stem from systematic influences, we term them systematic outliers. Our study not only enhances the understanding of Transformer-based LLMs but also shows that structurally eliminating outliers can accelerate convergence and improve model compression. The code is avilable at \\url{https://github.com/an-yongqi/systematic-outliers}.",
+    "rts": 0.6054346334518879,
+    "accept": 1,
+    "pub_year": 2025,
+    "cluster_cat": "5fa3ffa8-0105-48c7-8e4b-17635a89eea4",
+    "naipv2_score": 0.64404296875,
+    "deepseek": {
+      "paper_id": "542408",
+      "score": 82,
+      "rank": 1,
+      "confidence": 0.75,
+      "rationale": "Provides a detailed analysis of outlier formation and function in LLMs, with theoretical derivations and experiments. Addresses a significant problem with potential impact on model compression and understanding.",
+      "strengths": [
+        "Novel categorization of outliers",
+        "Theoretical and experimental support",
+        "Potential practical impact on compression"
+      ],
+      "risks": [
+        "Complexity of mechanisms may be hard to fully validate",
+        "Generalizability across model architectures unclear"
+      ],
+      "limitations": [
+        "Abstract lacks specific experimental details and quantitative results",
+        "Code availability mentioned but not evaluated"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 23529,
+      "usage_batch": {
+        "promptTokens": 2731,
+        "completionTokens": 1331,
+        "totalTokens": 4062
+      },
+      "request_id": "0c3d059f-26c1-4535-bbd6-0da88a723ff1",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  },
+  {
+    "paper_id": "549175",
+    "title": "What Makes a Good Time-series Forecasting Model? A Causal Perspective",
+    "abstract": "Generalization is a long-standing challenge in multivariate time series forecasting (MTSF) tasks. Most existing forecasting methods use all available variables in historical series to predict all future variables, assuming that there may be correlations among all variables. From a causal perspective, this reliance on correlated variables can compromise the model’s generalization. To address this, we aim to explore the role of causal relationships in enhancing the generalization of multivariate time series models. We examine how graphical causal models, through conditional independence constraints, can reduce the hypothesis space, thereby improving generalization. Building on this foundation, we introduce a novel causality-based MTSF algorithm CAusal Informed Transformer (CAIFormer). It first constructs a Directed Acyclic Graph (DAG) among variables using causal discovery techniques. Then we build the forecasting model by enforcing the causal constraints informed by the DAG. Empirical evaluations on benchmark datasets demonstrate that our method surpasses traditional approaches in predictive accuracy. Additionally, we present the structural causal models derived for these datasets, underscoring the practical applicability of our causality-driven framework in MTSF.",
+    "rts": 0.3630606312292357,
+    "accept": 0,
+    "pub_year": 2025,
+    "cluster_cat": "e4f8d05a-f4e8-430b-bee8-63d7addde2df",
+    "naipv2_score": -1.2568359375,
+    "deepseek": {
+      "paper_id": "549175",
+      "score": 70,
+      "rank": 8,
+      "confidence": 0.6,
+      "rationale": "提出CAIFormer，利用因果发现构建DAG并约束预测模型，提升多元时间序列预测泛化。实验显示优于传统方法。方法有理论支撑，但摘要未提供具体数据集和提升幅度。",
+      "strengths": [
+        "因果视角新颖",
+        "理论上有助于泛化",
+        "实验验证有效"
+      ],
+      "risks": [
+        "因果发现可能不准确",
+        "仅适用于多元时间序列"
+      ],
+      "limitations": [
+        "未提供具体数据集和指标",
+        "未报告提升幅度"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 23047,
+      "usage_batch": {
+        "promptTokens": 2553,
+        "completionTokens": 1422,
+        "totalTokens": 3975
+      },
+      "request_id": "bf443142-4538-40d6-a3d7-e67496a81075",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  },
+  {
+    "paper_id": "543839",
+    "title": "Large Language Models can Become Strong Self-Detoxifiers",
+    "abstract": "Reducing the likelihood of generating harmful and toxic output is an essential task when aligning large language models (LLMs). Existing methods mainly rely on training an external reward model (i.e., another language model) or fine-tuning the LLM using self-generated data to influence the outcome. In this paper, we show that LLMs have the capability of self-detoxification without external reward model learning or retraining of the LM. We propose \\textit{Self-disciplined Autoregressive Sampling (SASA)}, a lightweight controlled decoding algorithm for toxicity reduction of LLMs. SASA leverages the contextual representations from an LLM to learn linear subspaces from labeled data characterizing toxic v.s. non-toxic output in analytical forms. When auto-completing a response token-by-token, SASA dynamically tracks the margin of the current output to steer the generation away from the toxic subspace, by adjusting the autoregressive sampling strategy. Evaluated on LLMs of different scale and nature, namely Llama-3.1-Instruct (8B), Llama-2 (7B), and GPT2-L models with the RealToxicityPrompts, BOLD, and AttaQ benchmarks, SASA markedly enhances the quality of the generated sentences relative to the original models and attains comparable performance to state-of-the-art detoxification techniques, significantly reducing the toxicity level by only using the LLM's internal representations.",
+    "rts": 0.625,
+    "accept": 1,
+    "pub_year": 2025,
+    "cluster_cat": "bcb70f18-5406-41a8-93c2-3845faa4fbd4",
+    "naipv2_score": -1.1865234375,
+    "deepseek": {
+      "paper_id": "543839",
+      "score": 75,
+      "rank": 3,
+      "confidence": 0.7,
+      "rationale": "提出SASA，一种轻量级解码算法，利用LLM内部表示进行自解毒，无需外部奖励模型或微调。在多个模型和基准上验证，效果与SOTA相当。方法创新，但摘要未提供具体毒性降低数值。",
+      "strengths": [
+        "无需外部模型或微调",
+        "轻量级解码算法",
+        "多模型和基准验证"
+      ],
+      "risks": [
+        "可能影响生成质量",
+        "依赖线性子空间假设"
+      ],
+      "limitations": [
+        "未提供具体毒性降低百分比",
+        "未报告计算开销"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 23047,
+      "usage_batch": {
+        "promptTokens": 2553,
+        "completionTokens": 1422,
+        "totalTokens": 3975
+      },
+      "request_id": "bf443142-4538-40d6-a3d7-e67496a81075",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  },
+  {
+    "paper_id": "543038",
+    "title": "Overcoming label shift in targeted federated learning",
+    "abstract": "Federated learning enables multiple actors to collaboratively train models without sharing private data. This unlocks the potential for scaling machine learning to diverse applications. Existing algorithms for this task are well-justified when clients and the intended target domain share the same distribution of features and labels, but this assumption is often violated in real-world scenarios. One common violation is label shift, where the label distributions differ across clients or between clients and the target domain, which can significantly degrade model performance. To address this problem, we propose FedPALS, a novel model aggregation scheme that adapts to label shifts by leveraging knowledge of the target label distribution at the central server. Our approach ensures unbiased updates under stochastic gradient descent, ensuring robust generalization across clients with diverse, label-shifted data. Extensive experiments on image classification demonstrate that FedPALS consistently outperforms standard baselines by aligning model aggregation with the target domain. Our findings reveal that conventional federated learning methods suffer severely in cases of extreme client sparsity, highlighting the critical need for target-aware aggregation. FedPALS offers a principled and practical solution to mitigate label distribution mismatch, ensuring models trained in federated settings can generalize effectively to label-shifted target domains.",
+    "rts": 0.3890031906076595,
+    "accept": 0,
+    "pub_year": 2025,
+    "cluster_cat": "e5cb089e-5883-40d8-bd14-ceff0fcc2d60",
+    "naipv2_score": -1.6953125,
+    "deepseek": {
+      "paper_id": "543038",
+      "score": 76,
+      "rank": 2,
+      "confidence": 0.7,
+      "rationale": "提出FedPALS解决联邦学习中的标签偏移问题，利用目标标签分布调整聚合。理论保证无偏更新，实验显示优于基线。方法针对性强，但摘要未提供理论细节和实验规模。",
+      "strengths": [
+        "针对实际标签偏移问题",
+        "理论保证无偏更新",
+        "实验验证有效"
+      ],
+      "risks": [
+        "依赖目标标签分布已知",
+        "可能仅适用于图像分类"
+      ],
+      "limitations": [
+        "未提供理论证明细节",
+        "未报告数据集和模型"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 23047,
+      "usage_batch": {
+        "promptTokens": 2553,
+        "completionTokens": 1422,
+        "totalTokens": 3975
+      },
+      "request_id": "bf443142-4538-40d6-a3d7-e67496a81075",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  },
+  {
+    "paper_id": "546665",
+    "title": "Certifying Language Model Robustness with Fuzzed Randomized Smoothing: An Efficient Defense Against Backdoor Attacks",
+    "abstract": "The widespread deployment of pre-trained language models (PLMs) has exposed them to textual backdoor attacks, particularly those planted during the pre-training stage. These attacks pose significant risks to high-reliability applications, as they can stealthily affect multiple downstream tasks. While certifying robustness against such threats is crucial, existing defenses struggle with the high-dimensional, interdependent nature of textual data and the lack of access to original poisoned pre-training data. To address these challenges, we introduce **F**uzzed **R**andomized **S**moothing (**FRS**), a novel approach for efficiently certifying language model robustness against backdoor attacks. FRS integrates software robustness certification techniques with biphased model parameter smoothing, employing Monte Carlo tree search for proactive fuzzing to identify vulnerable textual segments within the Damerau-Levenshtein space. This allows for targeted and efficient text randomization, while eliminating the need for access to poisoned training data during model smoothing.  Our theoretical analysis demonstrates that FRS achieves a broader certified robustness radius compared to existing methods. Extensive experiments across various datasets, model configurations, and attack strategies validate FRS's superiority in terms of defense efficiency, accuracy, and robustness.",
+    "rts": 0.6250000000000001,
+    "accept": 1,
+    "pub_year": 2025,
+    "cluster_cat": "cb0a01e6-8f7c-4c74-a736-6821f8f2ad2a",
+    "naipv2_score": -1.08203125,
+    "deepseek": {
+      "paper_id": "546665",
+      "score": 73,
+      "rank": 5,
+      "confidence": 0.65,
+      "rationale": "提出FRS，结合模糊测试和随机平滑来认证语言模型对后门攻击的鲁棒性。理论分析显示更大认证半径，实验验证有效性。方法创新，但摘要未提供具体认证半径数值。",
+      "strengths": [
+        "新颖的认证方法",
+        "理论保证",
+        "无需中毒数据"
+      ],
+      "risks": [
+        "计算复杂度可能高",
+        "仅针对文本后门"
+      ],
+      "limitations": [
+        "未提供具体认证半径",
+        "未报告运行时间"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 23047,
+      "usage_batch": {
+        "promptTokens": 2553,
+        "completionTokens": 1422,
+        "totalTokens": 3975
+      },
+      "request_id": "bf443142-4538-40d6-a3d7-e67496a81075",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  },
+  {
+    "paper_id": "547979",
+    "title": "Seeing the Whole in the Parts in Self-Supervised Representation Learning",
+    "abstract": "Recent successes in self-supervised learning (SSL) model spatial co-occurrences of visual features either by masking portions of an image or by aggressively cropping it. Here, we propose a new way to model spatial co-occurrences by aligning local representations (before pooling) with a global image representation. We present CO-SSL, a family of instance discrimination methods and show that it outperforms previous methods on several datasets, including ImageNet-1K where it achieves 71.5% of Top-1 accuracy with 100 pre-training epochs. CO-SSL is also more robust to noise corruption, internal corruption, small adversarial attacks, and large training crop sizes. Our analysis further indicates that CO-SSL learns highly redundant local representations, which offers an explanation for its robustness. Overall, our work suggests that aligning local and global representations may be a powerful principle of unsupervised category learning.",
+    "rts": 0.4102655440414509,
+    "accept": 0,
+    "pub_year": 2025,
+    "cluster_cat": "182d3cc4-df0e-408a-9d4e-cbb880693454",
+    "naipv2_score": -1.6552734375,
+    "deepseek": {
+      "paper_id": "547979",
+      "score": 72,
+      "rank": 6,
+      "confidence": 0.65,
+      "rationale": "提出CO-SSL，通过对齐局部和全局表示改进自监督学习。在ImageNet上取得71.5% top-1准确率，并展示鲁棒性。方法简单有效，但摘要未提供与其他方法的详细比较。",
+      "strengths": [
+        "新颖的对齐策略",
+        "在ImageNet上表现良好",
+        "鲁棒性分析"
+      ],
+      "risks": [
+        "可能局限于视觉任务",
+        "缺乏理论解释"
+      ],
+      "limitations": [
+        "未提供与其他SOTA的详细比较",
+        "未报告计算成本"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 23047,
+      "usage_batch": {
+        "promptTokens": 2553,
+        "completionTokens": 1422,
+        "totalTokens": 3975
+      },
+      "request_id": "bf443142-4538-40d6-a3d7-e67496a81075",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  },
+  {
+    "paper_id": "544345",
+    "title": "Unify ML4TSP: Drawing Methodological Principles for TSP and Beyond from Streamlined Design Space of Learning and Search",
+    "abstract": "Despite the rich works on machine learning (ML) for combinatorial optimization (CO), a unified, principled framework remains lacking. This study utilizes the Travelling Salesman Problem (TSP) as a major case study, with adaptations demonstrated for other CO problems, dissecting established mainstream learning-based solvers to outline a comprehensive design space. We present ML4TSPBench, which advances a unified modular streamline incorporating existing technologies in both learning and search for transparent ablation, aiming to reassess the role of learning and discern which parts of existing techniques are genuinely beneficial and which are not. This further leads to the investigation of desirable principles of learning designs and the exploration of concepts guiding method designs. We demonstrate the desirability of principles such as joint probability estimation, symmetry solution representation, and online optimization for learning-based designs. Leveraging the findings, we propose enhancements to existing methods to compensate for their missing attributes, thereby advancing performance and enriching the technique library. From a higher viewpoint, we also uncover a performance advantage in non-autoregressive and supervised paradigms compared to their counterparts. The strategic decoupling and organic recompositions yield a factory of new TSP solvers, where we investigate synergies across various method combinations and pinpoint the optimal design choices to create more powerful ML4TSP solvers, thereby facilitating and offering a reference for future research and engineering endeavors.",
+    "rts": 0.642497339224179,
+    "accept": 1,
+    "pub_year": 2025,
+    "cluster_cat": "e9b0a66c-b042-4eb5-a2e6-e6cea5ce497f",
+    "naipv2_score": -0.177490234375,
+    "deepseek": {
+      "paper_id": "544345",
+      "score": 74,
+      "rank": 4,
+      "confidence": 0.65,
+      "rationale": "提出ML4TSPBench，统一学习与搜索的设计空间，通过消融研究提炼原则，并改进现有方法。贡献在于系统分析和基准，但摘要未提供具体性能提升数据。",
+      "strengths": [
+        "系统性的设计空间分析",
+        "提出设计原则",
+        "提供基准工具"
+      ],
+      "risks": [
+        "可能缺乏新颖算法",
+        "实验细节不足"
+      ],
+      "limitations": [
+        "未报告具体性能提升",
+        "未说明基准规模"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 23047,
+      "usage_batch": {
+        "promptTokens": 2553,
+        "completionTokens": 1422,
+        "totalTokens": 3975
+      },
+      "request_id": "bf443142-4538-40d6-a3d7-e67496a81075",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  },
+  {
+    "paper_id": "542286",
+    "title": "Q* Agent: Optimizing Language Agents with Q-Guided Exploration",
+    "abstract": "Language agents have become a promising solution to complex interactive tasks. One of the key ingredients to the success of language agents is the reward model on the trajectory of the agentic workflow, which provides valuable guidance during training or inference. However, due to the lack of annotations of intermediate interactions, most existing works use an outcome reward model to optimize policies across entire trajectories. This may lead to sub-optimal policies and hinder the overall performance. To address this, we propose Q\\*Agent, leveraging an estimated Q value to generate intermediate annotations for open language agents. \nBy introducing a reasoning tree and performing process reward modeling, Q\\*Agent provides effective intermediate guidance for each step. This guidance aims to automatically annotate data in a step-wise manner.\nBesides, we propose a Q-guided generation strategy that can significantly boost model performance by providing process guidance during inference.\nNotably, even with almost half the annotated data, Q\\*Agent retains strong performance, demonstrating its efficiency in handling limited supervision. We also empirically demonstrate that Q\\*Agent can lead to more accurate decision making through qualitative analysis.",
+    "rts": 0.4337049458220379,
+    "accept": 0,
+    "pub_year": 2025,
+    "cluster_cat": "01d5679f-d619-44a4-a775-9a5458409d18",
+    "naipv2_score": -1.2841796875,
+    "deepseek": {
+      "paper_id": "542286",
+      "score": 78,
+      "rank": 1,
+      "confidence": 0.75,
+      "rationale": "提出Q*Agent，利用Q值估计为语言智能体提供中间过程指导，解决仅用结果奖励的问题。方法新颖，实验显示数据效率高，但摘要未提供具体基准和统计显著性。",
+      "strengths": [
+        "新颖的过程奖励建模方法",
+        "数据效率高",
+        "定性分析支持决策改进"
+      ],
+      "risks": [
+        "缺乏具体实验细节",
+        "可能依赖特定任务"
+      ],
+      "limitations": [
+        "未提供基准数据集和指标",
+        "未报告统计显著性"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 23047,
+      "usage_batch": {
+        "promptTokens": 2553,
+        "completionTokens": 1422,
+        "totalTokens": 3975
+      },
+      "request_id": "bf443142-4538-40d6-a3d7-e67496a81075",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  },
+  {
+    "paper_id": "548516",
+    "title": "Learning to Plan Before Answering: Self-Teaching LLMs to Learn Abstract Plans for Problem Solving",
+    "abstract": "In the field of large language model (LLM) post-training, the effectiveness of utilizing synthetic data generated by the LLM itself has been well-presented. However, a key question remains unaddressed: what essential information should such self-generated data encapsulate? Existing approaches only produce step-by-step problem solutions, and fail to capture the abstract meta-knowledge necessary for generalization across similar problems. Drawing insights from cognitive science, where humans employ high-level abstraction to simplify complex problems before delving into specifics, we introduce a novel self-training algorithm: LEarning to Plan before Answering (LEPA). LEPA trains the LLM to formulate anticipatory plans, which serve as abstract meta-knowledge for problem-solving, before engaging with the intricacies of problems. This approach not only outlines the solution generation path but also shields the LLM from the distraction of irrelevant details. During data generation, LEPA first crafts an anticipatory plan based on the problem, and then generates a solution that aligns with both the plan and the problem. LEPA refines the plan through self-reflection, aiming to acquire plans that are instrumental in yielding correct solutions. During model optimization, the LLM is trained to predict both the refined plans and the corresponding solutions. By efficiently extracting and utilizing the anticipatory plans, LEPA demonstrates remarkable superiority over conventional algorithms on various challenging natural language reasoning benchmarks.",
+    "rts": 0.6581365628042842,
+    "accept": 1,
+    "pub_year": 2025,
+    "cluster_cat": "a699114e-5db7-40ca-a844-e364036512de",
+    "naipv2_score": -1.1923828125,
+    "deepseek": {
+      "paper_id": "548516",
+      "score": 71,
+      "rank": 7,
+      "confidence": 0.6,
+      "rationale": "提出LEPA，训练LLM在解答前生成抽象计划，提升推理泛化能力。在多个推理基准上表现优越。方法有认知科学依据，但摘要未提供具体数据集和提升幅度。",
+      "strengths": [
+        "新颖的计划生成训练",
+        "认知科学启发",
+        "在多个基准上验证"
+      ],
+      "risks": [
+        "可能增加推理成本",
+        "依赖自我反思质量"
+      ],
+      "limitations": [
+        "未提供具体数据集和指标",
+        "未报告提升幅度"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 23047,
+      "usage_batch": {
+        "promptTokens": 2553,
+        "completionTokens": 1422,
+        "totalTokens": 3975
+      },
+      "request_id": "bf443142-4538-40d6-a3d7-e67496a81075",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  },
+  {
+    "paper_id": "540884",
+    "title": "Decomposition Ascribed Synergistic Learning for Unified Image Restoration",
+    "abstract": "Learning to restore multiple image degradations within a single model is quite beneficial for real-world applications. Nevertheless, existing works typically concentrate on regarding each degradation independently, while their relationship has been less comprehended to ensure the synergistic learning. To this end, we revisit the diverse degradations through the lens of singular value decomposition, with the observation that the decomposed singular vectors and singular values naturally undertake the different types of degradation information, dividing various restoration tasks into two groups, \\ie, singular vector dominated and singular value dominated. The above analysis renders a more unified perspective to ascribe diverse degradation connections, compared to previous task-level independent learning. The dedicated optimization of degraded singular vectors and singular values inherently utilizes the potential partnership among diverse restoration tasks, attributing to the Decomposition Ascribed Synergistic Learning (DASL). Specifically, DASL comprises two effective operators, namely, Singular VEctor Operator (SVEO) and Singular VAlue Operator (SVAO), to favor the decomposed optimization, which can be lightly integrated into existing image restoration backbone. Moreover, the congruous decomposition loss has been devised for auxiliary. Extensive experiments on five image restoration tasks demonstrate the effectiveness of our method.",
+    "rts": 0.4513530927835051,
+    "accept": 0,
+    "pub_year": 2025,
+    "cluster_cat": "e9edf7f1-d157-4f98-b2a9-c3edc32b78e3",
+    "naipv2_score": -2.19140625,
+    "deepseek": {
+      "paper_id": "540884",
+      "score": 78,
+      "rank": 1,
+      "confidence": 0.7,
+      "rationale": "提出基于奇异值分解的统一图像恢复框架，将退化分为奇异向量主导和奇异值主导，并设计两个算子，具有较好的原创性和理论依据。摘要声称在五个任务上验证，但未提供具体指标。",
+      "strengths": [
+        "新颖的统一视角处理多种退化",
+        "理论分析（SVD）支撑方法设计",
+        "可集成到现有骨干网络"
+      ],
+      "risks": [
+        "缺乏具体实验数据",
+        "算子设计可能过于复杂"
+      ],
+      "limitations": [
+        "未提供定量结果",
+        "未说明计算开销"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 22393,
+      "usage_batch": {
+        "promptTokens": 2412,
+        "completionTokens": 1323,
+        "totalTokens": 3735
+      },
+      "request_id": "c4c22396-6ee4-431c-b2d5-c2fcc596d307",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  },
+  {
+    "paper_id": "544789",
+    "title": "GraphRouter: A Graph-based Router for LLM Selections",
+    "abstract": "The rapidly growing number and variety of Large Language Models (LLMs)\npresent significant challenges in efficiently selecting the appropriate LLM for\na given query, especially considering the trade-offs between performance and\ncomputational cost. Current LLM selection methods often struggle to generalize\nacross new LLMs and different tasks because of their limited ability to leverage\ncontextual interactions among tasks, queries, and LLMs, as well as their depen-\ndence on a transductive learning framework. To address these shortcomings, we\nintroduce a novel inductive graph framework, named as GraphRouter, which\nfully utilizes the contextual information among tasks, queries, and LLMs to en-\nhance the LLM selection process. GraphRouter constructs a heterogeneous\ngraph comprising task, query, and LLM nodes, with interactions represented as\nedges, which efficiently captures the contextual information between the query’s\nrequirements and the LLM’s capabilities. Through an innovative edge prediction\nmechanism, GraphRouter is able to predict attributes (the effect and cost of\nLLM response) of potential edges, allowing for optimized recommendations that\nadapt to both existing and newly introduced LLMs without requiring retraining.\nComprehensive experiments across three distinct effect-cost weight scenarios have\nshown that GraphRouter substantially surpasses existing routers, delivering a\nminimum performance improvement of 12.3%. In addition, it achieves enhanced\ngeneralization across new LLMs settings and supports diverse tasks with at least a\n9.5% boost in effect and a significant reduction in computational demands. This\nwork endeavors to apply a graph-based approach for the contextual and adaptive\nselection of LLMs, offering insights for real-world applications.",
+    "rts": 0.6718851909784911,
+    "accept": 1,
+    "pub_year": 2025,
+    "cluster_cat": "125e66f1-14a2-4d13-8bfd-ca31911de7e7",
+    "naipv2_score": -1.9912109375,
+    "deepseek": {
+      "paper_id": "544789",
+      "score": 72,
+      "rank": 4,
+      "confidence": 0.7,
+      "rationale": "提出基于图的LLM选择框架，具有归纳学习能力，可泛化到新LLM。实验显示显著提升，但摘要未详细说明评估设置。",
+      "strengths": [
+        "新颖的图框架",
+        "归纳学习能力",
+        "报告了性能提升"
+      ],
+      "risks": [
+        "图构建可能复杂",
+        "依赖任务和LLM特征"
+      ],
+      "limitations": [
+        "未提供具体实验细节",
+        "未讨论计算开销"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 22393,
+      "usage_batch": {
+        "promptTokens": 2412,
+        "completionTokens": 1323,
+        "totalTokens": 3735
+      },
+      "request_id": "c4c22396-6ee4-431c-b2d5-c2fcc596d307",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  },
+  {
+    "paper_id": "551098",
+    "title": "SynthCLIP: Are We Ready for a Fully Synthetic CLIP Training?",
+    "abstract": "We present SynthCLIP, a CLIP model trained on entirely synthetic text-image pairs. Leveraging recent text-to-image (TTI) networks and large language models (LLM), we generate synthetic datasets of images and corresponding captions at scale, with no human intervention. In this work, we provide an analysis on CLIP models trained on synthetic data. We provide insights on the data generation strategy, number of samples required, scaling trends, and resulting properties. We also introduce SynthCI-30M, a purely synthetic dataset comprising 30 million captioned images. Our work focuses on showing the advantages and disadvantages of synthetic data for training CLIP models. Our code, trained models, and data, will be released as open source.",
+    "rts": 0.4687499999999999,
+    "accept": 0,
+    "pub_year": 2025,
+    "cluster_cat": "5317e759-aaab-41c5-9961-6ee469cdb65b",
+    "naipv2_score": -1.2216796875,
+    "deepseek": {
+      "paper_id": "551098",
+      "score": 65,
+      "rank": 8,
+      "confidence": 0.7,
+      "rationale": "探索全合成数据训练CLIP模型，提供数据集和分析。但摘要未报告性能对比，且可能缺乏新颖性。",
+      "strengths": [
+        "大规模合成数据集",
+        "分析合成数据的影响",
+        "开源资源"
+      ],
+      "risks": [
+        "未报告与真实数据训练的对比",
+        "合成数据可能引入偏差"
+      ],
+      "limitations": [
+        "未提供定量结果",
+        "未讨论合成数据质量"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 22393,
+      "usage_batch": {
+        "promptTokens": 2412,
+        "completionTokens": 1323,
+        "totalTokens": 3735
+      },
+      "request_id": "c4c22396-6ee4-431c-b2d5-c2fcc596d307",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  },
+  {
+    "paper_id": "549163",
+    "title": "Scale-Aware Contrastive Reverse Distillation for Unsupervised Medical Anomaly Detection",
+    "abstract": "Unsupervised anomaly detection using deep learning has garnered significant research attention due to its broad applicability, particularly in medical imaging where labeled anomalous data are scarce. While earlier approaches leverage generative models like autoencoders and generative adversarial networks (GANs), they often fall short due to overgeneralization. Recent methods explore various strategies, including memory banks, normalizing flows, self-supervised learning, and knowledge distillation, to enhance discrimination. Among these, knowledge distillation, particularly reverse distillation, has shown promise. Following this paradigm, we propose a novel scale-aware contrastive reverse distillation model that addresses two key limitations of existing reverse distillation methods: insufficient feature discriminability and inability to handle anomaly scale variations. Specifically, we introduce a contrastive student-teacher learning approach to derive more discriminative representations by generating and exploring out-of-normal distributions. Further, we design a scale adaptation mechanism to softly weight contrastive distillation losses at different scales to account for the scale variation issue. Extensive experiments on benchmark datasets demonstrate state-of-the-art performance, validating the efficacy of the proposed method. The code will be made publicly available.",
+    "rts": 0.6875,
+    "accept": 1,
+    "pub_year": 2025,
+    "cluster_cat": "f544ea80-2bed-4c4a-a791-3aef744cd925",
+    "naipv2_score": -2.8125,
+    "deepseek": {
+      "paper_id": "549163",
+      "score": 66,
+      "rank": 7,
+      "confidence": 0.7,
+      "rationale": "提出尺度感知对比反向蒸馏用于医学异常检测，解决特征判别和尺度变化问题。声称SOTA，但未给出具体指标。",
+      "strengths": [
+        "针对医学异常检测的改进",
+        "对比学习和尺度适应机制",
+        "代码将开源"
+      ],
+      "risks": [
+        "未报告具体性能",
+        "可能依赖特定数据集"
+      ],
+      "limitations": [
+        "未提供定量结果",
+        "未讨论计算成本"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 22393,
+      "usage_batch": {
+        "promptTokens": 2412,
+        "completionTokens": 1323,
+        "totalTokens": 3735
+      },
+      "request_id": "c4c22396-6ee4-431c-b2d5-c2fcc596d307",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  },
+  {
+    "paper_id": "549001",
+    "title": "Are LLMs Prescient? A Continuous Evaluation using Daily News as the Oracle",
+    "abstract": "Many existing evaluation benchmarks for Large Language Models (LLMs) quickly become outdated due to the emergence of new models and training data. These benchmarks also fall short in assessing how LLM performance changes over time, as they consist of static questions without a temporal dimension. To address these limitations, we propose using future event prediction as a continuous evaluation method to assess LLMs' temporal generalization and forecasting abilities. Our benchmark, Daily Oracle, automatically generates question-answer (QA) pairs from daily news, challenging LLMs to predict \"future\" event outcomes. Our findings reveal that as pre-training data becomes outdated, LLM performance degrades over time. While Retrieval Augmented Generation (RAG) has the potential to enhance prediction accuracy, the performance degradation pattern persists, highlighting the need for continuous model updates.",
+    "rts": 0.4980634377038486,
+    "accept": 0,
+    "pub_year": 2025,
+    "cluster_cat": "16aeec11-24a9-40cb-a80e-8ea896ee6903",
+    "naipv2_score": -1.3173828125,
+    "deepseek": {
+      "paper_id": "549001",
+      "score": 68,
+      "rank": 6,
+      "confidence": 0.7,
+      "rationale": "提出基于未来事件预测的连续评估基准，揭示LLM时间退化问题。方法新颖，但摘要未提供具体实验数据。",
+      "strengths": [
+        "新颖的评估范式",
+        "自动生成QA对",
+        "揭示时间退化现象"
+      ],
+      "risks": [
+        "预测任务可能受噪声影响",
+        "未报告具体性能"
+      ],
+      "limitations": [
+        "未提供定量结果",
+        "未讨论基准的可靠性"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 22393,
+      "usage_batch": {
+        "promptTokens": 2412,
+        "completionTokens": 1323,
+        "totalTokens": 3735
+      },
+      "request_id": "c4c22396-6ee4-431c-b2d5-c2fcc596d307",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  },
+  {
+    "paper_id": "543150",
+    "title": "Causal Information Prioritization for Efficient Reinforcement Learning",
+    "abstract": "Current Reinforcement Learning (RL) methods often suffer from sample-inefficiency, resulting from blind exploration strategies that neglect causal relationships among states, actions, and rewards. Although recent causal approaches aim to address this problem, they lack grounded modeling of reward-guided causal understanding of states and actions for goal-orientation, thus impairing learning efficiency. To tackle this issue, we propose a novel method named Causal Information Prioritization (CIP) that improves sample efficiency by leveraging factored MDPs to infer causal relationships between different dimensions of states and actions with respect to rewards, enabling the prioritization of causal information. Specifically, CIP identifies and leverages causal relationships between states and rewards to execute counterfactual data augmentation to prioritize high-impact state features under the causal understanding of the environments. Moreover, CIP integrates a causality-aware empowerment learning objective, which significantly enhances the agent's execution of reward-guided actions for more efficient exploration in complex environments. \nTo fully assess the effectiveness of CIP, we conduct extensive experiments across $39$ tasks in $5$ diverse continuous control environments, encompassing both locomotion and manipulation skills learning with pixel-based and sparse reward settings. Experimental results demonstrate that CIP consistently outperforms existing RL methods across a wide range of scenarios.",
+    "rts": 0.7019328504466568,
+    "accept": 1,
+    "pub_year": 2025,
+    "cluster_cat": "1548108f-d7f2-4b3a-9b11-2e64953cceb7",
+    "naipv2_score": 0.166259765625,
+    "deepseek": {
+      "paper_id": "543150",
+      "score": 74,
+      "rank": 3,
+      "confidence": 0.7,
+      "rationale": "利用因果信息优先级提升强化学习样本效率，在多个任务上验证，方法有理论支撑。但摘要未给出具体提升幅度。",
+      "strengths": [
+        "因果建模与RL结合",
+        "大量实验（39个任务）",
+        "适用于稀疏奖励和像素输入"
+      ],
+      "risks": [
+        "因果推断可能引入额外计算",
+        "未报告具体性能提升"
+      ],
+      "limitations": [
+        "未提供定量结果",
+        "未讨论局限性"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 22393,
+      "usage_batch": {
+        "promptTokens": 2412,
+        "completionTokens": 1323,
+        "totalTokens": 3735
+      },
+      "request_id": "c4c22396-6ee4-431c-b2d5-c2fcc596d307",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  },
+  {
+    "paper_id": "545361",
+    "title": "MF-LAL: Drug Compound Generation Using Multi-Fidelity Latent Space Active Learning",
+    "abstract": "Current generative models for drug discovery primarily use molecular docking as an oracle to guide the generation of active compounds. However, such models are often not useful in practice because even compounds with high docking scores do not consistently show experimental activity. More accurate methods for activity prediction exist, such as molecular dynamics based binding free energy calculations, but they are too computationally expensive to use in a generative model. To address this challenge, we propose Multi-Fidelity Latent space Active Learning (MF-LAL), a generative modeling framework that integrates a set of oracles with varying cost-accuracy tradeoffs. We train a surrogate model for each oracle and use these surrogates to generate compounds with high predicted activity. Unlike previous approaches that separately learn the surrogate model and generative model, MF-LAL combines the generative and multi-fidelity surrogate models into a single framework, allowing for more accurate activity prediction and higher quality samples. We train MF-LAL with a novel active learning algorithm to further reduce computational cost. Our experiments on two disease-relevant proteins show that MF-LAL produces compounds with significantly better binding free energy scores than other single and multi-fidelity approaches.",
+    "rts": 0.5233837174498653,
+    "accept": 0,
+    "pub_year": 2025,
+    "cluster_cat": "d06fbe99-dd7f-4503-a9c0-115fec8b5b15",
+    "naipv2_score": -1.9287109375,
+    "deepseek": {
+      "paper_id": "545361",
+      "score": 70,
+      "rank": 5,
+      "confidence": 0.7,
+      "rationale": "提出多保真主动学习框架用于药物生成，整合不同成本精度的oracle，在两种蛋白上验证。但摘要未给出具体数值。",
+      "strengths": [
+        "解决实际药物发现中的成本-精度权衡",
+        "联合训练生成和代理模型",
+        "主动学习降低计算成本"
+      ],
+      "risks": [
+        "仅两个蛋白实验",
+        "未报告具体分数"
+      ],
+      "limitations": [
+        "未提供定量结果",
+        "未讨论泛化性"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 22393,
+      "usage_batch": {
+        "promptTokens": 2412,
+        "completionTokens": 1323,
+        "totalTokens": 3735
+      },
+      "request_id": "c4c22396-6ee4-431c-b2d5-c2fcc596d307",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  },
+  {
+    "paper_id": "541557",
+    "title": "$F^3Set$: Towards Analyzing Fast, Frequent, and Fine-grained Events from Videos",
+    "abstract": "Analyzing Fast, Frequent, and Fine-grained ($F^3$) events presents a significant challenge in video analytics and multi-modal LLMs. Current methods struggle to identify events that satisfy all the $F^3$ criteria with high accuracy due to challenges such as motion blur and subtle visual discrepancies. To advance research in video understanding, we introduce $F^3Set$, a benchmark that consists of video datasets for precise $F^3$ event detection. Datasets in $F^3Set$ are characterized by their extensive scale and comprehensive detail, usually encompassing over 1,000 event types with precise timestamps and supporting multi-level granularity. Currently, $F^3Set$ contains several sports datasets, and this framework may be extended to other applications as well. We evaluated popular temporal action understanding methods on $F^3Set$, revealing substantial challenges for existing techniques. Additionally, we propose a new method, $F^3ED$, for $F^3$ event detections, achieving superior performance. The dataset, model, and benchmark code are available at https://github.com/F3Set/F3Set.",
+    "rts": 0.7241750358680057,
+    "accept": 1,
+    "pub_year": 2025,
+    "cluster_cat": "0374b5ec-fc0d-4262-97f1-e99792736e55",
+    "naipv2_score": 1.05859375,
+    "deepseek": {
+      "paper_id": "541557",
+      "score": 75,
+      "rank": 2,
+      "confidence": 0.7,
+      "rationale": "提出针对快速、频繁、细粒度事件的基准数据集和检测方法，填补了视频理解中的空白。数据集规模大且提供时间戳，并开源。但摘要未给出具体性能提升。",
+      "strengths": [
+        "新颖的基准和任务定义",
+        "大规模数据集",
+        "开源代码和模型"
+      ],
+      "risks": [
+        "仅限体育领域，泛化性待验证",
+        "未报告具体指标"
+      ],
+      "limitations": [
+        "未提供与其他方法的定量比较",
+        "数据集构建细节缺失"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 22393,
+      "usage_batch": {
+        "promptTokens": 2412,
+        "completionTokens": 1323,
+        "totalTokens": 3735
+      },
+      "request_id": "c4c22396-6ee4-431c-b2d5-c2fcc596d307",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  },
+  {
+    "paper_id": "548733",
+    "title": "GRADE: Quantifying Sample Diversity in Text-to-Image Models",
+    "abstract": "Text-to-image (T2I) models are remarkable at generating realistic images based on textual descriptions. However, textual prompts are inherently *underspecified*: they do not specify all possible attributes of the required image. This raises key questions: do T2I models generate diverse outputs on typical underspecified prompts? How can we automatically measure diversity? We propose **GRADE**: **Gr**anular **A**ttribute **D**iversity **E**valuation, an automatic method for quantifying sample diversity. GRADE leverages the world knowledge embedded in large language models and visual question-answering systems to identify relevant concept-specific axes of diversity (e.g., ''shape'' and ''color'' for the concept ''cookie''). It then estimates attribute distributions and quantifies diversity using (normalized) entropy. GRADE achieves over 90\\% human agreement while exhibiting weak correlation to commonly used diversity metrics. We use GRADE to measure the overall diversity of 12 T2I models using 400 concept-attribute pairs, revealing that even the most diverse models display limited variation. Further, we find these models often exhibit *default behaviors*, a situation where the model consistently generates concepts with the same attributes (e.g., 98\\% of the cookies are round). Finally, we demonstrate that a key reason for low diversity is due to underspecified captions in training data.",
+    "rts": 0.5416666666666666,
+    "accept": 0,
+    "pub_year": 2025,
+    "cluster_cat": "c7d0ea0a-162b-4ce9-9949-12a92ac85bf9",
+    "naipv2_score": -0.297119140625,
+    "deepseek": {
+      "paper_id": "548733",
+      "score": 72,
+      "rank": 5,
+      "confidence": 0.65,
+      "rationale": "提出自动评估T2I模型多样性的方法，有大规模实验和洞察，但方法本身创新性一般。",
+      "strengths": [
+        "问题重要：评估生成多样性",
+        "方法合理：利用LLM和VQA",
+        "实验规模大：12个模型，400概念-属性对"
+      ],
+      "risks": [
+        "依赖外部模型可能引入偏差",
+        "摘要未给出具体实现细节"
+      ],
+      "limitations": [
+        "无法确认人类一致性评估的细节",
+        "未提及计算成本"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 23681,
+      "usage_batch": {
+        "promptTokens": 2624,
+        "completionTokens": 1390,
+        "totalTokens": 4014
+      },
+      "request_id": "7b1a4849-9398-441e-8a3b-b574d3fc016d",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  },
+  {
+    "paper_id": "543466",
+    "title": "Enhancing Robust Fairness via Confusional Spectral Regularization",
+    "abstract": "Recent research has highlighted a critical issue known as ``robust fairness\", where robust accuracy varies significantly across different classes, undermining the reliability of deep neural networks (DNNs). \nA common approach to address this has been to dynamically reweight classes during training, giving more weight to those with lower empirical robust performance. \nHowever, we find there is a divergence of class-wise robust performance between training set and testing set, which limits the effectiveness of these explicit reweighting methods, indicating the need for a principled alternative.\nIn this work, we derive a robust generalization bound for the worst-class robust error within the PAC-Bayesian framework, accounting for unknown data distributions. \nOur analysis shows that the worst-class robust error is influenced by two main factors: the spectral norm of the empirical robust confusion matrix and the information embedded in the model and training set. \nWhile the latter has been extensively studied, we propose a novel regularization technique targeting the spectral norm of the robust confusion matrix to improve worst-class robust accuracy and enhance robust fairness.\nWe validate our approach through comprehensive experiments on various datasets and models, demonstrating its effectiveness in enhancing robust fairness.",
+    "rts": 0.7491036593610563,
+    "accept": 1,
+    "pub_year": 2025,
+    "cluster_cat": "cad56d58-51ca-41fa-86ae-250d2719b717",
+    "naipv2_score": -1.3408203125,
+    "deepseek": {
+      "paper_id": "543466",
+      "score": 78,
+      "rank": 2,
+      "confidence": 0.7,
+      "rationale": "从PAC-Bayes角度提出新的正则化方法，有理论推导和实验验证，针对鲁棒公平性问题。",
+      "strengths": [
+        "理论贡献：推导最差类鲁棒误差界",
+        "方法新颖：针对鲁棒混淆矩阵谱范数正则化",
+        "实验全面：多个数据集和模型"
+      ],
+      "risks": [
+        "摘要未给出具体性能提升幅度",
+        "正则化项可能增加训练复杂度"
+      ],
+      "limitations": [
+        "无法确认理论假设的合理性",
+        "未提及超参数敏感性"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 23681,
+      "usage_batch": {
+        "promptTokens": 2624,
+        "completionTokens": 1390,
+        "totalTokens": 4014
+      },
+      "request_id": "7b1a4849-9398-441e-8a3b-b574d3fc016d",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  },
+  {
+    "paper_id": "549369",
+    "title": "Natural Policy Gradient for Average Reward Non-Stationary RL",
+    "abstract": "We consider the problem of non-stationary reinforcement learning (RL) in the infinite-horizon average-reward setting. We model it by a Markov Decision Process with time-varying rewards and transition probabilities, with a variation budget of $\\Delta_T$. Existing non-stationary RL algorithms focus on model-based and model-free value-based methods. Policy-based methods, however, despite their flexibility in practice, are not theoretically well understood in non-stationary RL. We propose and analyze the first model-free policy-based algorithm, Non-Stationary Natural Actor-Critic (NS-NAC), a policy gradient method with efficient exploration for change and a novel interpretation of learning rates as adapting factors. We present a dynamic regret of $\\mathcal{\\tilde{O}} (|\\mathcal{S}|^{\\frac{1}{2}}|\\mathcal{A}|^{\\frac{1}{2}}\\Delta_T^{\\frac{1}{9}}T^{\\frac{8}{9}} )$, where $T$ is the time horizon, and $|\\mathcal{S}|$, $|\\mathcal{A}|$ are, respectively, the size of the state and action space. The regret analysis relies on adapting the Lyapunov function based analysis to dynamic environments and characterizing the effects of simultaneous updates in policy, value function estimate and environment.",
+    "rts": 0.5703220792426292,
+    "accept": 0,
+    "pub_year": 2025,
+    "cluster_cat": "6b9467b0-43d5-4749-9a60-c33010366f1c",
+    "naipv2_score": -1.3662109375,
+    "deepseek": {
+      "paper_id": "549369",
+      "score": 70,
+      "rank": 6,
+      "confidence": 0.6,
+      "rationale": "首次提出非平稳平均奖励RL的策略梯度算法，有理论保证，但实验部分可能有限。",
+      "strengths": [
+        "理论贡献：动态遗憾界",
+        "方法新颖：自然策略梯度用于非平稳环境",
+        "分析深入：Lyapunov函数适应动态环境"
+      ],
+      "risks": [
+        "摘要未提及实验验证",
+        "算法可能复杂难以实现"
+      ],
+      "limitations": [
+        "无法确认实验效果",
+        "未提及计算复杂度"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 23681,
+      "usage_batch": {
+        "promptTokens": 2624,
+        "completionTokens": 1390,
+        "totalTokens": 4014
+      },
+      "request_id": "7b1a4849-9398-441e-8a3b-b574d3fc016d",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  },
+  {
+    "paper_id": "541715",
+    "title": "FlowDec: A flow-based full-band general audio codec with high perceptual quality",
+    "abstract": "We propose FlowDec, a neural full-band audio codec for general audio sampled at 48 kHz that combines non-adversarial codec training with a stochastic postfilter based on a novel conditional flow matching method. Compared to the prior work ScoreDec which is based on score matching, we generalize from speech to general audio and move from 24 kbit/s to as low as 4 kbit/s, while improving output quality and reducing the required postfilter DNN evaluations from 60 to 6 without any fine-tuning or distillation techniques. We provide theoretical insights and geometric intuitions for our approach in comparison to ScoreDec as well as another recent work that uses flow matching, and conduct ablation studies on our proposed components. We show that FlowDec is a competitive alternative to the recent GAN-dominated stream of neural codecs, achieving FAD scores better than those of the established GAN-based codec DAC and listening test scores that are on par, and producing qualitatively more natural reconstructions for speech and harmonic structures in music.",
+    "rts": 0.7674037828912157,
+    "accept": 1,
+    "pub_year": 2025,
+    "cluster_cat": "46839c1a-2dbe-43e8-8bdc-b9c16825b073",
+    "naipv2_score": 0.1083984375,
+    "deepseek": {
+      "paper_id": "541715",
+      "score": 82,
+      "rank": 1,
+      "confidence": 0.75,
+      "rationale": "提出新颖的流匹配后滤波器，在低码率下实现高感知质量，有理论分析和消融实验，与强基线比较。",
+      "strengths": [
+        "原创性高：将流匹配引入音频编解码后滤波",
+        "方法可靠：非对抗训练结合随机后滤波",
+        "证据充分：FAD和听力测试与DAC比较",
+        "清晰度好：提供理论见解和几何直觉"
+      ],
+      "risks": [
+        "摘要未提供详细实验设置和统计显著性",
+        "主观听力测试可能存在偏差"
+      ],
+      "limitations": [
+        "无法确认实验细节如训练数据、模型规模",
+        "未提及计算复杂度"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 23681,
+      "usage_batch": {
+        "promptTokens": 2624,
+        "completionTokens": 1390,
+        "totalTokens": 4014
+      },
+      "request_id": "7b1a4849-9398-441e-8a3b-b574d3fc016d",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  },
+  {
+    "paper_id": "544053",
+    "title": "MAA: Meticulous Adversarial Attack against Vision-Language Pre-trained Models",
+    "abstract": "Current adversarial attacks for evaluating the robustness of vision-language pre-trained (VLP) models in multi-modal tasks suffer from limited transferability, where attacks crafted for a specific model often struggle to generalize effectively across different models, limiting their utility in assessing robustness more broadly. This is mainly attributed to the over-reliance on model-specific features and regions, particularly in the image modality. In this paper, we propose an elegant yet highly effective method termed Meticulous Adversarial Attack (MAA) to fully exploit model-independent characteristics and vulnerabilities of individual samples, achieving enhanced generalizability and reduced model dependence. MAA emphasizes fine-grained optimization of adversarial images by developing a novel resizing and sliding crop (RScrop) technique, incorporating a multi-granularity similarity disruption (MGSD) strategy. \nRScrop efficiently enriches the initial adversarial examples by generating more comprehensive, diverse, and detailed perspectives of the images, establishing a robust foundation for capturing representative and intrinsic visual characteristics. Building on this,  MGSD seeks to maximize %the layer- and component-wise feature% \nthe embedding distance between adversarial examples and their original counterparts across different granularities and hierarchical levels within the architecture of VLP models, thereby amplifying the impact of the adversarial perturbations and enhancing the efficacy of attacks across every layer and component of the model. Extensive experiments across diverse VLP models, multiple benchmark datasets, and a variety of downstream tasks demonstrate that MAA significantly enhances the effectiveness and transferability of adversarial attacks. A large cohort of performance studies is conducted to generate insights into the effectiveness of various model configurations, guiding future advancements in this domain. The source code is provided in the supplementary material.",
+    "rts": 0.6021040733671882,
+    "accept": 0,
+    "pub_year": 2025,
+    "cluster_cat": "383cb6db-e75b-4293-8d20-e30b1c2ff2cc",
+    "naipv2_score": -1.173828125,
+    "deepseek": {
+      "paper_id": "544053",
+      "score": 76,
+      "rank": 3,
+      "confidence": 0.7,
+      "rationale": "提出新的对抗攻击方法，强调可迁移性，有大量实验和源代码，但攻击方法创新性中等。",
+      "strengths": [
+        "方法设计细致：RScrop和MGSD策略",
+        "实验广泛：多种VLP模型和任务",
+        "提供源代码"
+      ],
+      "risks": [
+        "攻击方法可能依赖特定模型结构",
+        "摘要未报告具体攻击成功率"
+      ],
+      "limitations": [
+        "无法确认攻击的鲁棒性",
+        "未提及计算开销"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 23681,
+      "usage_batch": {
+        "promptTokens": 2624,
+        "completionTokens": 1390,
+        "totalTokens": 4014
+      },
+      "request_id": "7b1a4849-9398-441e-8a3b-b574d3fc016d",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  },
+  {
+    "paper_id": "550010",
+    "title": "Physics-aligned field reconstruction with diffusion bridge",
+    "abstract": "The reconstruction of physical fields from sparse measurements is pivotal in both scientific research and engineering applications. Traditional methods are increasingly supplemented by deep learning models due to their efficacy in extracting features from data. However, except for the low accuracy on complex physical systems, these models often fail to comply with essential physical constraints, such as governing equations and boundary conditions. To overcome this limitation, we introduce a novel data-driven field reconstruction framework, termed the Physics-aligned Schr\\\"{o}dinger Bridge (PalSB). This framework leverages a diffusion bridge mechanism that is specifically tailored to align with physical constraints. The PalSB approach incorporates a dual-stage training process designed to address both local reconstruction mapping and global physical principles. Additionally, a boundary-aware sampling technique is implemented to ensure adherence to physical boundary conditions. We demonstrate the effectiveness of PalSB through its application to three complex nonlinear systems: cylinder flow from Particle Image Velocimetry experiments, two-dimensional turbulence, and a reaction-diffusion system. The results reveal that PalSB not only achieves higher accuracy but also exhibits enhanced compliance with physical constraints compared to existing methods. This highlights PalSB's capability to generate high-quality representations of intricate physical interactions, showcasing its potential for advancing field reconstruction techniques. The source code can be found at https://github.com/lzy12301/PalSB.",
+    "rts": 0.8053577321323483,
+    "accept": 1,
+    "pub_year": 2025,
+    "cluster_cat": "3095eacd-e515-46b4-8aa8-996c7f28c611",
+    "naipv2_score": 2.111328125,
+    "deepseek": {
+      "paper_id": "550010",
+      "score": 68,
+      "rank": 7,
+      "confidence": 0.6,
+      "rationale": "提出物理对齐的扩散桥方法用于场重建，有实验验证，但创新性中等。",
+      "strengths": [
+        "方法结合物理约束",
+        "实验涵盖三个复杂系统",
+        "提供源代码"
+      ],
+      "risks": [
+        "扩散桥方法可能计算量大",
+        "摘要未给出定量比较结果"
+      ],
+      "limitations": [
+        "无法确认物理约束的严格性",
+        "未提及训练成本"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 23681,
+      "usage_batch": {
+        "promptTokens": 2624,
+        "completionTokens": 1390,
+        "totalTokens": 4014
+      },
+      "request_id": "7b1a4849-9398-441e-8a3b-b574d3fc016d",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  },
+  {
+    "paper_id": "546316",
+    "title": "Enhancing Deception Detection with Cognitive Load Features: An Audio-Visual Approach",
+    "abstract": "Deception ranges from minor mischief to serious fraud, often leading to significant psychological and financial harm. Effective deception detection is crucial to mitigate these risks and preserve societal trust. Cognitive load is a useful indicator for detecting deception, as lying causes individuals to experience greater mental strain. While prior research leveraged cognitive load features, typically measured through physiological signals such as pupil dilation, these methods often require specialized equipment and can be subject to human bias. These limitations hinder the scalability and automation of deception detection systems. Thus, we propose a novel deception detection framework that automatically extracts cognitive load features from audio-visual data, eliminating the need for specialized hardware or subjective human input. Our approach integrates these features into the deception detection pipeline, enhancing its robustness. Moreover, we introduce a focal loss to address the inherent complexity of deception detection. This objective function enables the model to focus on harder-to-detect instances of deception, thereby improving the performance. Our approach achieves state-of-the-art results on benchmark audio-visual datasets, demonstrating significant improvements in automated deception detection. Extensive experiments validate the effectiveness of both our cognitive load feature extraction and the proposed objective function in advancing the field.",
+    "rts": 0.7311763622974963,
+    "accept": 0,
+    "pub_year": 2025,
+    "cluster_cat": "36cf7b8f-85c2-4aa0-84c9-62292eef0335",
+    "naipv2_score": -3.583984375,
+    "deepseek": {
+      "paper_id": "546316",
+      "score": 74,
+      "rank": 4,
+      "confidence": 0.65,
+      "rationale": "利用认知负荷特征进行欺骗检测，无需专用设备，有创新性，但技术细节有限。",
+      "strengths": [
+        "问题重要：欺骗检测有实际应用价值",
+        "方法创新：自动提取认知负荷特征",
+        "使用focal loss处理类别不平衡"
+      ],
+      "risks": [
+        "摘要未说明特征提取的具体方法",
+        "可能依赖特定数据集"
+      ],
+      "limitations": [
+        "无法确认特征提取的可靠性",
+        "未提及跨数据集泛化"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 23681,
+      "usage_batch": {
+        "promptTokens": 2624,
+        "completionTokens": 1390,
+        "totalTokens": 4014
+      },
+      "request_id": "7b1a4849-9398-441e-8a3b-b574d3fc016d",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  },
+  {
+    "paper_id": "550613",
+    "title": "DeepLTL: Learning to Efficiently Satisfy Complex LTL Specifications for Multi-Task RL",
+    "abstract": "Linear temporal logic (LTL) has recently been adopted as a powerful formalism for specifying complex, temporally extended tasks in multi-task reinforcement learning (RL). However, learning policies that efficiently satisfy arbitrary specifications not observed during training remains a challenging problem. Existing approaches suffer from several shortcomings: they are often only applicable to finite-horizon fragments of LTL, are restricted to suboptimal solutions, and do not adequately handle safety constraints. In this work, we propose a novel learning approach to address these concerns. Our method leverages the structure of Büchi automata, which explicitly represent the semantics of LTL specifications, to learn policies conditioned on sequences of truth assignments that lead to satisfying the desired formulae. Experiments in a variety of discrete and continuous domains demonstrate that our approach is able to zero-shot satisfy a wide range of finite- and infinite-horizon specifications, and outperforms existing methods in terms of both satisfaction probability and efficiency. Code available at: https://deep-ltl.github.io/",
+    "rts": 0.8749998102934814,
+    "accept": 1,
+    "pub_year": 2025,
+    "cluster_cat": "fb583b3e-4b78-4cea-a18f-34afc65f5296",
+    "naipv2_score": 1.0615234375,
+    "deepseek": {
+      "paper_id": "550613",
+      "score": 66,
+      "rank": 8,
+      "confidence": 0.6,
+      "rationale": "利用Büchi自动机学习满足LTL规范的多任务RL策略，有实验，但理论贡献有限。",
+      "strengths": [
+        "问题重要：复杂时序任务",
+        "方法合理：利用自动机结构",
+        "实验涵盖离散和连续域"
+      ],
+      "risks": [
+        "摘要未给出具体性能指标",
+        "可能难以扩展到大规模状态空间"
+      ],
+      "limitations": [
+        "无法确认零样本泛化的范围",
+        "未提及安全约束的处理细节"
+      ],
+      "score_method": "deepseek_batch_rubric",
+      "latency_ms_batch": 23681,
+      "usage_batch": {
+        "promptTokens": 2624,
+        "completionTokens": 1390,
+        "totalTokens": 4014
+      },
+      "request_id": "7b1a4849-9398-441e-8a3b-b574d3fc016d",
+      "model": "deepseek-v4-pro",
+      "prompt_version": "deepseek-paper-batch-rubric-1.0.0",
+      "thinking": "disabled"
+    }
+  }
+]

@@ -85,6 +85,7 @@ export async function callDeepSeekJson(messages, options = {}) {
     stream: false,
     max_tokens: options.maxTokens || 3_000,
   };
+  if (Number.isFinite(options.temperature)) payload.temperature = options.temperature;
   if (thinking === 'enabled') payload.reasoning_effort = config.reasoningEffort;
 
   try {

@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0.0",
+  "source": "NAIDv2 fixed public test set",
+  "test_csv_sha256": "bbbd4ccc1a84761579e6faf54c3248bba0c3456696c0a9897889390aaef2095e",
+  "official_predictions_sha256": "8a88a75c3f51cb4d38609111839818279bfe6d2f54598b16137f8f86c91fcc61",
+  "usable_rows": 1028,
+  "selected_rows": 32,
+  "accepted": 16,
+  "rejected": 16,
+  "selection": "evenly spaced across RTS separately within accept/reject; interleaved; deterministic",
+  "cases_sha256": "ebd1ac2f2f2aa3f6914256adc46613ecc4e7826cf4d26b15fab584359e0f6cc3"
+}
