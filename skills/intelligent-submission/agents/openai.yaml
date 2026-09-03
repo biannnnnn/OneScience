@@ -1,0 +1,7 @@
+interface:
+  display_name: "智能投稿"
+  short_description: "检索候选期刊与近期论文，生成可审计的投稿策略"
+  default_prompt: "Use $intelligent-submission to assess my manuscript and recommend an evidence-backed journal submission order."
+
+policy:
+  allow_implicit_invocation: true

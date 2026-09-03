@@ -92,7 +92,7 @@ export async function resolveJournalSource(journal, options = {}) {
 }
 
 export async function findRecentSimilarPapers(journal, keywords, options = {}) {
-  const limit = Math.max(1, Math.min(Number(options.limit) || 3, 10));
+  const limit = Math.max(1, Math.min(Number(options.limit) || 3, 250));
   const source = options.source || await resolveJournalSource(journal, options);
   if (!source) return { source: null, items: [], queries: [], errors: [] };
   const years = Math.max(1, Math.min(Number(options.recentYears) || 3, 8));
@@ -100,7 +100,7 @@ export async function findRecentSimilarPapers(journal, keywords, options = {}) {
   const queries = [...new Set([
     ...(options.queries || []),
     ...(keywords || []),
-    ...(journal.fields || []),
+    ...(options.includeJournalFields === false ? [] : (journal.fields || [])),
   ].map((query) => String(query || '').trim()).filter(Boolean))].slice(0, 8);
   if (!queries.length) return { source, items: [], queries: [], errors: [] };
 
@@ -111,7 +111,7 @@ export async function findRecentSimilarPapers(journal, keywords, options = {}) {
         search: query,
         filter: `primary_location.source.id:${source.id},from_publication_date:${startYear}-01-01,type:article,is_retracted:false`,
         sort: 'relevance_score:desc',
-        per_page: Math.min(50, Math.max(limit * 3, 10)),
+        per_page: Math.min(100, Math.max(limit, 10)),
         select: 'id,doi,display_name,publication_date,publication_year,authorships,primary_location,open_access,cited_by_count,abstract_inverted_index,relevance_score',
       }, options);
       return { query, works: payload.results || [] };
@@ -145,7 +145,7 @@ export async function findRecentSimilarPapers(journal, keywords, options = {}) {
     right.queryHits.size - left.queryHits.size
     || right.reciprocalRank - left.reciprocalRank
     || right.bestRelevance - left.bestRelevance
-    || (right.work.cited_by_count || 0) - (left.work.cited_by_count || 0)
+    || (options.excludeCitationRanking ? 0 : (right.work.cited_by_count || 0) - (left.work.cited_by_count || 0))
   ));
   const items = ranked.slice(0, limit).map(({ work, queryHits, bestRelevance }) => ({
       id: openAlexId(work.id),

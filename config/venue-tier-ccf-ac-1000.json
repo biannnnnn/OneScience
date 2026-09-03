@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0.0",
+  "catalog_file": "data/ccf-international-2026-journals.json",
+  "catalog": {
+    "label": "CCF 第七版推荐国际学术会议和期刊目录（国际期刊 A/C）",
+    "version": "2026-04-09",
+    "url": "https://www.ccf.org.cn/Academic_Evaluation/By_category/2026-03-31/870181.shtml"
+  },
+  "recent_years": 8,
+  "papers_per_venue": 200,
+  "venues": [
+    { "catalog_id": "ai-tpami", "tier_rank": 1, "field": "人工智能", "topic": "computer vision", "article_type": "research article", "queries": ["object detection", "image recognition"] },
+    { "catalog_id": "ai-ivc", "tier_rank": 3, "field": "人工智能", "topic": "computer vision", "article_type": "research article", "queries": ["object detection", "image recognition"] },
+    { "catalog_id": "ai-prl", "tier_rank": 3, "field": "人工智能", "topic": "computer vision", "article_type": "research article", "queries": ["object detection", "image recognition"] },
+
+    { "catalog_id": "ai-ijcv", "tier_rank": 1, "field": "人工智能", "topic": "three-dimensional vision", "article_type": "research article", "queries": ["3D vision", "point cloud"] },
+    { "catalog_id": "ai-iet-cvi", "tier_rank": 3, "field": "人工智能", "topic": "three-dimensional vision", "article_type": "research article", "queries": ["3D vision", "point cloud"] },
+    { "catalog_id": "ai-machine-vision-and-applications", "tier_rank": 3, "field": "人工智能", "topic": "three-dimensional vision", "article_type": "research article", "queries": ["3D vision", "point cloud"] },
+
+    { "catalog_id": "ai-jmlr", "tier_rank": 1, "field": "人工智能", "topic": "machine learning", "article_type": "research article", "queries": ["machine learning", "deep learning"] },
+    { "catalog_id": "ai-nca", "tier_rank": 3, "field": "人工智能", "topic": "machine learning", "article_type": "research article", "queries": ["machine learning", "deep learning"] },
+    { "catalog_id": "ai-applied-intelligence", "tier_rank": 3, "field": "人工智能", "topic": "machine learning", "article_type": "research article", "queries": ["machine learning", "deep learning"] },
+
+    { "catalog_id": "cn-tmc", "tier_rank": 1, "field": "计算机网络", "topic": "mobile networking", "article_type": "research article", "queries": ["mobile network", "edge networking"] },
+    { "catalog_id": "cn-ad-hoc-networks", "tier_rank": 3, "field": "计算机网络", "topic": "mobile networking", "article_type": "research article", "queries": ["mobile network", "edge networking"] },
+    { "catalog_id": "cn-wireless-networks", "tier_rank": 3, "field": "计算机网络", "topic": "mobile networking", "article_type": "research article", "queries": ["mobile network", "edge networking"] },
+
+    { "catalog_id": "cn-ton", "tier_rank": 1, "field": "计算机网络", "topic": "network systems", "article_type": "research article", "queries": ["network performance", "network optimization"] },
+    { "catalog_id": "cn-cc", "tier_rank": 3, "field": "计算机网络", "topic": "network systems", "article_type": "research article", "queries": ["network performance", "network optimization"] },
+    { "catalog_id": "cn-jnca", "tier_rank": 3, "field": "计算机网络", "topic": "network systems", "article_type": "research article", "queries": ["network performance", "network optimization"] },
+
+    { "catalog_id": "nis-tdsc", "tier_rank": 1, "field": "网络与信息安全", "topic": "cybersecurity", "article_type": "research article", "queries": ["intrusion detection", "malware detection"] },
+    { "catalog_id": "nis-jisa", "tier_rank": 3, "field": "网络与信息安全", "topic": "cybersecurity", "article_type": "research article", "queries": ["intrusion detection", "malware detection"] },
+    { "catalog_id": "nis-cybersecurity", "tier_rank": 3, "field": "网络与信息安全", "topic": "cybersecurity", "article_type": "research article", "queries": ["intrusion detection", "malware detection"] },
+
+    { "catalog_id": "dm_cs-tkde", "tier_rank": 1, "field": "数据库/数据挖掘/内容检索", "topic": "data mining", "article_type": "research article", "queries": ["data mining", "knowledge discovery"] },
+    { "catalog_id": "dm_cs-dse", "tier_rank": 3, "field": "数据库/数据挖掘/内容检索", "topic": "data mining", "article_type": "research article", "queries": ["data mining", "knowledge discovery"] },
+    { "catalog_id": "dm_cs-jiis", "tier_rank": 3, "field": "数据库/数据挖掘/内容检索", "topic": "data mining", "article_type": "research article", "queries": ["data mining", "knowledge discovery"] },
+
+    { "catalog_id": "dm_cs-tois", "tier_rank": 1, "field": "数据库/数据挖掘/内容检索", "topic": "information retrieval", "article_type": "research article", "queries": ["information retrieval", "search ranking"] },
+    { "catalog_id": "dm_cs-ir", "tier_rank": 3, "field": "数据库/数据挖掘/内容检索", "topic": "information retrieval", "article_type": "research article", "queries": ["information retrieval", "search ranking"] },
+    { "catalog_id": "dm_cs-ijswis", "tier_rank": 3, "field": "数据库/数据挖掘/内容检索", "topic": "information retrieval", "article_type": "research article", "queries": ["information retrieval", "search ranking"] },
+
+    { "catalog_id": "tcse_ss_pdl-tse", "tier_rank": 1, "field": "软件工程/系统软件/程序设计语言", "topic": "software engineering", "article_type": "research article", "queries": ["software testing", "software maintenance"] },
+    { "catalog_id": "tcse_ss_pdl-sqj", "tier_rank": 3, "field": "软件工程/系统软件/程序设计语言", "topic": "software engineering", "article_type": "research article", "queries": ["software testing", "software maintenance"] },
+    { "catalog_id": "tcse_ss_pdl-sttt", "tier_rank": 3, "field": "软件工程/系统软件/程序设计语言", "topic": "software engineering", "article_type": "research article", "queries": ["software testing", "software maintenance"] },
+
+    { "catalog_id": "cgandmt-tip", "tier_rank": 1, "field": "计算机图形学与多媒体", "topic": "image processing", "article_type": "research article", "queries": ["image processing", "image restoration"] },
+    { "catalog_id": "cgandmt-jvcir", "tier_rank": 3, "field": "计算机图形学与多媒体", "topic": "image processing", "article_type": "research article", "queries": ["image processing", "image restoration"] },
+    { "catalog_id": "cgandmt-image", "tier_rank": 3, "field": "计算机图形学与多媒体", "topic": "image processing", "article_type": "research article", "queries": ["image processing", "image restoration"] },
+
+    { "catalog_id": "cgandmt-tvcg", "tier_rank": 1, "field": "计算机图形学与多媒体", "topic": "visualization", "article_type": "research article", "queries": ["data visualization", "visual analytics"] },
+    { "catalog_id": "cgandmt-tvc", "tier_rank": 3, "field": "计算机图形学与多媒体", "topic": "visualization", "article_type": "research article", "queries": ["data visualization", "visual analytics"] },
+    { "catalog_id": "cgandmt-c-and-g", "tier_rank": 3, "field": "计算机图形学与多媒体", "topic": "visualization", "article_type": "research article", "queries": ["data visualization", "visual analytics"] },
+
+    { "catalog_id": "arch_dcp_ss-tpds", "tier_rank": 1, "field": "计算机体系结构/并行与分布计算/存储系统", "topic": "distributed computing", "article_type": "research article", "queries": ["distributed computing", "cloud computing"] },
+    { "catalog_id": "arch_dcp_ss-fgcs", "tier_rank": 3, "field": "计算机体系结构/并行与分布计算/存储系统", "topic": "distributed computing", "article_type": "research article", "queries": ["distributed computing", "cloud computing"] },
+    { "catalog_id": "arch_dcp_ss-tjsc", "tier_rank": 3, "field": "计算机体系结构/并行与分布计算/存储系统", "topic": "distributed computing", "article_type": "research article", "queries": ["distributed computing", "cloud computing"] },
+
+    { "catalog_id": "hciandpc-tochi", "tier_rank": 1, "field": "人机交互与普适计算", "topic": "human-computer interaction", "article_type": "research article", "queries": ["human computer interaction", "user study"] },
+    { "catalog_id": "hciandpc-bit", "tier_rank": 3, "field": "人机交互与普适计算", "topic": "human-computer interaction", "article_type": "research article", "queries": ["human computer interaction", "user study"] },
+    { "catalog_id": "hciandpc-pacmhci", "tier_rank": 3, "field": "人机交互与普适计算", "topic": "human-computer interaction", "article_type": "research article", "queries": ["human computer interaction", "user study"] }
+  ]
+}

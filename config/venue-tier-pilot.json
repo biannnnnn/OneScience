@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "recent_years": 3,
+  "papers_per_venue": 10,
+  "venues": [
+    {
+      "catalog_id": "frontiers-computer-science",
+      "tier_rank": 1,
+      "field": "artificial intelligence",
+      "topic": "computer vision",
+      "article_type": "research article",
+      "queries": ["computer vision", "deep learning"]
+    },
+    {
+      "catalog_id": "vrih",
+      "tier_rank": 2,
+      "field": "artificial intelligence",
+      "topic": "computer vision",
+      "article_type": "research article",
+      "queries": ["computer vision", "deep learning"]
+    }
+  ]
+}

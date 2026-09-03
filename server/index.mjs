@@ -22,6 +22,17 @@ import {
   scorePapersWithRanker,
 } from './lib/ranker-client.mjs';
 import {
+  getDeepSeekScorerStatus,
+  scoreFromDeepSeek,
+  scorePapersWithDeepSeek,
+} from './lib/deepseek-scorer.mjs';
+import {
+  DEFAULT_SCORING_MODEL,
+  SCORING_MODELS,
+  normalizeScoringModel,
+  scoringModelDefinition,
+} from './lib/scoring-models.mjs';
+import {
   compareWithJournalBenchmark,
   enrichJournalMetrics,
   selectDistinctJournals,
@@ -94,10 +105,21 @@ app.get('/api/health', async (_request, response) => {
 });
 
 app.get('/api/model/status', async (_request, response) => {
+  const rankerStatuses = await Promise.all(
+    SCORING_MODELS.filter((model) => model.kind === 'ranker')
+      .map((model) => getRankerServiceStatus({ modelId: model.id })),
+  );
+  const deepSeekScorer = getDeepSeekScorerStatus();
   response.json({
     llm: getDeepSeekStatus(),
     scholarlySearch: getOpenAlexStatus(),
-    ranker: await getRankerServiceStatus(),
+    ranker: rankerStatuses[0],
+    scoringModels: [...rankerStatuses, {
+      ...deepSeekScorer,
+      id: 'deepseek',
+      label: 'DeepSeek 大模型',
+      kind: 'deepseek',
+    }],
   });
 });
 
@@ -189,6 +211,11 @@ app.post('/api/projects/:id/review-flow', async (request, response, next) => {
     const journalCount = Math.max(2, Math.min(Number(request.body.k) || 5, 8));
     const papersPerJournal = Math.max(1, Math.min(Number(request.body.n) || 3, 8));
     const recentYears = Math.max(1, Math.min(Number(request.body.recentYears) || 3, 8));
+    const scoringModel = normalizeScoringModel(request.body.scoringModel || DEFAULT_SCORING_MODEL);
+    if (!scoringModel) {
+      return response.status(422).json({ error: '评分模型无效，可选值为 ranker-8b、ranker-3b、ranker-0.6b 或 deepseek。' });
+    }
+    const scorerDefinition = scoringModelDefinition(scoringModel);
     const keywords = workflowKeywords(project);
     if (!keywords.length) return response.status(422).json({ error: '未能提取有效关键词，请补充研究方向或关键词后重试。' });
 
@@ -227,7 +254,9 @@ app.post('/api/projects/:id/review-flow', async (request, response, next) => {
     const discoveredCandidates = discovery.sources.map((source) => enrichDiscoveredJournal(source));
     prestigeBandForDiscovered(discoveredCandidates);
     const candidates = selectDistinctJournals(discoveredCandidates, journalCount);
-    const rankerStatus = await getRankerServiceStatus();
+    const scorerStatus = scorerDefinition.kind === 'deepseek'
+      ? { ...getDeepSeekScorerStatus(), id: scoringModel, label: scorerDefinition.label, kind: 'deepseek' }
+      : await getRankerServiceStatus({ modelId: scoringModel });
     const journalResults = [];
 
     for (const candidate of candidates) {
@@ -268,9 +297,10 @@ app.post('/api/projects/:id/review-flow', async (request, response, next) => {
       let manuscriptScore = fallbackManuscriptScore(project, journal);
       let manuscriptReview = null;
       let scoringError = null;
-      let rankerTrace = null;
-      const batchScoringAvailable = rankerStatus.available
-        && rankerStatus.capabilities?.includes('paper_score_batch');
+      let scoringTrace = null;
+      const batchScoringAvailable = scorerStatus.available
+        && (scorerDefinition.kind === 'deepseek'
+          || scorerStatus.capabilities?.includes('paper_score_batch'));
       if (batchScoringAvailable && originalDocument.abstract) {
         try {
           const scoreInputs = [
@@ -287,16 +317,19 @@ app.post('/api/projects/:id/review-flow', async (request, response, next) => {
                 abstract: paper.abstract,
               })),
           ];
-          const scored = await scorePapersWithRanker(scoreInputs);
-          rankerTrace = scored.modelTrace;
+          const scored = scorerDefinition.kind === 'deepseek'
+            ? await scorePapersWithDeepSeek(scoreInputs)
+            : await scorePapersWithRanker(scoreInputs, { modelId: scoringModel });
+          scoringTrace = scored.modelTrace;
           const scoreById = new Map(scored.scores.map((item) => [item.paper_id, item]));
           const manuscriptItem = scoreById.get(project.id);
-          if (!manuscriptItem) throw new Error('Ranker Service 未返回用户稿件评分。');
-          manuscriptScore = scoreFromRanker(manuscriptItem, scored.modelTrace);
+          if (!manuscriptItem) throw new Error(`${scorerDefinition.label} 未返回用户稿件评分。`);
+          const mapScore = scorerDefinition.kind === 'deepseek' ? scoreFromDeepSeek : scoreFromRanker;
+          manuscriptScore = mapScore(manuscriptItem, scored.modelTrace);
           referencePapers = referencePapers.map((paper) => {
             const scoreItem = scoreById.get(paper.id);
             return scoreItem
-              ? { ...paper, modelScore: scoreFromRanker(scoreItem, scored.modelTrace) }
+              ? { ...paper, modelScore: mapScore(scoreItem, scored.modelTrace) }
               : { ...paper, scoringError: paper.abstract ? '批量评分结果缺少该论文。' : 'OpenAlex 未提供摘要。' };
           });
         } catch (error) {
@@ -306,16 +339,16 @@ app.post('/api/projects/:id/review-flow', async (request, response, next) => {
             scoringError: paper.abstract ? error.message : 'OpenAlex 未提供摘要。',
           }));
         }
-      } else if (rankerStatus.available && !originalDocument.abstract) {
-        scoringError = '用户稿件未识别到摘要，Ranker 不会使用全文替代训练时的标题+摘要输入。';
+      } else if (scorerStatus.available && !originalDocument.abstract) {
+        scoringError = `用户稿件未识别到摘要，${scorerDefinition.label} 不会使用全文替代标题+摘要输入。`;
         referencePapers = referencePapers.map((paper) => ({
           ...paper,
           scoringError: paper.abstract ? scoringError : 'OpenAlex 未提供摘要。',
         }));
-      } else if (rankerStatus.available) {
-        scoringError = 'Ranker Service 尚未部署 paper_score_batch 能力。';
+      } else if (scorerStatus.available) {
+        scoringError = `${scorerDefinition.label} 尚未部署 paper_score_batch 能力。`;
       } else {
-        scoringError = rankerStatus.error || 'Ranker Service 不可用。';
+        scoringError = scorerStatus.error || `${scorerDefinition.label} 不可用。`;
       }
       journalResults.push({
         journal,
@@ -331,7 +364,8 @@ app.post('/api/projects/:id/review-flow', async (request, response, next) => {
         referencePapers,
         manuscriptScore,
         manuscriptReview,
-        rankerTrace,
+        scoringTrace,
+        rankerTrace: scorerDefinition.kind === 'ranker' ? scoringTrace : null,
         scoringError,
         comparison: compareWithJournalBenchmark(manuscriptScore, referencePapers),
       });
@@ -340,7 +374,8 @@ app.post('/api/projects/:id/review-flow', async (request, response, next) => {
     const reviewFlow = {
       schemaVersion: '1.0.0',
       generatedAt: new Date().toISOString(),
-      hyperparameters: { k: journalCount, n: papersPerJournal, recentYears },
+      hyperparameters: { k: journalCount, n: papersPerJournal, recentYears, scoringModel },
+      scoring: { model: scoringModel, label: scorerDefinition.label, kind: scorerDefinition.kind },
       keywords,
       discovery: {
         method: discoveryMethod,
@@ -357,10 +392,11 @@ app.post('/api/projects/:id/review-flow', async (request, response, next) => {
       },
       services: {
         openAlex: openAlexStatus,
-        ranker: rankerStatus,
+        ranker: scorerDefinition.kind === 'ranker' ? scorerStatus : null,
+        scorer: scorerStatus,
       },
       journals: journalResults,
-      notice: '自训练 Ranker 只提供论文质量相对排序；系统据此比较稿件与每本期刊的近期相似论文基线，不展示录用概率。',
+      notice: `${scorerDefinition.label} 只提供论文质量相对排序；系统据此比较稿件与每本期刊的近期相似论文基线，不展示录用概率。`,
     };
     response.json(await patchProject(project.id, {
       reviewFlow,

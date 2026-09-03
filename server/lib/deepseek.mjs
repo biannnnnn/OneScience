@@ -99,7 +99,15 @@ export async function callDeepSeekJson(messages, options = {}) {
       signal: controller.signal,
     });
     if (!response.ok) {
-      throw new Error(`DeepSeek API 请求失败（HTTP ${response.status}）。`);
+      const rawError = await response.text().catch(() => '');
+      let detail = '';
+      try {
+        const parsed = JSON.parse(rawError);
+        detail = cleanString(parsed?.error?.message || parsed?.message, 300);
+      } catch {
+        detail = cleanString(rawError, 300);
+      }
+      throw new Error(`DeepSeek API 请求失败（HTTP ${response.status}）${detail ? `：${detail}` : '。'}`);
     }
     const responseBody = await response.json();
     const message = responseBody.choices?.[0]?.message;

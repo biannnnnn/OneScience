@@ -1,0 +1,29 @@
+{
+  "backend": "transformers",
+  "auth": {
+    "api_key_env": "ONESCIENCE_RANKER_API_KEY",
+    "required": false
+  },
+  "model": {
+    "base_model_path": "/home/liuheng/OneScience/models/Meta-Llama-3-8B",
+    "adapter_path": "/home/liuheng/OneScience/evaluation/naipv2-fulltext-rankers/runs/llama3-8b-fulltext-evidence-seed42",
+    "calibration_path": "/home/liuheng/OneScience/evaluation/naipv2-fulltext-rankers/runs/llama3-8b-fulltext-evidence-seed42/validation-calibration.json",
+    "model_name": "meta-llama/Meta-Llama-3-8B",
+    "model_version": "fulltext-evidence-v1",
+    "adapter_version": "llama3-8b-fulltext-evidence-seed42",
+    "input_schema": "fulltext_evidence_v1",
+    "max_length": 1024,
+    "batch_size": 2,
+    "device": "cuda:0"
+  },
+  "server": {
+    "host": "100.91.253.128",
+    "port": 8790,
+    "max_concurrent": 1,
+    "max_request_bytes": 4194304
+  },
+  "privacy": {
+    "persist_requests": false,
+    "log_paper_text": false
+  }
+}

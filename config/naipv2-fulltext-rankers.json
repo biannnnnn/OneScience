@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0.0",
+  "dataset": "data/naipv2-fulltext-evidence",
+  "source": "ProReview train/test parquet",
+  "seed": 42,
+  "target": "confidence-weighted reviewer overall rating",
+  "models": {
+    "llama3-8b": "models/Meta-Llama-3-8B",
+    "qwen25-3b": "models/Qwen2.5-3B",
+    "qwen3-0.6b": "models/Qwen3-0.6B"
+  },
+  "training": {
+    "epochs": 1,
+    "max_pairs": 10000,
+    "max_length": 1024,
+    "learning_rate": 0.0001,
+    "pair_min_rating_difference": 0.5,
+    "lora": {"r": 16, "alpha": 32, "dropout": 0.05}
+  },
+  "model_input": [
+    "title",
+    "abstract",
+    "research_question_and_main_contributions",
+    "experimental_setup_and_datasets",
+    "key_findings_and_conclusion"
+  ],
+  "excluded_from_model_input": [
+    "authors", "affiliations", "venue", "citations", "references",
+    "reviews", "meta_review", "decision"
+  ]
+}

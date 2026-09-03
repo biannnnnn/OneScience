@@ -39,6 +39,17 @@ const benchmarkLabels = {
   insufficient_reference_data: '近期样本不足',
 };
 
+const scoringModels = [
+  { id: 'ranker-8b', label: '8B 小模型' },
+  { id: 'ranker-3b', label: '3B 小模型' },
+  { id: 'ranker-0.6b', label: '0.6B 小模型' },
+  { id: 'deepseek', label: 'DeepSeek 大模型' },
+];
+
+function scoringLabel(flow) {
+  return flow?.scoring?.label || '8B Ranker';
+}
+
 function formatDate(value) {
   return new Intl.DateTimeFormat('zh-CN', { month: 'short', day: 'numeric' }).format(new Date(value));
 }
@@ -287,7 +298,8 @@ function KeywordStage({ project, busy, runAction }) {
   const [k, setK] = useState(defaults.k);
   const [n, setN] = useState(defaults.n);
   const [recentYears, setRecentYears] = useState(defaults.recentYears);
-  const run = () => runAction('review-flow', () => api.runReviewFlow(project.id, { k, n, recentYears, useAI: true }), 1);
+  const [scoringModel, setScoringModel] = useState(defaults.scoringModel || 'ranker-8b');
+  const run = () => runAction('review-flow', () => api.runReviewFlow(project.id, { k, n, recentYears, scoringModel, useAI: true }), 1);
   const keywords = project.reviewFlow?.keywords || [...new Set([...(project.document.keywords || []), ...(project.profile?.keywords || []), project.profile?.researchField].filter(Boolean))];
   return (
     <div className="stage-content">
@@ -304,10 +316,11 @@ function KeywordStage({ project, busy, runAction }) {
           <label><span>候选期刊数 k</span><input type="number" min="2" max="8" value={k} onChange={(event) => setK(Number(event.target.value))} /><small>系统尽量覆盖高挑战、稳健与广覆盖梯度。</small></label>
           <label><span>每刊近期论文数 n</span><input type="number" min="1" max="8" value={n} onChange={(event) => setN(Number(event.target.value))} /><small>论文越多，期刊分数基线越稳定，推理耗时也越长。</small></label>
           <label><span>近期窗口</span><select value={recentYears} onChange={(event) => setRecentYears(Number(event.target.value))}><option value="2">近 2 年</option><option value="3">近 3 年</option><option value="5">近 5 年</option></select></label>
-          <div className="parameter-cost"><Info size={16} /><span>一次运行最多需要 {k * n + k} 次 Ranker 评分：{k * n} 篇参考论文 + 稿件与每刊参考集合的同尺度排序。</span></div>
+          <label className="scoring-model-field"><span>最终评分模型</span><select value={scoringModel} onChange={(event) => setScoringModel(event.target.value)}>{scoringModels.map((model) => <option key={model.id} value={model.id}>{model.label}</option>)}</select><small>系统会等待所选模型完成逐刊批量评分；DeepSeek 会产生外部 API 调用。</small></label>
+          <div className="parameter-cost"><Info size={16} /><span>一次运行会执行 {k} 个批量评分任务，共比较最多 {k * n} 篇参考论文；当前选择：{scoringModels.find((model) => model.id === scoringModel)?.label}。</span></div>
         </article>
       </div>
-      {project.reviewFlow && <div className="catalog-notice"><Info size={17} /><span>上次运行：k={defaults.k}，n={defaults.n}，{defaults.recentYears} 年窗口。{project.reviewFlow.notice}</span></div>}
+      {project.reviewFlow && <div className="catalog-notice"><Info size={17} /><span>上次运行：k={defaults.k}，n={defaults.n}，{defaults.recentYears} 年窗口，评分模型为 {scoringLabel(project.reviewFlow)}。{project.reviewFlow.notice}</span></div>}
     </div>
   );
 }
@@ -353,8 +366,8 @@ function RecentPapersStage({ project, setActiveStep }) {
   if (!flow) return <EmptyFlow onBack={() => setActiveStep(0)} />;
   return (
     <div className="stage-content">
-      <StageHeading eyebrow="RECENT PAPERS & NAIPv2 RANKER" title="近期相似论文评分" description="OpenAlex 按期刊、日期和关键词检索；自训练 Ranker 仅使用标题与摘要，对稿件和参考论文做同尺度质量排序。" action={<Button onClick={() => setActiveStep(3)} icon={ArrowRight}>查看投稿判断</Button>} />
-      {!flow.services?.ranker?.available && <div className="catalog-notice warning"><AlertCircle size={17} /><span>Ranker 未连接：参考论文当前只显示检索降级分，不代表论文质量。启动 Ranker Service 后重新运行即可获得模型评分。</span></div>}
+      <StageHeading eyebrow="RECENT PAPERS & SELECTED SCORER" title="近期相似论文评分" description={`OpenAlex 按期刊、日期和关键词检索；${scoringLabel(flow)} 仅使用标题与摘要，对稿件和参考论文做同尺度质量排序。`} action={<Button onClick={() => setActiveStep(3)} icon={ArrowRight}>查看投稿判断</Button>} />
+      {!flow.services?.scorer?.available && <div className="catalog-notice warning"><AlertCircle size={17} /><span>{scoringLabel(flow)} 未连接：参考论文当前只显示检索降级分，不代表论文质量。配置所选评分服务后重新运行即可获得模型评分。</span></div>}
       <div className="paper-journal-stack">
         {flow.journals.map(({ journal, referencePapers, retrieval }) => (
           <section className="surface-card paper-journal-group" key={journal.id}>
@@ -364,7 +377,7 @@ function RecentPapersStage({ project, setActiveStep }) {
               <div className="reference-paper-list">
                 {referencePapers.map((paper) => (
                   <article key={paper.id}>
-                    <div className="paper-score"><strong>{paper.modelScore.score}</strong><small>{paper.modelScore.modelTrace ? 'Ranker 分' : '降级分'}</small></div>
+                    <div className="paper-score"><strong>{paper.modelScore.score}</strong><small>{paper.modelScore.modelTrace ? `${scoringLabel(flow)} 分` : '降级分'}</small></div>
                     <div><span className="paper-meta">{paper.year} · {paper.authors.slice(0, 3).join('、') || '作者信息未提供'}</span><h4><a href={paper.url} target="_blank" rel="noreferrer">{paper.title}<ExternalLink size={12} /></a></h4><p>{paper.modelScore.rationale}</p>{paper.scoringError && <small className="score-error">评分降级：{paper.scoringError}</small>}</div>
                   </article>
                 ))}
@@ -383,7 +396,7 @@ function DecisionStage({ project, busy, runAction }) {
   const rerun = () => runAction('review-flow', () => api.runReviewFlow(project.id, { ...flow.hyperparameters, useAI: true }), 3);
   return (
     <div className="stage-content">
-      <StageHeading eyebrow="RANKER BENCHMARK" title="稿件与同刊论文对比" description="将稿件的 Ranker 排序分与每本候选期刊的近期相似论文分布比较，判断是否达到该刊公开论文基线。" action={<Button variant="secondary" loading={busy === 'review-flow'} onClick={rerun} icon={RefreshCw}>重新运行</Button>} />
+      <StageHeading eyebrow="MODEL BENCHMARK" title="稿件与同刊论文对比" description={`将稿件的 ${scoringLabel(flow)} 排序分与每本候选期刊的近期相似论文分布比较，判断是否达到该刊公开论文基线。`} action={<Button variant="secondary" loading={busy === 'review-flow'} onClick={rerun} icon={RefreshCw}>重新运行</Button>} />
       <div className="decision-grid">
         {flow.journals.map(({ journal, manuscriptScore, comparison, scoringError }) => {
           const calibrated = comparison.isCalibratedProbability;
@@ -391,13 +404,13 @@ function DecisionStage({ project, busy, runAction }) {
           const tone = calibrated ? comparison.decision : comparison.benchmarkVerdict;
           return (
             <article className="surface-card decision-card" key={journal.id}>
-              <header><div><span className={`prestige-band ${journal.prestigeBand}`}>{journal.prestigeLabel}</span><h3>{journal.name}</h3><RankBadges journal={journal} /></div><div className="manuscript-score"><strong>{manuscriptScore.score}</strong><small>稿件 Ranker 分</small></div></header>
+              <header><div><span className={`prestige-band ${journal.prestigeBand}`}>{journal.prestigeLabel}</span><h3>{journal.name}</h3><RankBadges journal={journal} /></div><div className="manuscript-score"><strong>{manuscriptScore.score}</strong><small>稿件 {scoringLabel(flow)} 分</small></div></header>
               <div className={`decision-verdict ${tone}`}><Gauge size={20} /><div><small>{calibrated ? '校准分类器判断' : '相对基线判断'}</small><strong>{label || '暂无判断'}</strong></div>{calibrated && <span>{Math.round(comparison.acceptancePrediction.acceptance_probability * 100)}%</span>}</div>
               <div className="benchmark-scale"><span><small>近期 P25</small><strong>{comparison.recentPaperLowerQuartile ?? '—'}</strong></span><span><small>近期中位数</small><strong>{comparison.recentPaperMedian ?? '—'}</strong></span><span><small>稿件差值</small><strong>{comparison.scoreDelta === null ? '—' : `${comparison.scoreDelta >= 0 ? '+' : ''}${comparison.scoreDelta}`}</strong></span><span><small>样本数</small><strong>{comparison.recentPaperCount}</strong></span></div>
               <p className="decision-rationale">{manuscriptScore.rationale}</p>
               {manuscriptScore.strengths.length > 0 && <div className="factor-list positive"><strong>正向因素</strong>{manuscriptScore.strengths.map((item) => <span key={item}><CheckCircle2 size={13} />{item}</span>)}</div>}
               {manuscriptScore.risks.length > 0 && <div className="factor-list risk"><strong>主要风险</strong>{manuscriptScore.risks.map((item) => <span key={item}><AlertCircle size={13} />{item}</span>)}</div>}
-              {scoringError && <div className="inline-warning"><AlertCircle size={15} />Ranker 评分降级：{scoringError}</div>}
+              {scoringError && <div className="inline-warning"><AlertCircle size={15} />{scoringLabel(flow)} 评分降级：{scoringError}</div>}
               <footer>{comparison.notice}</footer>
             </article>
           );

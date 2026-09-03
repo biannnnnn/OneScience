@@ -914,6 +914,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .parameter-card label > span { font-size: 13px; font-weight: 650; }
 .parameter-card input, .parameter-card select { width: 100%; min-height: 38px; padding: 7px 9px; border: 1px solid #cad5cd; border-radius: 8px; background: #fff; }
 .parameter-card label small { grid-column: 1 / -1; color: var(--muted); font-size: 11px; line-height: 1.5; }
+.parameter-card .scoring-model-field { grid-template-columns: 1fr 150px; }
 .parameter-cost { display: flex; gap: 9px; margin-top: 16px; padding: 12px; color: #675329; background: #fff8e8; border: 1px solid #ead9ad; border-radius: 9px; font-size: 11px; line-height: 1.55; }
 .parameter-cost svg { flex: 0 0 auto; }
 

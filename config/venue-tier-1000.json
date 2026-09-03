@@ -1,0 +1,215 @@
+{
+  "schema_version": "1.0.0",
+  "recent_years": 8,
+  "papers_per_venue": 200,
+  "venues": [
+    {
+      "catalog_id": "frontiers-computer-science",
+      "tier_rank": 1,
+      "field": "artificial intelligence",
+      "topic": "computer vision",
+      "article_type": "research article",
+      "queries": ["object detection", "image recognition"]
+    },
+    {
+      "catalog_id": "vrih",
+      "tier_rank": 2,
+      "field": "artificial intelligence",
+      "topic": "computer vision",
+      "article_type": "research article",
+      "queries": ["object detection", "image recognition"]
+    },
+    {
+      "catalog_id": "frontiers-computer-science",
+      "tier_rank": 1,
+      "field": "artificial intelligence",
+      "topic": "three-dimensional vision",
+      "article_type": "research article",
+      "queries": ["3D vision", "point cloud"]
+    },
+    {
+      "catalog_id": "vrih",
+      "tier_rank": 2,
+      "field": "artificial intelligence",
+      "topic": "three-dimensional vision",
+      "article_type": "research article",
+      "queries": ["3D vision", "point cloud"]
+    },
+    {
+      "catalog_id": "jas",
+      "tier_rank": 1,
+      "field": "intelligent systems",
+      "topic": "robotics",
+      "article_type": "research article",
+      "queries": ["robot control", "robot perception"]
+    },
+    {
+      "catalog_id": "vrih",
+      "tier_rank": 2,
+      "field": "intelligent systems",
+      "topic": "robotics",
+      "article_type": "research article",
+      "queries": ["robot control", "robot perception"]
+    },
+    {
+      "catalog_id": "jas",
+      "tier_rank": 1,
+      "field": "intelligent systems",
+      "topic": "autonomous systems",
+      "article_type": "research article",
+      "queries": ["autonomous driving", "autonomous navigation"]
+    },
+    {
+      "catalog_id": "vrih",
+      "tier_rank": 2,
+      "field": "intelligent systems",
+      "topic": "autonomous systems",
+      "article_type": "research article",
+      "queries": ["autonomous driving", "autonomous navigation"]
+    },
+    {
+      "catalog_id": "bdma",
+      "tier_rank": 1,
+      "field": "data science",
+      "topic": "machine learning",
+      "article_type": "research article",
+      "queries": ["machine learning", "deep learning"]
+    },
+    {
+      "catalog_id": "vrih",
+      "tier_rank": 2,
+      "field": "data science",
+      "topic": "machine learning",
+      "article_type": "research article",
+      "queries": ["machine learning", "deep learning"]
+    },
+    {
+      "catalog_id": "bdma",
+      "tier_rank": 1,
+      "field": "data science",
+      "topic": "data mining",
+      "article_type": "research article",
+      "queries": ["data mining", "knowledge discovery"]
+    },
+    {
+      "catalog_id": "vrih",
+      "tier_rank": 2,
+      "field": "data science",
+      "topic": "data mining",
+      "article_type": "research article",
+      "queries": ["data mining", "knowledge discovery"]
+    },
+    {
+      "catalog_id": "science-china-information-sciences",
+      "tier_rank": 1,
+      "field": "communications",
+      "topic": "wireless communications",
+      "article_type": "research article",
+      "queries": ["wireless communication", "mobile network"]
+    },
+    {
+      "catalog_id": "china-communications",
+      "tier_rank": 2,
+      "field": "communications",
+      "topic": "wireless communications",
+      "article_type": "research article",
+      "queries": ["wireless communication", "mobile network"]
+    },
+    {
+      "catalog_id": "science-china-information-sciences",
+      "tier_rank": 1,
+      "field": "communications",
+      "topic": "6G networks",
+      "article_type": "research article",
+      "queries": ["6G network", "integrated sensing communication"]
+    },
+    {
+      "catalog_id": "china-communications",
+      "tier_rank": 2,
+      "field": "communications",
+      "topic": "6G networks",
+      "article_type": "research article",
+      "queries": ["6G network", "integrated sensing communication"]
+    },
+    {
+      "catalog_id": "fitee",
+      "tier_rank": 1,
+      "field": "information technology",
+      "topic": "edge computing",
+      "article_type": "research article",
+      "queries": ["edge computing", "cloud edge computing"]
+    },
+    {
+      "catalog_id": "china-communications",
+      "tier_rank": 2,
+      "field": "information technology",
+      "topic": "edge computing",
+      "article_type": "research article",
+      "queries": ["edge computing", "cloud edge computing"]
+    },
+    {
+      "catalog_id": "fitee",
+      "tier_rank": 1,
+      "field": "information technology",
+      "topic": "internet of things",
+      "article_type": "research article",
+      "queries": ["internet of things", "industrial IoT"]
+    },
+    {
+      "catalog_id": "china-communications",
+      "tier_rank": 2,
+      "field": "information technology",
+      "topic": "internet of things",
+      "article_type": "research article",
+      "queries": ["internet of things", "industrial IoT"]
+    },
+    {
+      "catalog_id": "cje",
+      "tier_rank": 1,
+      "field": "communications",
+      "topic": "satellite communications",
+      "article_type": "research article",
+      "queries": ["satellite communication", "satellite network"]
+    },
+    {
+      "catalog_id": "china-communications",
+      "tier_rank": 2,
+      "field": "communications",
+      "topic": "satellite communications",
+      "article_type": "research article",
+      "queries": ["satellite communication", "satellite network"]
+    },
+    {
+      "catalog_id": "cybersecurity",
+      "tier_rank": 1,
+      "field": "cybersecurity",
+      "topic": "network security",
+      "article_type": "research article",
+      "queries": ["network security", "intrusion detection"]
+    },
+    {
+      "catalog_id": "china-communications",
+      "tier_rank": 2,
+      "field": "cybersecurity",
+      "topic": "network security",
+      "article_type": "research article",
+      "queries": ["network security", "intrusion detection"]
+    },
+    {
+      "catalog_id": "cybersecurity",
+      "tier_rank": 1,
+      "field": "cybersecurity",
+      "topic": "privacy protection",
+      "article_type": "research article",
+      "queries": ["privacy protection", "privacy preserving"]
+    },
+    {
+      "catalog_id": "china-communications",
+      "tier_rank": 2,
+      "field": "cybersecurity",
+      "topic": "privacy protection",
+      "article_type": "research article",
+      "queries": ["privacy protection", "privacy preserving"]
+    }
+  ]
+}

@@ -17,6 +17,14 @@ PROMPT_TEMPLATE = (
     "Evaluate the quality of this paper:"
 )
 PROMPT_VERSION = "naipv2-official-pointwise-1.0.0"
+FULLTEXT_PROMPT_VERSION = "naipv2-fulltext-evidence-pointwise-1.0.0"
+FULLTEXT_INPUT_SCHEMA = "fulltext_evidence_v1"
+FULLTEXT_FIELDS = (
+    ("[ABSTRACT]", "abstract"),
+    ("[RESEARCH QUESTION AND MAIN CONTRIBUTIONS]", "research_question_contributions"),
+    ("[EXPERIMENTAL SETUP AND DATASETS]", "experimental_setup_datasets"),
+    ("[KEY FINDINGS AND CONCLUSION]", "key_findings_conclusion"),
+)
 
 
 class RankerError(RuntimeError):
@@ -29,11 +37,25 @@ def normalize_text(value: object) -> str:
     return re.sub(r"\s+", " ", str(value or "")).strip()
 
 
-def prompt_for_paper(paper: dict) -> str:
+def evidence_for_paper(paper: dict, input_schema: str = "title_abstract_v1") -> str:
+    if input_schema != FULLTEXT_INPUT_SCHEMA:
+        return normalize_text(paper.get("abstract"))
+    parts = []
+    for label, field in FULLTEXT_FIELDS:
+        value = normalize_text(paper.get(field))
+        parts.extend((label, value or "[NOT PROVIDED]"))
+    return "\n".join(parts)
+
+
+def prompt_for_paper(paper: dict, input_schema: str = "title_abstract_v1") -> str:
     return PROMPT_TEMPLATE.format(
         title=normalize_text(paper.get("title")),
-        abstract=normalize_text(paper.get("abstract")),
+        abstract=evidence_for_paper(paper, input_schema),
     )
+
+
+def prompt_version(input_schema: str) -> str:
+    return FULLTEXT_PROMPT_VERSION if input_schema == FULLTEXT_INPUT_SCHEMA else PROMPT_VERSION
 
 
 def sha256_file(path: pathlib.Path) -> str:
@@ -96,6 +118,7 @@ class MockRanker:
     def __init__(self, config: dict):
         self.config = config
         self.calibration = Calibration(None)
+        self.input_schema = str((config.get("model") or {}).get("input_schema", "title_abstract_v1"))
 
     def info(self) -> dict:
         return {
@@ -103,7 +126,8 @@ class MockRanker:
             "model": "naipv2-ranker-mock",
             "model_version": "contract-only",
             "adapter_version": "mock",
-            "prompt_version": PROMPT_VERSION,
+            "prompt_version": prompt_version(self.input_schema),
+            "input_schema": self.input_schema,
             "quantization": None,
             "max_length": 512,
             "calibration": {"available": False, "method": "request_empirical_cdf"},
@@ -112,7 +136,7 @@ class MockRanker:
     def score_raw(self, papers: list[dict]) -> list[float]:
         values = []
         for paper in papers:
-            digest = hashlib.sha256(prompt_for_paper(paper).encode("utf-8")).digest()
+            digest = hashlib.sha256(prompt_for_paper(paper, self.input_schema).encode("utf-8")).digest()
             values.append(round(int.from_bytes(digest[:4], "big") / (2**32 - 1) * 8 - 4, 6))
         return values
 
@@ -145,6 +169,9 @@ class TransformersRanker:
         self.torch = torch
         self.max_length = int(model_config.get("max_length", 512))
         self.batch_size = max(1, int(model_config.get("batch_size", 8)))
+        self.input_schema = str(model_config.get("input_schema", "title_abstract_v1"))
+        if self.input_schema not in ("title_abstract_v1", FULLTEXT_INPUT_SCHEMA):
+            raise RankerError("INPUT_SCHEMA_UNKNOWN", "不支持的 Ranker 输入协议。")
         self.device = str(model_config.get("device", "cuda:0"))
         if not torch.cuda.is_available():
             raise RankerError("CUDA_REQUIRED", "NAIPv2 Ranker 需要 NVIDIA CUDA。")
@@ -171,7 +198,8 @@ class TransformersRanker:
             "model": model_config.get("model_name", "meta-llama/Meta-Llama-3-8B"),
             "model_version": model_config.get("model_version", self.base_model.name),
             "adapter_version": model_config.get("adapter_version", "retrained-paper-faithful-seed42"),
-            "prompt_version": PROMPT_VERSION,
+            "prompt_version": prompt_version(self.input_schema),
+            "input_schema": self.input_schema,
             "quantization": "bitsandbytes-8bit",
             "max_length": self.max_length,
             "calibration": {
@@ -188,7 +216,10 @@ class TransformersRanker:
         values: list[float] = []
         with self.torch.inference_mode():
             for start in range(0, len(papers), self.batch_size):
-                prompts = [prompt_for_paper(item) for item in papers[start:start + self.batch_size]]
+                prompts = [
+                    prompt_for_paper(item, self.input_schema)
+                    for item in papers[start:start + self.batch_size]
+                ]
                 encoded = self.tokenizer(
                     prompts,
                     max_length=self.max_length,

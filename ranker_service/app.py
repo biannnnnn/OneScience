@@ -18,6 +18,11 @@ from .model import RankerError, create_ranker
 
 
 PROJECT_ROOT = pathlib.Path(__file__).resolve().parent.parent
+EVIDENCE_FIELDS = (
+    "research_question_contributions",
+    "experimental_setup_datasets",
+    "key_findings_conclusion",
+)
 
 
 class ApiError(RuntimeError):
@@ -76,7 +81,14 @@ def validate_papers(payload: object) -> list[dict]:
             details.append({"path": location + "/title", "message": "title 不能为空且不超过 1000 字符。"})
         if not abstract or len(abstract) > 24000:
             details.append({"path": location + "/abstract", "message": "abstract 不能为空且不超过 24000 字符。"})
-        result.append({"paper_id": paper_id, "title": title, "abstract": abstract})
+        normalized = {"paper_id": paper_id, "title": title, "abstract": abstract}
+        for field in EVIDENCE_FIELDS:
+            value = str(paper.get(field) or "").strip()
+            if len(value) > 24000:
+                details.append({"path": location + "/" + field, "message": field + " 不能超过 24000 字符。"})
+            if value:
+                normalized[field] = value
+        result.append(normalized)
     if details:
         raise ApiError(422, "RANKER_REQUEST_INVALID", "论文评分请求不符合接口协议。", details)
     return result
@@ -112,13 +124,17 @@ class RankerService:
         )
 
     def health(self) -> dict:
+        backend = self.ranker.info()
+        capabilities = ["paper_score_batch"]
+        if backend.get("input_schema") == "fulltext_evidence_v1":
+            capabilities.append("fulltext_evidence_v1")
         return {
             "ok": True,
             "status": "busy" if self.busy else "ready",
             "service": "onescience-naipv2-ranker",
             "service_version": __version__,
-            "backend": self.ranker.info(),
-            "capabilities": ["paper_score_batch"],
+            "backend": backend,
+            "capabilities": capabilities,
             "batches_completed": self.completed,
             "active_inferences": self.active_inferences,
             "max_concurrent": self.max_concurrent,
@@ -195,7 +211,7 @@ def make_handler(service: RankerService, max_request_bytes: int):
                 self.send_json(200, {
                     "service_version": __version__,
                     "active": service.ranker.info(),
-                    "capabilities": ["paper_score_batch"],
+                    "capabilities": service.health()["capabilities"],
                 })
                 return
             self.send_error_payload(ApiError(404, "NOT_FOUND", "未找到该接口。"))

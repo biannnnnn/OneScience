@@ -6,6 +6,16 @@ import {
   scoreFromRanker,
   scorePapersWithRanker,
 } from '../server/lib/ranker-client.mjs';
+import { normalizeScoringModel, scoringModelDefinition } from '../server/lib/scoring-models.mjs';
+
+test('scoring model selector accepts only supported model ids and aliases', () => {
+  assert.equal(normalizeScoringModel('8B'), 'ranker-8b');
+  assert.equal(normalizeScoringModel('3b'), 'ranker-3b');
+  assert.equal(normalizeScoringModel('0.6B'), 'ranker-0.6b');
+  assert.equal(normalizeScoringModel('deepseek'), 'deepseek');
+  assert.equal(normalizeScoringModel('unknown'), null);
+  assert.equal(scoringModelDefinition('ranker-3b').urlEnv, 'RANKER_3B_SERVICE_URL');
+});
 
 
 test('Ranker client sends only paper id, title and abstract', async () => {
@@ -36,6 +46,48 @@ test('Ranker client sends only paper id, title and abstract', async () => {
   assert.deepEqual(Object.keys(requestBody.papers[0]).sort(), ['abstract', 'paper_id', 'title']);
   assert.equal(requestBody.papers[0].text, undefined);
   assert.equal(result.scores[0].raw_score, 1.25);
+});
+
+test('Ranker client routes a selected small model to its configured service', async () => {
+  let requestedUrl;
+  await scorePapersWithRanker([{
+    paperId: 'paper-3b', title: 'A paper', abstract: 'Abstract.',
+  }], {
+    modelId: 'ranker-3b',
+    env: { RANKER_3B_SERVICE_URL: 'http://ranker-3b.test' },
+    fetchImpl: async (url) => {
+      requestedUrl = url;
+      return new Response(JSON.stringify({ scores: [], model_trace: {}, disclaimer: '' }), {
+        status: 200, headers: { 'Content-Type': 'application/json' },
+      });
+    },
+  });
+  assert.equal(requestedUrl, 'http://ranker-3b.test/v1/paper-scores');
+});
+
+
+test('Ranker client sends bounded structured full-text evidence but never raw manuscript text', async () => {
+  let requestBody;
+  await scorePapersWithRanker([{
+    paperId: 'fulltext-1', title: 'Evidence paper', abstract: 'Abstract evidence.',
+    researchQuestionContributions: 'Research question and contribution.',
+    experimentalSetupDatasets: 'Experiment and dataset evidence.',
+    keyFindingsConclusion: 'Findings and conclusion evidence.',
+    text: 'Raw manuscript must remain local.',
+  }], {
+    env: { RANKER_SERVICE_URL: 'http://ranker.test' },
+    fetchImpl: async (_url, options) => {
+      requestBody = JSON.parse(options.body);
+      return new Response(JSON.stringify({ scores: [], model_trace: {}, disclaimer: '' }), {
+        status: 200, headers: { 'Content-Type': 'application/json' },
+      });
+    },
+  });
+  assert.deepEqual(Object.keys(requestBody.papers[0]).sort(), [
+    'abstract', 'experimental_setup_datasets', 'key_findings_conclusion', 'paper_id',
+    'research_question_contributions', 'title',
+  ]);
+  assert.equal(requestBody.papers[0].text, undefined);
 });
 
 

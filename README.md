@@ -79,12 +79,15 @@ DEEPSEEK_API_KEY=your_deepseek_key
 DEEPSEEK_BASE_URL=https://api.deepseek.com
 DEEPSEEK_MODEL=deepseek-v4-pro
 
-# 已训练的私有 NAIPv2 Ranker Service
+# 可选评分器：8B 保留旧变量兼容；3B 与 0.6B 分别连接各自服务
 RANKER_SERVICE_URL=http://100.91.253.128:8788
+RANKER_8B_SERVICE_URL=http://100.91.253.128:8788
+RANKER_3B_SERVICE_URL=http://your-ranker-host:8789
+RANKER_06B_SERVICE_URL=http://your-ranker-host:8790
 RANKER_SERVICE_API_KEY=
 ```
 
-OpenAlex API 在当前官方文档中要求 API key。没有 key 时，界面会明确显示 Web 检索未执行；没有 Ranker Service 时，界面显示降级分，并明确说明该分数不代表论文质量。
+最终评分可在参数页选择 8B、3B、0.6B Ranker 或 DeepSeek。三个 Ranker URL 应分别指向加载对应模型的服务；未配置所选服务时，界面会显示降级分。选择 DeepSeek 时复用上述 `DEEPSEEK_*` 配置，并会产生外部 API 调用。OpenAlex API 未配置时不会执行 Web 检索。
 
 配置后先运行真实链路预检：
 

@@ -1,17 +1,27 @@
 import crypto from 'node:crypto';
+import { DEFAULT_SCORING_MODEL, scoringModelDefinition } from './scoring-models.mjs';
 
 const DEFAULT_BASE_URL = 'http://127.0.0.1:8788';
 const DEFAULT_TIMEOUT_MS = 300_000;
 
-function serviceConfig(env = process.env) {
+function serviceConfig(env = process.env, modelId = DEFAULT_SCORING_MODEL) {
+  const definition = scoringModelDefinition(modelId);
+  if (!definition || definition.kind !== 'ranker') {
+    throw new Error(`不支持的 Ranker 评分模型：${modelId}。`);
+  }
+  const legacyUrl = definition.id === DEFAULT_SCORING_MODEL ? env.RANKER_SERVICE_URL : '';
+  const configuredUrl = env[definition.urlEnv] || legacyUrl;
   return {
-    baseUrl: String(env.RANKER_SERVICE_URL || DEFAULT_BASE_URL).replace(/\/+$/, ''),
-    apiKey: String(env.RANKER_SERVICE_API_KEY || env.ONESCIENCE_RANKER_API_KEY || ''),
+    modelId: definition.id,
+    label: definition.label,
+    baseUrl: String(configuredUrl || (definition.id === DEFAULT_SCORING_MODEL ? DEFAULT_BASE_URL : '')).replace(/\/+$/, ''),
+    apiKey: String(env[`${definition.urlEnv.replace('_URL', '')}_API_KEY`] || env.RANKER_SERVICE_API_KEY || env.ONESCIENCE_RANKER_API_KEY || ''),
   };
 }
 
 async function serviceRequest(pathname, options = {}) {
-  const config = serviceConfig(options.env);
+  const config = serviceConfig(options.env, options.modelId);
+  if (!config.baseUrl) throw new Error(`${config.label} 尚未配置 ${scoringModelDefinition(config.modelId).urlEnv}。`);
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), options.timeoutMs || DEFAULT_TIMEOUT_MS);
   try {
@@ -42,6 +52,7 @@ async function serviceRequest(pathname, options = {}) {
 }
 
 export async function getRankerServiceStatus(options = {}) {
+  const definition = scoringModelDefinition(options.modelId || DEFAULT_SCORING_MODEL);
   try {
     const health = await serviceRequest('/health', { ...options, timeoutMs: options.timeoutMs || 3_000 });
     let models;
@@ -61,6 +72,9 @@ export async function getRankerServiceStatus(options = {}) {
     }
     return {
       available: true,
+      id: definition.id,
+      label: definition.label,
+      kind: 'ranker',
       healthAvailable: true,
       authenticated: true,
       status: health.status,
@@ -70,6 +84,9 @@ export async function getRankerServiceStatus(options = {}) {
   } catch (error) {
     return {
       available: false,
+      id: definition?.id || options.modelId,
+      label: definition?.label || options.modelId,
+      kind: 'ranker',
       healthAvailable: false,
       authenticated: false,
       error: error.message,
@@ -79,11 +96,21 @@ export async function getRankerServiceStatus(options = {}) {
 }
 
 function scorePaperPayload(paper) {
-  return {
+  const payload = {
     paper_id: String(paper.paperId || paper.id),
     title: String(paper.title || 'Untitled').trim().slice(0, 1000),
     abstract: String(paper.abstract || '').replace(/\s+/g, ' ').trim().slice(0, 24_000),
   };
+  const evidence = {
+    research_question_contributions: paper.researchQuestionContributions ?? paper.research_question_contributions,
+    experimental_setup_datasets: paper.experimentalSetupDatasets ?? paper.experimental_setup_datasets,
+    key_findings_conclusion: paper.keyFindingsConclusion ?? paper.key_findings_conclusion,
+  };
+  for (const [field, value] of Object.entries(evidence)) {
+    const normalized = String(value || '').replace(/\s+/g, ' ').trim().slice(0, 24_000);
+    if (normalized) payload[field] = normalized;
+  }
+  return payload;
 }
 
 export async function scorePapersWithRanker(papers, options = {}) {
